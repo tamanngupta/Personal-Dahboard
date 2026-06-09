@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wardrobe — Tamanna's Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #07080d;
+  --concrete: #0f1015;
+  --concrete-edge: #1c1f28;
+  --text: #c8c2b4;
+  --text-dim: #4a4840;
+  --accent: #c94040;
+  --accent-dim: rgba(201,64,64,0.12);
+  --accent-mid: rgba(201,64,64,0.25);
+  --surface: #0c0d12;
+  --surface2: #13141a;
+  --border: #1c1f28;
+  --green: #6a9e5e;
+  --amber: #e8943a;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+
+body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 4rem; }
+
+.sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.star {
+  position: absolute; border-radius: 50%; background: white; opacity: 0;
+  animation: twinkle var(--d,3s) ease-in-out infinite var(--delay,0s);
+}
+@keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:var(--max-op,0.6)} }
+
+/* HEADER */
+.page-header {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.6rem 2.4rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--concrete);
+}
+.back-btn {
+  display: flex; align-items: center; gap: 0.5rem;
+  color: var(--text-dim); text-decoration: none;
+  font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.back-btn:hover { color: var(--accent); }
+.back-btn svg { width: 14px; height: 14px; }
+.page-title {
+  font-family: 'Fraunces', serif; font-size: 1.5rem;
+  font-weight: 600; color: var(--accent);
+}
+
+/* TABS */
+.tabs-wrap {
+  position: relative; z-index: 2;
+  display: flex; padding: 0 2.4rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--concrete);
+  overflow-x: auto; scrollbar-width: none;
+}
+.tabs-wrap::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 0.9rem 1.1rem;
+  font-family: 'DM Sans', sans-serif; font-size: 0.72rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-dim); background: none; border: none;
+  border-bottom: 2px solid transparent; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.main {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 1100px;
+  margin: 0 auto; padding: 2rem 2.4rem;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* SECTION HEAD */
+.section-head {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 1.4rem;
+}
+.section-title {
+  font-family: 'Fraunces', serif; font-size: 1.1rem;
+  font-weight: 600; color: var(--text);
+}
+.section-sub { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.2rem; }
+
+.add-btn {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--accent); border-radius: 2px;
+  background: transparent; color: var(--accent);
+  font-family: 'DM Sans', sans-serif; font-size: 0.72rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s;
+}
+.add-btn:hover { background: var(--accent-dim); }
+
+/* FILTER BAR */
+.filter-bar {
+  display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.4rem;
+}
+.filter-chip {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border); border-radius: 2px;
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-dim); background: transparent;
+  cursor: pointer; transition: all 0.2s;
+}
+.filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+.filter-chip.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+/* ITEM GRID */
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.item-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  transition: border-color 0.3s;
+  position: relative;
+}
+.item-card:hover { border-color: rgba(201,64,64,0.3); }
+
+.item-img {
+  width: 100%; aspect-ratio: 3/4;
+  object-fit: cover; background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-dim); font-size: 2rem;
+  overflow: hidden;
+}
+.item-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.item-body { padding: 0.8rem; }
+.item-name {
+  font-size: 0.8rem; color: var(--text);
+  font-weight: 500; margin-bottom: 0.3rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.item-meta {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 0.4rem;
+}
+.item-price { font-size: 0.75rem; color: var(--accent); }
+.item-cat {
+  font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-dim);
+}
+.item-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.item-tag {
+  font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.15rem 0.4rem; border-radius: 2px;
+  border: 1px solid var(--border); color: var(--text-dim);
+}
+.tag-need { border-color: rgba(232,148,58,0.3); color: var(--amber); }
+.tag-want { border-color: rgba(201,64,64,0.3); color: var(--accent); }
+.tag-dream { border-color: rgba(139,107,177,0.3); color: #8b6bb1; }
+
+.item-actions {
+  display: flex; gap: 0.4rem; padding: 0 0.8rem 0.8rem;
+}
+.item-btn {
+  flex: 1; padding: 0.35rem;
+  background: none; border: 1px solid var(--border);
+  border-radius: 2px; color: var(--text-dim);
+  font-size: 0.65rem; letter-spacing: 0.08em;
+  text-transform: uppercase; cursor: pointer;
+  transition: all 0.2s; text-align: center;
+}
+.item-btn:hover { border-color: var(--accent); color: var(--accent); }
+.item-btn.bought-btn:hover { border-color: var(--green); color: var(--green); }
+.item-btn.del-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.owned-badge {
+  position: absolute; top: 0.5rem; right: 0.5rem;
+  background: rgba(106,158,94,0.15);
+  border: 1px solid rgba(106,158,94,0.4);
+  color: #6a9e5e; font-size: 0.58rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.15rem 0.4rem; border-radius: 2px;
+}
+
+.empty-state {
+  padding: 3rem 2rem; text-align: center;
+  color: var(--text-dim); font-size: 0.82rem; font-style: italic;
+  grid-column: 1/-1;
+}
+
+/* BUDGET TAB */
+.budget-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem; margin-bottom: 2rem;
+}
+.budget-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px; padding: 1.2rem;
+  transition: border-color 0.3s;
+}
+.budget-card:hover { border-color: rgba(201,64,64,0.2); }
+.budget-card-header {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 0.8rem;
+}
+.budget-cat-name {
+  font-size: 0.72rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-dim);
+}
+.budget-edit-btn {
+  background: none; border: none; color: var(--text-dim);
+  cursor: pointer; font-size: 0.75rem; transition: color 0.2s;
+}
+.budget-edit-btn:hover { color: var(--accent); }
+.budget-amounts {
+  display: flex; align-items: baseline;
+  gap: 0.3rem; margin-bottom: 0.7rem;
+}
+.budget-spent {
+  font-family: 'Fraunces', serif; font-size: 1.2rem; color: var(--text);
+}
+.budget-limit {
+  font-size: 0.75rem; color: var(--text-dim);
+}
+.budget-bar-wrap {
+  height: 4px; background: var(--border);
+  border-radius: 2px; overflow: hidden;
+}
+.budget-bar {
+  height: 100%; border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.budget-bar.safe { background: var(--green); }
+.budget-bar.warn { background: var(--amber); }
+.budget-bar.over { background: var(--accent); }
+.budget-remaining {
+  font-size: 0.65rem; color: var(--text-dim);
+  margin-top: 0.4rem; text-align: right;
+}
+
+.budget-total-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px; padding: 1.2rem;
+  margin-bottom: 2rem;
+  display: flex; align-items: center; gap: 3rem;
+}
+.budget-total-item .label {
+  font-size: 0.6rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.2rem;
+}
+.budget-total-item .val {
+  font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--accent);
+}
+.budget-total-item .val.green { color: var(--green); }
+
+/* SPEND HISTORY */
+.history-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px; overflow: hidden;
+}
+.hotspot-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.hotspot-table th {
+  text-align: left; font-size: 0.62rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-dim); padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--border); font-weight: 400;
+}
+.hotspot-table td {
+  padding: 0.75rem 0.8rem;
+  border-bottom: 1px solid rgba(28,31,40,0.6);
+  vertical-align: middle; color: var(--text);
+}
+.hotspot-table tr:hover td { background: rgba(201,64,64,0.02); }
+.hotspot-table tr:last-child td { border-bottom: none; }
+
+/* CAPSULE */
+.capsule-layout {
+  display: grid; grid-template-columns: 280px 1fr;
+  gap: 1.4rem; align-items: start;
+}
+.capsule-picker {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px; padding: 1rem;
+}
+.capsule-picker-title {
+  font-size: 0.65rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-dim);
+  margin-bottom: 0.8rem;
+}
+.capsule-pick-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.5rem; max-height: 500px;
+  overflow-y: auto; scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.capsule-pick-item {
+  border: 1px solid var(--border);
+  border-radius: 2px; overflow: hidden;
+  cursor: pointer; transition: border-color 0.2s;
+  position: relative;
+}
+.capsule-pick-item:hover { border-color: rgba(201,64,64,0.4); }
+.capsule-pick-item.selected { border-color: var(--accent); }
+.capsule-pick-item.selected::after {
+  content: '✓';
+  position: absolute; top: 4px; right: 4px;
+  width: 16px; height: 16px;
+  background: var(--accent); color: white;
+  border-radius: 50%; font-size: 0.6rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.capsule-pick-img {
+  width: 100%; aspect-ratio: 3/4;
+  object-fit: cover; background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; color: var(--text-dim);
+}
+.capsule-pick-img img { width: 100%; height: 100%; object-fit: cover; }
+.capsule-pick-name {
+  padding: 0.3rem 0.4rem; font-size: 0.62rem;
+  color: var(--text-dim); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.capsule-canvas {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px; padding: 1.2rem;
+  min-height: 300px;
+}
+.capsule-canvas-title {
+  font-size: 0.65rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+.capsule-canvas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.8rem;
+}
+.capsule-canvas-empty {
+  font-size: 0.78rem; color: var(--text-dim);
+  font-style: italic; padding: 2rem; text-align: center;
+}
+.capsule-canvas-item { position: relative; }
+.capsule-canvas-img {
+  width: 100%; aspect-ratio: 3/4; object-fit: cover;
+  background: var(--surface2); border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; overflow: hidden;
+}
+.capsule-canvas-img img { width: 100%; height: 100%; object-fit: cover; }
+.capsule-canvas-name {
+  font-size: 0.62rem; color: var(--text-dim);
+  margin-top: 0.3rem; text-align: center;
+}
+.capsule-remove {
+  position: absolute; top: 4px; right: 4px;
+  background: rgba(7,8,13,0.7); border: none;
+  color: var(--text-dim); border-radius: 50%;
+  width: 18px; height: 18px; font-size: 0.6rem;
+  cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: color 0.2s;
+}
+.capsule-remove:hover { color: var(--accent); }
+
+/* IMPORT BAR */
+.import-bar {
+  display: flex; gap: 0.8rem; align-items: center;
+  padding: 0.9rem 1.2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px; margin-bottom: 1.4rem;
+}
+.import-bar input {
+  flex: 1; background: none; border: none;
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem; outline: none;
+}
+.import-bar input::placeholder { color: var(--text-dim); }
+.import-btn {
+  padding: 0.4rem 0.9rem;
+  background: none; border: 1px solid var(--border);
+  border-radius: 2px; color: var(--text-dim);
+  font-size: 0.7rem; letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+.import-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* MODAL */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(7,8,13,0.88); z-index: 100;
+  align-items: center; justify-content: center; padding: 1rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--concrete);
+  border: 1px solid var(--border);
+  border-radius: 2px; width: 100%;
+  max-width: 520px; max-height: 88vh;
+  overflow-y: auto; padding: 2rem;
+  position: relative;
+  animation: modalIn 0.22s ease forwards;
+}
+@keyframes modalIn {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:none; }
+}
+.modal-close {
+  position: absolute; top: 1rem; right: 1rem;
+  background: none; border: none; color: var(--text-dim);
+  cursor: pointer; font-size: 1.1rem; transition: color 0.2s;
+}
+.modal-close:hover { color: var(--text); }
+.modal-title {
+  font-family: 'Fraunces', serif; font-size: 1.1rem;
+  color: var(--accent); margin-bottom: 1.4rem;
+}
+.form-group { margin-bottom: 1rem; }
+.form-label {
+  display: block; font-size: 0.65rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 0.4rem;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; padding: 0.55rem 0.8rem;
+  outline: none; transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--accent);
+}
+.form-input::placeholder { color: var(--text-dim); }
+.form-select option { background: var(--concrete); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.form-hint { font-size: 0.65rem; color: var(--text-dim); margin-top: 0.3rem; font-style: italic; }
+.form-actions {
+  display: flex; gap: 0.7rem; margin-top: 1.4rem; justify-content: flex-end;
+}
+.btn-primary {
+  padding: 0.55rem 1.3rem;
+  background: var(--accent); border: none; border-radius: 2px;
+  color: white; font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.08em; cursor: pointer; transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.88; }
+.btn-secondary {
+  padding: 0.55rem 1.1rem; background: transparent;
+  border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text-dim); font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--text-dim); color: var(--text); }
+
+/* IMAGE PREVIEW */
+.img-preview {
+  width: 80px; height: 107px; object-fit: cover;
+  border: 1px solid var(--border); border-radius: 2px;
+  background: var(--surface2); margin-top: 0.5rem;
+  display: none;
+}
+.img-preview.show { display: block; }
+
+/* BADGE */
+.badge {
+  display: inline-block; padding: 0.2rem 0.55rem;
+  border-radius: 2px; font-size: 0.65rem;
+  letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid;
+}
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 2rem; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 2px; padding: 0.6rem 1.2rem;
+  font-size: 0.78rem; color: var(--text);
+  opacity: 0; transition: all 0.3s ease;
+  z-index: 200; white-space: nowrap;
+}
+.toast.show { opacity:1; transform: translateX(-50%) translateY(0); }
+
+/* ROW BTNS */
+.row-btn {
+  background: none; border: none; color: var(--text-dim);
+  cursor: pointer; padding: 0.2rem; transition: color 0.2s; font-size: 0.75rem;
+}
+.row-btn:hover { color: var(--accent); }
+.row-btn.del:hover { color: var(--accent); }
+.row-actions { display: flex; gap: 0.4rem; }
+</style>
+</head>
+<body>
+
+<div class="sky" id="sky"></div>
+
+<header class="page-header">
+  <a href="index.html" class="back-btn">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M10 3L5 8l5 5"/>
+    </svg>
+    back
+  </a>
+  <span class="page-title">Wardrobe</span>
+  <div style="width:120px"></div>
+</header>
+
+<div class="tabs-wrap">
+  <button class="tab-btn active" onclick="switchTab('wishlist',this)">Wishlist</button>
+  <button class="tab-btn" onclick="switchTab('owned',this)">Owned</button>
+  <button class="tab-btn" onclick="switchTab('aspirational',this)">Dream Shelf</button>
+  <button class="tab-btn" onclick="switchTab('budget',this)">Budget</button>
+  <button class="tab-btn" onclick="switchTab('history',this)">Spend History</button>
+  <button class="tab-btn" onclick="switchTab('capsule',this)">Capsule</button>
+</div>
+
+<div class="main">
+
+  <!-- WISHLIST -->
+  <div class="tab-panel active" id="tab-wishlist">
+    <div class="import-bar" style="margin-bottom:0">
+  <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="importCSV(event)">
+  <input type="text" id="csvHint" placeholder="Import Pinterest CSV — or add items manually" readonly style="cursor:default">
+  <button class="import-btn" onclick="document.getElementById('csvFile').click()">Import CSV</button>
+  <button class="import-btn" onclick="openModal('item','','wishlist')">+ Add Item</button>
+  <button class="import-btn" onclick="togglePinterest()">📌 Pinterest</button>
+</div>
+
+<div id="pinterest-panel" style="display:none;margin-bottom:1.4rem;border:1px solid var(--border);border-radius:2px;overflow:hidden">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.8rem;background:var(--surface);border-bottom:1px solid var(--border)">
+    <span style="font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim)">pinterest — right click any image → copy image address</span>
+    <button onclick="togglePinterest()" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:0.8rem">✕</button>
+  </div>
+  <iframe src="" style="width:100%;height:600px;border:none" loading="lazy"></iframe> <!--input whatever pintrest board or other wardrobe inspiaration you have-->
+</div>
+    <div class="filter-bar" id="wishlist-filters"></div>
+    <div class="item-grid" id="wishlist-grid"></div>
+  </div>
+
+  <!-- OWNED -->
+  <div class="tab-panel" id="tab-owned">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Owned</div>
+        <div class="section-sub">Things you actually have. The real wardrobe.</div>
+      </div>
+      <button class="add-btn" onclick="openModal('item','','owned')">+ Add Item</button>
+    </div>
+    <div class="filter-bar" id="owned-filters"></div>
+    <div class="item-grid" id="owned-grid"></div>
+  </div>
+
+  <!-- DREAM SHELF -->
+  <div class="tab-panel" id="tab-aspirational">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Dream Shelf</div>
+        <div class="section-sub">Future aspirations. No budget pressure. Just logged desire.</div>
+      </div>
+      <button class="add-btn" onclick="openModal('item','','aspirational')">+ Add Item</button>
+    </div>
+    <div class="filter-bar" id="aspirational-filters"></div>
+    <div class="item-grid" id="aspirational-grid"></div>
+  </div>
+
+  <!-- BUDGET -->
+  <div class="tab-panel" id="tab-budget">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Budget</div>
+        <div class="section-sub">Per-category limits. Know where your money goes.</div>
+      </div>
+      <button class="add-btn" onclick="openModal('budget')">Edit Limits</button>
+    </div>
+    <div class="budget-total-card" id="budgetTotalCard"></div>
+    <div class="budget-overview" id="budgetGrid"></div>
+  </div>
+
+  <!-- SPEND HISTORY -->
+  <div class="tab-panel" id="tab-history">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Spend History</div>
+        <div class="section-sub">Every clothing purchase logged. The receipts.</div>
+      </div>
+      <button class="add-btn" onclick="openModal('spend')">+ Log Spend</button>
+    </div>
+    <div class="history-table-wrap">
+      <table class="hotspot-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Where</th>
+            <th>Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CAPSULE -->
+  <div class="tab-panel" id="tab-capsule">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Capsule Planner</div>
+        <div class="section-sub">Pick items, see if they work together.</div>
+      </div>
+      <button class="add-btn" onclick="clearCapsule()">Clear</button>
+    </div>
+    <div class="capsule-layout">
+      <div class="capsule-picker">
+        <div class="capsule-picker-title">Your Wardrobe</div>
+        <div class="capsule-pick-grid" id="capsulePickGrid"></div>
+      </div>
+      <div class="capsule-canvas">
+        <div class="capsule-canvas-title">Selected Pieces</div>
+        <div class="capsule-canvas-grid" id="capsuleCanvas">
+          <div class="capsule-canvas-empty">Select items from the left to build your capsule.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ITEM MODAL -->
+<div class="modal-overlay" id="modal-item">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('item')">✕</button>
+    <div class="modal-title" id="item-modal-title">Add Item</div>
+    <div class="form-group">
+      <label class="form-label">Name</label>
+      <input class="form-input" id="item-name" placeholder="e.g. Wide Leg Jeans">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Image URL</label>
+      <input class="form-input" id="item-img" placeholder="Paste image URL or leave blank" oninput="previewImg()">
+      <div class="form-hint">Right-click any Pinterest pin → Copy image address</div>
+      <img class="img-preview" id="item-img-preview" alt="preview">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Or Upload Image</label>
+      <input class="form-input" type="file" id="item-upload" accept="image/*" onchange="uploadImg(event)">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="item-cat">
+          <option value="tanks-crops">Tanks / Crops</option>
+          <option value="tees">Tees</option>
+          <option value="outerwear">Outerwear</option>
+          <option value="jeans-trousers">Jeans / Trousers</option>
+          <option value="shorts">Shorts</option>
+          <option value="shoes">Shoes</option>
+          <option value="accessories">Accessories</option>
+          <option value="sets">Sets</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Price / Est. Price</label>
+        <input class="form-input" id="item-price" placeholder="₹1,200">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Priority</label>
+      <select class="form-select" id="item-priority">
+        <option value="need">Need</option>
+        <option value="want">Want</option>
+        <option value="dream">Dream</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Season</label>
+      <select class="form-select" id="item-season">
+        <option value="all">All Year</option>
+        <option value="summer">Summer</option>
+        <option value="winter">Winter</option>
+        <option value="monsoon">Monsoon</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes</label>
+      <input class="form-input" id="item-notes" placeholder="Inspo, fit details, where to buy…">
+    </div>
+    <input type="hidden" id="item-section">
+    <input type="hidden" id="item-editId">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('item')">Cancel</button>
+      <button class="btn-primary" onclick="saveItem()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- BUDGET MODAL -->
+<div class="modal-overlay" id="modal-budget">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('budget')">✕</button>
+    <div class="modal-title">Set Category Limits</div>
+    <div id="budget-form-fields"></div>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('budget')">Cancel</button>
+      <button class="btn-primary" onclick="saveBudgetLimits()">Save Limits</button>
+    </div>
+  </div>
+</div>
+
+<!-- SPEND MODAL -->
+<div class="modal-overlay" id="modal-spend">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('spend')">✕</button>
+    <div class="modal-title">Log a Spend</div>
+    <div class="form-group">
+      <label class="form-label">Item Name</label>
+      <input class="form-input" id="spend-name" placeholder="What did you buy?">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="spend-cat">
+          <option value="tanks-crops">Tanks / Crops</option>
+          <option value="tees">Tees</option>
+          <option value="outerwear">Outerwear</option>
+          <option value="jeans-trousers">Jeans / Trousers</option>
+          <option value="shorts">Shorts</option>
+          <option value="shoes">Shoes</option>
+          <option value="accessories">Accessories</option>
+          <option value="sets">Sets</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Amount</label>
+        <input class="form-input" id="spend-amount" placeholder="₹800" type="number">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Where</label>
+        <input class="form-input" id="spend-where" placeholder="Zara, H&M, Sarojini…">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-input" type="date" id="spend-date">
+      </div>
+    </div>
+    <input type="hidden" id="spend-editId">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('spend')">Cancel</button>
+      <button class="btn-primary" onclick="saveSpend()">Log It</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CATS = [
+  { id: 'tanks-crops',    label: 'Tanks / Crops' },
+  { id: 'tees',           label: 'Tees' },
+  { id: 'outerwear',      label: 'Outerwear' },
+  { id: 'jeans-trousers', label: 'Jeans / Trousers' },
+  { id: 'shorts',         label: 'Shorts' },
+  { id: 'shoes',          label: 'Shoes' },
+  { id: 'accessories',    label: 'Accessories' },
+  { id: 'sets',           label: 'Sets' },
+  { id: 'other',          label: 'Other' },
+];
+
+function load(k) { try { return JSON.parse(localStorage.getItem(k)) || []; } catch { return []; } }
+function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+function loadObj(k) { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch { return {}; } }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'budget') renderBudget();
+  if (name === 'capsule') renderCapsule();
+}
+
+function openModal(type, editId, section) {
+  if (type === 'item') {
+    document.getElementById('item-section').value = section || 'wishlist';
+    document.getElementById('item-modal-title').textContent =
+      section === 'owned' ? 'Add Owned Item' :
+      section === 'aspirational' ? 'Add to Dream Shelf' : 'Add to Wishlist';
+    if (editId) prefillItem(editId);
+  }
+  if (type === 'budget') renderBudgetForm();
+  document.getElementById('modal-' + type).classList.add('open');
+}
+function closeModal(type) {
+  document.getElementById('modal-' + type).classList.remove('open');
+  if (type === 'item') clearItemModal();
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+function clearItemModal() {
+  ['item-name','item-img','item-notes','item-price','item-editId','item-section'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('item-img-preview').classList.remove('show');
+  document.getElementById('item-img-preview').src = '';
+  document.getElementById('item-cat').selectedIndex = 0;
+  document.getElementById('item-priority').selectedIndex = 0;
+  document.getElementById('item-season').selectedIndex = 0;
+  document.getElementById('item-upload').value = '';
+}
+
+function previewImg() {
+  const url = document.getElementById('item-img').value.trim();
+  const prev = document.getElementById('item-img-preview');
+  if (url) { prev.src = url; prev.classList.add('show'); }
+  else prev.classList.remove('show');
+}
+
+function uploadImg(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById('item-img').value = ev.target.result;
+    previewImg();
+  };
+  reader.readAsDataURL(file);
+}
+
+function prefillItem(id) {
+  const all = [...load('wishlist'), ...load('owned'), ...load('aspirational')];
+  const item = all.find(x => x.id === id);
+  if (!item) return;
+  document.getElementById('item-name').value     = item.name;
+  document.getElementById('item-img').value      = item.img || '';
+  document.getElementById('item-price').value    = item.price || '';
+  document.getElementById('item-cat').value      = item.cat;
+  document.getElementById('item-priority').value = item.priority;
+  document.getElementById('item-season').value   = item.season || 'all';
+  document.getElementById('item-notes').value    = item.notes || '';
+  document.getElementById('item-section').value  = item.section;
+  document.getElementById('item-editId').value   = item.id;
+  if (item.img) previewImg();
+}
+
+function saveItem() {
+  const name = document.getElementById('item-name').value.trim();
+  if (!name) { showToast('Name is required'); return; }
+  const section = document.getElementById('item-section').value;
+  const editId  = document.getElementById('item-editId').value;
+  const entry = {
+    id:       editId || uid(),
+    name,
+    img:      document.getElementById('item-img').value.trim(),
+    price:    document.getElementById('item-price').value.trim(),
+    cat:      document.getElementById('item-cat').value,
+    priority: document.getElementById('item-priority').value,
+    season:   document.getElementById('item-season').value,
+    notes:    document.getElementById('item-notes').value.trim(),
+    section,
+    added:    new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }),
+  };
+
+  // find which section it's currently in if editing
+  if (editId) {
+    ['wishlist','owned','aspirational'].forEach(s => {
+      const list = load(s);
+      const i = list.findIndex(x => x.id === editId);
+      if (i > -1) { list[i] = entry; save(s, list); }
+    });
+  } else {
+    const list = load(section);
+    list.push(entry);
+    save(section, list);
+  }
+
+  closeModal('item');
+  renderAllGrids();
+  showToast('Saved');
+}
+
+function deleteItem(id, section) {
+  const list = load(section).filter(x => x.id !== id);
+  save(section, list);
+  renderAllGrids();
+  showToast('Removed');
+}
+
+function markBought(id) {
+  // move from wishlist to owned + log spend
+  const wishlist = load('wishlist');
+  const item = wishlist.find(x => x.id === id);
+  if (!item) return;
+
+  // move to owned
+  item.section = 'owned';
+  const owned = load('owned');
+  owned.push(item);
+  save('owned', owned);
+  save('wishlist', wishlist.filter(x => x.id !== id));
+
+  // auto-log spend
+  if (item.price) {
+    const amount = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+    if (!isNaN(amount)) {
+      const history = load('wardrobe-history');
+      history.push({
+        id: uid(),
+        name: item.name,
+        cat: item.cat,
+        amount,
+        where: '—',
+        date: new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }),
+      });
+      save('wardrobe-history', history);
+    }
+  }
+
+  renderAllGrids();
+  renderHistory();
+  showToast('Marked as bought — moved to Owned');
+}
+
+// FILTERS
+let activeFilters = { wishlist: 'all', owned: 'all', aspirational: 'all' };
+
+function renderFilters(section) {
+  const el = document.getElementById(section + '-filters');
+  const cats = ['all', ...CATS.map(c => c.id)];
+  el.innerHTML = cats.map(c => {
+    const label = c === 'all' ? 'All' : CATS.find(x => x.id === c)?.label || c;
+    return `<button class="filter-chip ${activeFilters[section] === c ? 'active' : ''}"
+      onclick="setFilter('${section}','${c}',this)">${label}</button>`;
+  }).join('');
+}
+
+function setFilter(section, cat, btn) {
+  activeFilters[section] = cat;
+  document.querySelectorAll(`#${section}-filters .filter-chip`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid(section);
+}
+
+function renderGrid(section) {
+  const items = load(section).filter(item =>
+    activeFilters[section] === 'all' || item.cat === activeFilters[section]
+  );
+  const grid = document.getElementById(section + '-grid');
+
+  if (!items.length) {
+    const msgs = {
+      wishlist: 'Nothing in your wishlist yet. Go find something cute.',
+      owned: 'Nothing logged as owned. Add your existing wardrobe.',
+      aspirational: 'Dream shelf is empty. No aspirations? Unlikely.',
+    };
+    grid.innerHTML = `<div class="empty-state">${msgs[section]}</div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(item => {
+    const catLabel = CATS.find(c => c.id === item.cat)?.label || item.cat;
+    return `
+    <div class="item-card">
+      <div class="item-img">
+        ${item.img
+          ? `<img src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.parentElement.innerHTML='🛍️'">`
+          : '🛍️'}
+      </div>
+      <div class="item-body">
+        <div class="item-name" title="${item.name}">${item.name}</div>
+        <div class="item-meta">
+          <span class="item-price">${item.price || '—'}</span>
+          <span class="item-cat">${catLabel}</span>
+        </div>
+        <div class="item-tags">
+          <span class="item-tag tag-${item.priority}">${item.priority}</span>
+          ${item.season !== 'all' ? `<span class="item-tag">${item.season}</span>` : ''}
+        </div>
+      </div>
+      <div class="item-actions">
+        ${section === 'wishlist'
+          ? `<button class="item-btn bought-btn" onclick="markBought('${item.id}')">✓ Bought</button>`
+          : ''}
+        <button class="item-btn" onclick="openModal('item','${item.id}','${section}')">Edit</button>
+        <button class="item-btn del-btn" onclick="deleteItem('${item.id}','${section}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAllGrids() {
+  ['wishlist','owned','aspirational'].forEach(s => {
+    renderFilters(s);
+    renderGrid(s);
+  });
+}
+
+// BUDGET
+function renderBudgetForm() {
+  const limits = loadObj('budget-limits');
+  document.getElementById('budget-form-fields').innerHTML = CATS.map(c => `
+    <div class="form-group">
+      <label class="form-label">${c.label}</label>
+      <input class="form-input" id="blimit-${c.id}"
+        placeholder="₹ limit" type="number"
+        value="${limits[c.id] || ''}">
+    </div>`).join('');
+}
+
+function saveBudgetLimits() {
+  const limits = {};
+  CATS.forEach(c => {
+    const v = parseFloat(document.getElementById('blimit-' + c.id).value);
+    if (!isNaN(v)) limits[c.id] = v;
+  });
+  localStorage.setItem('budget-limits', JSON.stringify(limits));
+  closeModal('budget');
+  renderBudget();
+  showToast('Limits saved');
+}
+
+function getSpentByCategory() {
+  const spent = {};
+  load('wardrobe-history').forEach(h => {
+    spent[h.cat] = (spent[h.cat] || 0) + (h.amount || 0);
+  });
+  return spent;
+}
+
+function renderBudget() {
+  const limits = loadObj('budget-limits');
+  const spent  = getSpentByCategory();
+
+  const totalLimit = Object.values(limits).reduce((a,b) => a+b, 0);
+  const totalSpent = Object.values(spent).reduce((a,b) => a+b, 0);
+  const remaining  = totalLimit - totalSpent;
+
+  document.getElementById('budgetTotalCard').innerHTML = `
+    <div class="budget-total-item">
+      <div class="label">Total Budget</div>
+      <div class="val">₹${totalLimit.toLocaleString('en-IN')}</div>
+    </div>
+    <div class="budget-total-item">
+      <div class="label">Total Spent</div>
+      <div class="val">₹${totalSpent.toLocaleString('en-IN')}</div>
+    </div>
+    <div class="budget-total-item">
+      <div class="label">Remaining</div>
+      <div class="val ${remaining >= 0 ? 'green' : ''}">
+        ${remaining >= 0 ? '₹' + remaining.toLocaleString('en-IN') : '-₹' + Math.abs(remaining).toLocaleString('en-IN')}
+      </div>
+    </div>`;
+
+  document.getElementById('budgetGrid').innerHTML = CATS.map(c => {
+    const limit = limits[c.id] || 0;
+    const s     = spent[c.id] || 0;
+    const pct   = limit ? Math.min((s / limit) * 100, 100) : 0;
+    const barClass = pct >= 100 ? 'over' : pct >= 75 ? 'warn' : 'safe';
+    const rem  = limit - s;
+    return `
+    <div class="budget-card">
+      <div class="budget-card-header">
+        <span class="budget-cat-name">${c.label}</span>
+        <button class="budget-edit-btn" onclick="openModal('budget')">✎</button>
+      </div>
+      <div class="budget-amounts">
+        <span class="budget-spent">₹${s.toLocaleString('en-IN')}</span>
+        <span class="budget-limit">/ ₹${limit ? limit.toLocaleString('en-IN') : '—'}</span>
+      </div>
+      <div class="budget-bar-wrap">
+        <div class="budget-bar ${barClass}" style="width:${pct}%"></div>
+      </div>
+      <div class="budget-remaining">
+        ${limit ? (rem >= 0 ? '₹' + rem.toLocaleString('en-IN') + ' left' : 'over by ₹' + Math.abs(rem).toLocaleString('en-IN')) : 'No limit set'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// SPEND HISTORY
+function saveSpend() {
+  const name = document.getElementById('spend-name').value.trim();
+  if (!name) { showToast('Item name required'); return; }
+  const editId = document.getElementById('spend-editId').value;
+  const entry = {
+    id:     editId || uid(),
+    name,
+    cat:    document.getElementById('spend-cat').value,
+    amount: parseFloat(document.getElementById('spend-amount').value) || 0,
+    where:  document.getElementById('spend-where').value.trim(),
+    date:   document.getElementById('spend-date').value
+      ? new Date(document.getElementById('spend-date').value)
+          .toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })
+      : new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }),
+  };
+  const history = load('wardrobe-history');
+  if (editId) {
+    const i = history.findIndex(h => h.id === editId);
+    if (i > -1) history[i] = entry; else history.push(entry);
+  } else { history.push(entry); }
+  save('wardrobe-history', history);
+  closeModal('spend');
+  ['spend-name','spend-amount','spend-where','spend-date','spend-editId'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  renderHistory();
+  showToast('Spend logged');
+}
+
+function renderHistory() {
+  const history = load('wardrobe-history');
+  const tbody = document.getElementById('historyBody');
+  if (!history.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:3rem 2rem;text-align:center;color:var(--text-dim);font-style:italic">No spends logged yet. Either very disciplined or very broke.</td></tr>';
+    return;
+  }
+  const sorted = [...history].reverse();
+  tbody.innerHTML = sorted.map(h => {
+    const catLabel = CATS.find(c => c.id === h.cat)?.label || h.cat;
+    return `<tr>
+      <td><strong>${h.name}</strong></td>
+      <td>${catLabel}</td>
+      <td style="color:var(--accent)">₹${h.amount.toLocaleString('en-IN')}</td>
+      <td>${h.where || '—'}</td>
+      <td>${h.date}</td>
+      <td class="row-actions">
+        <button class="row-btn del" onclick="deleteSpend('${h.id}')">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function deleteSpend(id) {
+  save('wardrobe-history', load('wardrobe-history').filter(h => h.id !== id));
+  renderHistory();
+  showToast('Removed');
+}
+
+// CAPSULE
+let capsuleSelected = new Set(JSON.parse(localStorage.getItem('capsule-selected') || '[]'));
+
+function renderCapsule() {
+  const all = [...load('wishlist'), ...load('owned'), ...load('aspirational')];
+  const pickGrid = document.getElementById('capsulePickGrid');
+  const canvas   = document.getElementById('capsuleCanvas');
+
+  if (!all.length) {
+    pickGrid.innerHTML = '<div style="font-size:0.75rem;color:var(--text-dim);padding:1rem;font-style:italic">Add items to your wardrobe first.</div>';
+    canvas.innerHTML   = '<div class="capsule-canvas-empty">No items yet.</div>';
+    return;
+  }
+
+  pickGrid.innerHTML = all.map(item => `
+    <div class="capsule-pick-item ${capsuleSelected.has(item.id) ? 'selected' : ''}"
+      onclick="toggleCapsule('${item.id}')">
+      <div class="capsule-pick-img">
+        ${item.img
+          ? `<img src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.parentElement.innerHTML='🛍️'">`
+          : '🛍️'}
+      </div>
+      <div class="capsule-pick-name">${item.name}</div>
+    </div>`).join('');
+
+  const selected = all.filter(i => capsuleSelected.has(i.id));
+  if (!selected.length) {
+    canvas.innerHTML = '<div class="capsule-canvas-empty">Select items from the left to build your capsule.</div>';
+    return;
+  }
+  canvas.innerHTML = selected.map(item => `
+    <div class="capsule-canvas-item">
+      <div class="capsule-canvas-img">
+        ${item.img
+          ? `<img src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.parentElement.innerHTML='🛍️'">`
+          : '🛍️'}
+      </div>
+      <button class="capsule-remove" onclick="toggleCapsule('${item.id}')">✕</button>
+      <div class="capsule-canvas-name">${item.name}</div>
+    </div>`).join('');
+}
+
+function toggleCapsule(id) {
+  if (capsuleSelected.has(id)) capsuleSelected.delete(id);
+  else capsuleSelected.add(id);
+  localStorage.setItem('capsule-selected', JSON.stringify([...capsuleSelected]));
+  renderCapsule();
+}
+
+function clearCapsule() {
+  capsuleSelected.clear();
+  localStorage.removeItem('capsule-selected');
+  renderCapsule();
+}
+
+// CSV IMPORT
+function importCSV(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const lines = ev.target.result.split('\n').slice(1);
+    const wishlist = load('wishlist');
+    let count = 0;
+    lines.forEach(line => {
+      const cols = line.split(',');
+      const title = (cols[0] || '').replace(/"/g,'').trim();
+      const link  = (cols[1] || '').replace(/"/g,'').trim();
+      if (!title) return;
+      wishlist.push({
+        id: uid(), name: title, img: '', price: '',
+        cat: 'other', priority: 'want', season: 'all',
+        notes: link || '', section: 'wishlist',
+        added: new Date().toLocaleDateString('en-IN'),
+      });
+      count++;
+    });
+    save('wishlist', wishlist);
+    renderAllGrids();
+    showToast(count + ' items imported from CSV');
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+// STARS
+const sky = document.getElementById('sky');
+for (let i = 0; i < 90; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 1.8 + 0.3;
+  s.style.cssText = `
+    width:${size}px;height:${size}px;
+    top:${Math.random()*100}%;left:${Math.random()*100}%;
+    --d:${(Math.random()*4+2).toFixed(1)}s;
+    --delay:-${(Math.random()*6).toFixed(1)}s;
+    --max-op:${(Math.random()*0.5+0.2).toFixed(2)};
+  `;
+  sky.appendChild(s);
+}
+
+function togglePinterest() {
+  const panel = document.getElementById('pinterest-panel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+// INIT
+renderAllGrids();
+renderHistory();
+</script>
+</body>
+</html>

@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tools — Tamanna's Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #07080d;
+  --concrete: #0f1015;
+  --concrete-edge: #1c1f28;
+  --text: #c8c2b4;
+  --text-dim: #4a4840;
+  --accent: #5b8fa8;
+  --accent-dim: rgba(91,143,168,0.12);
+  --accent-mid: rgba(91,143,168,0.25);
+  --surface: #0c0d12;
+  --surface2: #13141a;
+  --border: #1c1f28;
+  --green: #6a9e5e;
+  --amber: #e8943a;
+  --red: #c94040;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 4rem; }
+
+.sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.star {
+  position: absolute; border-radius: 50%; background: white; opacity: 0;
+  animation: twinkle var(--d,3s) ease-in-out infinite var(--delay,0s);
+}
+@keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:var(--max-op,0.6)} }
+
+.page-header {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.6rem 2.4rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--concrete);
+}
+.back-btn {
+  display: flex; align-items: center; gap: 0.5rem;
+  color: var(--text-dim); text-decoration: none;
+  font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.back-btn:hover { color: var(--accent); }
+.back-btn svg { width: 14px; height: 14px; }
+.page-title {
+  font-family: 'Fraunces', serif; font-size: 1.5rem;
+  font-weight: 600; color: var(--accent);
+}
+
+.main {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 1100px;
+  margin: 0 auto; padding: 2rem 2.4rem;
+}
+
+/* FILTER + ADD BAR */
+.top-bar {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem; gap: 1rem; flex-wrap: wrap;
+}
+.filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; flex: 1; }
+.filter-chip {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border); border-radius: 2px;
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-dim); background: transparent;
+  cursor: pointer; transition: all 0.2s;
+}
+.filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+.filter-chip.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+.add-btn {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--accent); border-radius: 2px;
+  background: transparent; color: var(--accent);
+  font-family: 'DM Sans', sans-serif; font-size: 0.72rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.add-btn:hover { background: var(--accent-dim); }
+
+/* iOS APP GRID */
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 100px);
+  gap: 1.8rem 1.4rem;
+  justify-content: start;
+}
+
+.app-icon-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.5rem;
+  cursor: pointer;
+}
+
+.app-icon {
+  width: 76px; height: 76px;
+  border-radius: 18px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+.app-icon img {
+  width: 100%; height: 100%;
+  object-fit: cover; border-radius: 17px;
+}
+.app-icon:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.app-icon:active { transform: scale(0.96); }
+
+/* status dot */
+.status-dot {
+  position: absolute; bottom: 6px; right: 6px;
+  width: 8px; height: 8px; border-radius: 50%;
+  border: 1.5px solid var(--surface2);
+}
+.dot-trying  { background: var(--amber); }
+.dot-daily   { background: var(--green); }
+.dot-dropped { background: var(--red); }
+.dot-paused  { background: var(--text-dim); }
+
+.app-name {
+  font-size: 0.68rem; color: var(--text);
+  text-align: center; width: 100px;
+  white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.empty-state {
+  font-size: 0.82rem; color: var(--text-dim);
+  font-style: italic; padding: 3rem 0;
+}
+
+/* POPOUT PANEL */
+.popout-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(7,8,13,0.5);
+  z-index: 50; backdrop-filter: blur(2px);
+}
+.popout-overlay.open { display: block; }
+
+.popout {
+  position: fixed; top: 0; right: -480px;
+  width: 460px; height: 100vh;
+  background: var(--concrete);
+  border-left: 1px solid var(--border);
+  z-index: 51; overflow-y: auto;
+  transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+}
+.popout.open { right: 0; }
+
+.popout-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.8rem 1.6rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+  background: var(--concrete); z-index: 2;
+}
+.popout-app-identity { display: flex; align-items: center; gap: 1rem; }
+.popout-icon {
+  width: 56px; height: 56px; border-radius: 14px;
+  background: var(--surface2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; overflow: hidden; flex-shrink: 0;
+}
+.popout-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 13px; }
+.popout-app-name {
+  font-family: 'Fraunces', serif; font-size: 1.2rem; color: var(--text);
+}
+.popout-app-url {
+  font-size: 0.7rem; color: var(--accent);
+  text-decoration: none; margin-top: 0.2rem; display: block;
+  opacity: 0.8; transition: opacity 0.2s;
+}
+.popout-app-url:hover { opacity: 1; }
+.popout-close {
+  background: none; border: none; color: var(--text-dim);
+  cursor: pointer; font-size: 1.1rem; transition: color 0.2s;
+  padding: 0.2rem; flex-shrink: 0;
+}
+.popout-close:hover { color: var(--text); }
+
+.popout-body { padding: 1.4rem 1.6rem; flex: 1; }
+
+.popout-section { margin-bottom: 1.6rem; }
+.popout-section-label {
+  font-size: 0.6rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-dim);
+  margin-bottom: 0.6rem;
+}
+
+/* STARS RATING */
+.stars-display { display: flex; gap: 0.3rem; }
+.star-icon {
+  font-size: 1rem; cursor: pointer;
+  transition: transform 0.1s;
+  color: var(--text-dim);
+}
+.star-icon.lit { color: var(--amber); }
+.star-icon:hover { transform: scale(1.2); }
+
+/* STATUS ROW */
+.status-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.status-chip {
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border); border-radius: 2px;
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-dim); background: transparent;
+  cursor: pointer; transition: all 0.2s;
+}
+.status-chip:hover { border-color: var(--accent); }
+.status-chip.active-trying  { border-color: var(--amber); color: var(--amber); background: rgba(232,148,58,0.1); }
+.status-chip.active-daily   { border-color: var(--green); color: var(--green); background: rgba(106,158,94,0.1); }
+.status-chip.active-dropped { border-color: var(--red); color: var(--red); background: rgba(201,64,64,0.1); }
+.status-chip.active-paused  { border-color: var(--text-dim); color: var(--text); background: rgba(74,72,64,0.1); }
+
+/* TAGS */
+.tags-wrap { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+.tag-pill {
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--border); border-radius: 20px;
+  font-size: 0.62rem; color: var(--text-dim);
+  display: flex; align-items: center; gap: 0.3rem;
+}
+.tag-remove {
+  background: none; border: none; color: var(--text-dim);
+  cursor: pointer; font-size: 0.7rem; line-height: 1;
+  padding: 0; transition: color 0.2s;
+}
+.tag-remove:hover { color: var(--red); }
+.tag-input-row { display: flex; gap: 0.5rem; }
+.tag-input {
+  flex: 1; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem; padding: 0.4rem 0.7rem;
+  outline: none; transition: border-color 0.2s;
+}
+.tag-input:focus { border-color: var(--accent); }
+.tag-input::placeholder { color: var(--text-dim); }
+.tag-add-btn {
+  padding: 0.4rem 0.8rem;
+  background: none; border: 1px solid var(--border);
+  border-radius: 2px; color: var(--text-dim);
+  font-size: 0.72rem; cursor: pointer; transition: all 0.2s;
+}
+.tag-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* FIELD NOTES */
+.field-notes-area {
+  width: 100%; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; padding: 0.7rem 0.9rem;
+  outline: none; resize: vertical; min-height: 120px;
+  line-height: 1.6; transition: border-color 0.2s;
+}
+.field-notes-area:focus { border-color: var(--accent); }
+.field-notes-area::placeholder { color: var(--text-dim); }
+
+.standout-input {
+  width: 100%; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; padding: 0.55rem 0.8rem;
+  outline: none; transition: border-color 0.2s;
+}
+.standout-input:focus { border-color: var(--accent); }
+.standout-input::placeholder { color: var(--text-dim); }
+
+.description-text {
+  font-size: 0.8rem; color: var(--text-dim);
+  line-height: 1.6; font-style: italic;
+}
+
+.popout-actions {
+  display: flex; gap: 0.6rem;
+  padding: 1.2rem 1.6rem;
+  border-top: 1px solid var(--border);
+  position: sticky; bottom: 0;
+  background: var(--concrete);
+}
+.btn-primary {
+  flex: 1; padding: 0.6rem;
+  background: var(--accent); border: none; border-radius: 2px;
+  color: white; font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.08em; cursor: pointer; transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.85; }
+.btn-danger {
+  padding: 0.6rem 1rem;
+  background: none; border: 1px solid rgba(201,64,64,0.3);
+  border-radius: 2px; color: var(--red);
+  font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-danger:hover { background: rgba(201,64,64,0.08); }
+
+/* ADD MODAL */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(7,8,13,0.88); z-index: 100;
+  align-items: center; justify-content: center; padding: 1rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--concrete); border: 1px solid var(--border);
+  border-radius: 2px; width: 100%; max-width: 480px;
+  max-height: 88vh; overflow-y: auto; padding: 2rem;
+  position: relative; animation: modalIn 0.22s ease forwards;
+}
+@keyframes modalIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+.modal-close {
+  position: absolute; top: 1rem; right: 1rem;
+  background: none; border: none; color: var(--text-dim);
+  cursor: pointer; font-size: 1.1rem; transition: color 0.2s;
+}
+.modal-close:hover { color: var(--text); }
+.modal-title {
+  font-family: 'Fraunces', serif; font-size: 1.1rem;
+  color: var(--accent); margin-bottom: 1.4rem;
+}
+.form-group { margin-bottom: 1rem; }
+.form-label {
+  display: block; font-size: 0.65rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.4rem;
+}
+.form-input, .form-select {
+  width: 100%; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text); font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem; padding: 0.55rem 0.8rem;
+  outline: none; transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus { border-color: var(--accent); }
+.form-input::placeholder { color: var(--text-dim); }
+.form-select option { background: var(--concrete); }
+.form-hint { font-size: 0.65rem; color: var(--text-dim); margin-top: 0.3rem; font-style: italic; }
+.form-actions { display: flex; gap: 0.7rem; margin-top: 1.4rem; justify-content: flex-end; }
+.btn-secondary {
+  padding: 0.55rem 1.1rem; background: transparent;
+  border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text-dim); font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--text-dim); color: var(--text); }
+
+.autofill-status {
+  font-size: 0.65rem; color: var(--accent);
+  margin-top: 0.3rem; font-style: italic; min-height: 1em;
+}
+
+/* ICON PREVIEW */
+.icon-preview-wrap { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.5rem; }
+.icon-preview {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--surface2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; overflow: hidden; flex-shrink: 0;
+}
+.icon-preview img { width: 100%; height: 100%; object-fit: cover; border-radius: 11px; }
+.icon-preview-hint { font-size: 0.65rem; color: var(--text-dim); font-style: italic; }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 2rem; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 2px; padding: 0.6rem 1.2rem;
+  font-size: 0.78rem; color: var(--text);
+  opacity: 0; transition: all 0.3s ease;
+  z-index: 200; white-space: nowrap;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="sky" id="sky"></div>
+
+<header class="page-header">
+  <a href="index.html" class="back-btn">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M10 3L5 8l5 5"/>
+    </svg>
+    back
+  </a>
+  <span class="page-title">Tools</span>
+  <div style="width:80px"></div>
+</header>
+
+<div class="main">
+  <div class="top-bar">
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-chip active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-chip" onclick="setFilter('daily',this)">Daily Use</button>
+      <button class="filter-chip" onclick="setFilter('trying',this)">Trying</button>
+      <button class="filter-chip" onclick="setFilter('paused',this)">Paused</button>
+      <button class="filter-chip" onclick="setFilter('dropped',this)">Dropped</button>
+    </div>
+    <button class="add-btn" onclick="openAddModal()">+ Add Tool</button>
+  </div>
+
+  <div class="app-grid" id="appGrid"></div>
+</div>
+
+<!-- POPOUT PANEL -->
+<div class="popout-overlay" id="popoutOverlay" onclick="closePopout()"></div>
+<div class="popout" id="popout">
+  <div class="popout-header">
+    <div class="popout-app-identity">
+      <div class="popout-icon" id="popout-icon">🛠️</div>
+      <div>
+        <div class="popout-app-name" id="popout-name">App Name</div>
+        <a class="popout-app-url" id="popout-url" href="#" target="_blank">—</a>
+      </div>
+    </div>
+    <button class="popout-close" onclick="closePopout()">✕</button>
+  </div>
+
+  <div class="popout-body">
+
+    <!-- DESCRIPTION -->
+    <div class="popout-section">
+      <div class="popout-section-label">Description</div>
+      <div class="description-text" id="popout-description">—</div>
+    </div>
+
+    <!-- STATUS -->
+    <div class="popout-section">
+      <div class="popout-section-label">Status</div>
+      <div class="status-row">
+        <button class="status-chip" onclick="setStatus('trying')" id="chip-trying">Trying</button>
+        <button class="status-chip" onclick="setStatus('daily')" id="chip-daily">Daily Use</button>
+        <button class="status-chip" onclick="setStatus('paused')" id="chip-paused">Paused</button>
+        <button class="status-chip" onclick="setStatus('dropped')" id="chip-dropped">Dropped</button>
+      </div>
+    </div>
+
+    <!-- RATING -->
+    <!-- RATING -->
+<div class="popout-section">
+  <div class="popout-section-label">Rating</div>
+  <div class="stars-display" id="starsDisplay">
+    <span class="star-icon" onclick="setRating(1)" data-val="1">★</span>
+    <span class="star-icon" onclick="setRating(2)" data-val="2">★</span>
+    <span class="star-icon" onclick="setRating(3)" data-val="3">★</span>
+    <span class="star-icon" onclick="setRating(4)" data-val="4">★</span>
+    <span class="star-icon" onclick="setRating(5)" data-val="5">★</span>
+  </div>
+</div>
+
+    <!-- STANDOUT FEATURE -->
+    <div class="popout-section">
+      <div class="popout-section-label">Standout Feature</div>
+      <input class="standout-input" id="popout-standout" placeholder="The one thing that makes it worth it…">
+    </div>
+
+    <!-- TAGS -->
+    <div class="popout-section">
+      <div class="popout-section-label">Tags</div>
+      <div class="tags-wrap" id="popout-tags"></div>
+      <div class="tag-input-row">
+        <input class="tag-input" id="tagInput" placeholder="Add tag…" onkeydown="if(event.key==='Enter')addTag()">
+        <button class="tag-add-btn" onclick="addTag()">Add</button>
+      </div>
+    </div>
+
+    <!-- FIELD NOTES -->
+    <div class="popout-section">
+      <div class="popout-section-label">Field Notes</div>
+      <textarea class="field-notes-area" id="popout-notes"
+        placeholder="Personal notes — quirks, workflows, features you discovered, why you love or hate it…"></textarea>
+    </div>
+
+  </div>
+
+  <div class="popout-actions">
+    <button class="btn-primary" onclick="savePopout()">Save Changes</button>
+    <button class="btn-danger" onclick="deleteTool()">Delete</button>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div class="modal-overlay" id="modal-add">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAddModal()">✕</button>
+    <div class="modal-title">Add a Tool</div>
+    <div class="form-group">
+      <label class="form-label">App Name</label>
+      <input class="form-input" id="add-name" placeholder="e.g. Notion, Figma, Arc">
+    </div>
+    <div class="form-group">
+      <label class="form-label">URL</label>
+      <input class="form-input" id="add-url" placeholder="https://notion.so"
+        oninput="clearTimeout(autoTimer);autoTimer=setTimeout(autofetchMeta,800)">
+      <div class="autofill-status" id="add-autofill-status"></div>
+      <div class="form-hint">Paste the URL and description auto-fills from the site</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <input class="form-input" id="add-description" placeholder="Auto-filled or write your own">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Icon</label>
+      <input class="form-input" id="add-icon-url" placeholder="Icon URL or emoji"
+        oninput="updateIconPreview()">
+      <div class="icon-preview-wrap">
+        <div class="icon-preview" id="icon-preview-box">🛠️</div>
+        <div class="icon-preview-hint">Paste an image URL, an emoji, or leave blank for default</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Initial Status</label>
+      <select class="form-select" id="add-status">
+        <option value="trying">Trying</option>
+        <option value="daily">Daily Use</option>
+        <option value="paused">Paused</option>
+        <option value="dropped">Dropped</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeAddModal()">Cancel</button>
+      <button class="btn-primary" onclick="addTool()">Add Tool</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let autoTimer;
+let currentToolId = null;
+let activeFilter  = 'all';
+
+function load(k) { try { return JSON.parse(localStorage.getItem(k)) || []; } catch { return []; } }
+function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// ── AUTOFETCH META ──────────────────────────────────────
+async function autofetchMeta() {
+  const url = document.getElementById('add-url').value.trim();
+  const status = document.getElementById('add-autofill-status');
+  if (!url || !url.startsWith('http')) { status.textContent = ''; return; }
+
+  status.textContent = 'Fetching…';
+  try {
+    const proxy = 'https://corsproxy.io/?' + encodeURIComponent(url);
+    const r = await fetch(proxy);
+    const html = await r.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // description
+    const desc =
+      doc.querySelector('meta[property="og:description"]')?.content ||
+      doc.querySelector('meta[name="description"]')?.content || '';
+
+    // icon — try og:image first, then apple-touch-icon, then favicon
+    const icon =
+      doc.querySelector('meta[property="og:image"]')?.content ||
+      doc.querySelector('link[rel="apple-touch-icon"]')?.href ||
+      doc.querySelector('link[rel="icon"]')?.href || '';
+
+    // name
+    const name =
+      doc.querySelector('meta[property="og:site_name"]')?.content ||
+      doc.querySelector('title')?.textContent?.split('|')[0].trim() || '';
+
+    if (desc) {
+      document.getElementById('add-description').value = desc.slice(0, 200);
+      status.textContent = 'Details fetched ✓';
+    } else {
+      status.textContent = 'No description found — fill manually';
+    }
+
+    if (name && !document.getElementById('add-name').value.trim()) {
+      document.getElementById('add-name').value = name;
+    }
+
+    if (icon && !document.getElementById('add-icon-url').value.trim()) {
+      // resolve relative URLs
+      try {
+        const resolved = new URL(icon, url).href;
+        document.getElementById('add-icon-url').value = resolved;
+        updateIconPreview();
+      } catch {}
+    }
+
+  } catch {
+    status.textContent = 'Fetch failed — fill manually';
+  }
+}
+
+function updateIconPreview() {
+  const val = document.getElementById('add-icon-url').value.trim();
+  const box = document.getElementById('icon-preview-box');
+  if (!val) { box.innerHTML = '🛠️'; return; }
+  // if it's a single emoji or short text
+  if ([...val].length <= 2 && !val.startsWith('http')) {
+    box.innerHTML = val;
+  } else {
+    box.innerHTML = `<img src="${val}" onerror="this.parentElement.innerHTML='🛠️'">`;
+  }
+}
+
+// ── ADD TOOL ───────────────────────────────────────────
+function openAddModal() {
+  document.getElementById('modal-add').classList.add('open');
+}
+function closeAddModal() {
+  document.getElementById('modal-add').classList.remove('open');
+  ['add-name','add-url','add-description','add-icon-url'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('add-autofill-status').textContent = '';
+  document.getElementById('add-status').selectedIndex = 0;
+  document.getElementById('icon-preview-box').innerHTML = '🛠️';
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+function addTool() {
+  const name = document.getElementById('add-name').value.trim();
+  if (!name) { showToast('Name is required'); return; }
+  const tools = load('tools');
+  tools.push({
+    id:          uid(),
+    name,
+    url:         document.getElementById('add-url').value.trim(),
+    description: document.getElementById('add-description').value.trim(),
+    icon:        document.getElementById('add-icon-url').value.trim(),
+    status:      document.getElementById('add-status').value,
+    rating:      0,
+    standout:    '',
+    tags:        [],
+    notes:       '',
+    added:       new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }),
+  });
+  save('tools', tools);
+  closeAddModal();
+  renderGrid();
+  showToast(name + ' added');
+}
+
+// ── GRID ───────────────────────────────────────────────
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
+}
+
+function renderGrid() {
+  const tools = load('tools').filter(t =>
+    activeFilter === 'all' || t.status === activeFilter
+  );
+  const grid = document.getElementById('appGrid');
+  if (!tools.length) {
+    grid.innerHTML = '<div class="empty-state">No tools here yet. Your stack is waiting to be built.</div>';
+    return;
+  }
+  grid.innerHTML = tools.map(t => `
+    <div class="app-icon-wrap" onclick="openPopout('${t.id}')">
+      <div class="app-icon">
+        ${iconHTML(t.icon)}
+        <div class="status-dot dot-${t.status}"></div>
+      </div>
+      <div class="app-name">${t.name}</div>
+    </div>`).join('');
+}
+
+function iconHTML(icon) {
+  if (!icon) return '🛠️';
+  if ([...icon].length <= 2 && !icon.startsWith('http')) return icon;
+  return `<img src="${icon}" onerror="this.parentElement.innerHTML='🛠️'" loading="lazy">`;
+}
+
+// ── POPOUT ─────────────────────────────────────────────
+function openPopout(id) {
+  const tool = load('tools').find(t => t.id === id);
+  if (!tool) return;
+  currentToolId = id;
+
+  // populate
+  const iconEl = document.getElementById('popout-icon');
+  iconEl.innerHTML = iconHTML(tool.icon);
+
+  document.getElementById('popout-name').textContent        = tool.name;
+  document.getElementById('popout-description').textContent = tool.description || 'No description yet.';
+
+  const urlEl = document.getElementById('popout-url');
+  urlEl.href        = tool.url || '#';
+  urlEl.textContent = tool.url || '—';
+
+  document.getElementById('popout-standout').value = tool.standout || '';
+  document.getElementById('popout-notes').value    = tool.notes || '';
+
+  // status chips
+  ['trying','daily','paused','dropped'].forEach(s => {
+    const chip = document.getElementById('chip-' + s);
+    chip.className = 'status-chip' + (tool.status === s ? ' active-' + s : '');
+  });
+
+  // stars
+  renderStars(tool.rating || 0);
+
+  // tags
+  renderTagPills(tool.tags || []);
+
+  document.getElementById('popout').classList.add('open');
+  document.getElementById('popoutOverlay').classList.add('open');
+}
+
+function closePopout() {
+  document.getElementById('popout').classList.remove('open');
+  document.getElementById('popoutOverlay').classList.remove('open');
+  currentToolId = null;
+}
+
+function savePopout() {
+  if (!currentToolId) return;
+  const tools = load('tools');
+  const i = tools.findIndex(t => t.id === currentToolId);
+  if (i < 0) return;
+
+  tools[i].standout = document.getElementById('popout-standout').value.trim();
+  tools[i].notes    = document.getElementById('popout-notes').value.trim();
+
+  save('tools', tools);
+  renderGrid();
+  showToast('Saved');
+}
+
+function deleteTool() {
+  if (!currentToolId) return;
+  save('tools', load('tools').filter(t => t.id !== currentToolId));
+  closePopout();
+  renderGrid();
+  showToast('Tool removed');
+}
+
+// ── STATUS ─────────────────────────────────────────────
+function setStatus(s) {
+  if (!currentToolId) return;
+  const tools = load('tools');
+  const i = tools.findIndex(t => t.id === currentToolId);
+  if (i < 0) return;
+  tools[i].status = s;
+  save('tools', tools);
+
+  ['trying','daily','paused','dropped'].forEach(st => {
+    const chip = document.getElementById('chip-' + st);
+    chip.className = 'status-chip' + (s === st ? ' active-' + st : '');
+  });
+
+  // update dot in grid
+  const dotEl = document.querySelector(`.app-icon-wrap:nth-child(${
+    load('tools').findIndex(t => t.id === currentToolId) + 1
+  }) .status-dot`);
+  renderGrid();
+}
+
+// ── RATING ─────────────────────────────────────────────
+function setRating(n) {
+  if (!currentToolId) return;
+  const tools = load('tools');
+  const i = tools.findIndex(t => t.id === currentToolId);
+  if (i < 0) return;
+  tools[i].rating = n;
+  save('tools', tools);
+  renderStars(n);
+}
+
+function renderStars(n) {
+  document.querySelectorAll('.star-icon').forEach(s => {
+    s.classList.toggle('lit', parseInt(s.dataset.val) <= n);
+  });
+}
+
+// ── TAGS ───────────────────────────────────────────────
+function addTag() {
+  const input = document.getElementById('tagInput');
+  const val   = input.value.trim();
+  if (!val || !currentToolId) return;
+
+  const tools = load('tools');
+  const i = tools.findIndex(t => t.id === currentToolId);
+  if (i < 0) return;
+
+  if (!tools[i].tags) tools[i].tags = [];
+  if (tools[i].tags.includes(val)) { showToast('Tag already exists'); return; }
+  tools[i].tags.push(val);
+  save('tools', tools);
+
+  renderTagPills(tools[i].tags);
+  input.value = '';
+}
+
+function removeTag(tag) {
+  if (!currentToolId) return;
+  const tools = load('tools');
+  const i = tools.findIndex(t => t.id === currentToolId);
+  if (i < 0) return;
+  tools[i].tags = (tools[i].tags || []).filter(t => t !== tag);
+  save('tools', tools);
+  renderTagPills(tools[i].tags);
+}
+
+function renderTagPills(tags) {
+  document.getElementById('popout-tags').innerHTML = (tags || []).map(tag => `
+    <div class="tag-pill">
+      ${tag}
+      <button class="tag-remove" onclick="removeTag('${tag}')">✕</button>
+    </div>`).join('');
+}
+
+// ── FILTER TAGS (from all tools) ───────────────────────
+// tag filter chips auto-populate from existing tags
+function renderTagFilters() {
+  const allTags = [...new Set(load('tools').flatMap(t => t.tags || []))];
+  const bar = document.getElementById('filterBar');
+  // remove old tag chips
+  bar.querySelectorAll('.tag-filter-chip').forEach(c => c.remove());
+  allTags.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-chip tag-filter-chip';
+    btn.textContent = '#' + tag;
+    btn.onclick = function() {
+      activeFilter = 'tag:' + tag;
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderGridByTag(tag);
+    };
+    bar.appendChild(btn);
+  });
+}
+
+function renderGridByTag(tag) {
+  const tools = load('tools').filter(t => (t.tags || []).includes(tag));
+  const grid  = document.getElementById('appGrid');
+  if (!tools.length) {
+    grid.innerHTML = '<div class="empty-state">No tools with this tag.</div>';
+    return;
+  }
+  grid.innerHTML = tools.map(t => `
+    <div class="app-icon-wrap" onclick="openPopout('${t.id}')">
+      <div class="app-icon">
+        ${iconHTML(t.icon)}
+        <div class="status-dot dot-${t.status}"></div>
+      </div>
+      <div class="app-name">${t.name}</div>
+    </div>`).join('');
+}
+
+// ── STARS ──────────────────────────────────────────────
+document.getElementById('starsDisplay').innerHTML =
+  [1,2,3,4,5].map(i =>
+    `<span class="star-icon" onclick="setRating(${i})" data-val="${i}">★</span>`
+  ).join('');
+
+// ── STARS ──────────────────────────────────────────────
+const sky = document.getElementById('sky');
+for (let i = 0; i < 90; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 1.8 + 0.3;
+  s.style.cssText = `
+    width:${size}px;height:${size}px;
+    top:${Math.random()*100}%;left:${Math.random()*100}%;
+    --d:${(Math.random()*4+2).toFixed(1)}s;
+    --delay:-${(Math.random()*6).toFixed(1)}s;
+    --max-op:${(Math.random()*0.5+0.2).toFixed(2)};
+  `;
+  sky.appendChild(s);
+}
+
+// ── INIT ───────────────────────────────────────────────
+renderGrid();
+renderTagFilters();
+</script>
+</body>
+</html>

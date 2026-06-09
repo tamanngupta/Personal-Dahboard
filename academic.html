@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academic — Tamanna's Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #07080d;
+  --concrete: #0f1015;
+  --concrete-edge: #1c1f28;
+  --text: #c8c2b4;
+  --text-dim: #4a4840;
+  --amber: #e8943a;
+  --amber-dim: rgba(232,148,58,0.12);
+  --amber-mid: rgba(232,148,58,0.25);
+  --teal: #4ecdc4;
+  --red: #c94040;
+  --green: #6a9e5e;
+  --surface: #0c0d12;
+  --surface2: #13141a;
+  --border: #1c1f28;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 0 4rem;
+}
+
+/* STARS */
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  opacity: 0;
+  animation: twinkle var(--d, 3s) ease-in-out infinite var(--delay, 0s);
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0; }
+  50% { opacity: var(--max-op, 0.6); }
+}
+
+/* HEADER */
+.page-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.6rem 2.4rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--concrete);
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.back-btn:hover { color: var(--amber); }
+.back-btn svg { width: 14px; height: 14px; }
+
+.page-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--amber);
+  letter-spacing: 0.02em;
+}
+
+.gcal-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.gcal-btn:hover { border-color: var(--amber); color: var(--amber); }
+.gcal-btn.connected { border-color: var(--green); color: var(--green); }
+.gcal-btn svg { width: 13px; height: 13px; }
+
+/* DEADLINE STRIP */
+.deadline-strip {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 0.8rem;
+  padding: 0.8rem 2.4rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.deadline-strip::-webkit-scrollbar { display: none; }
+.deadline-strip-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+  align-self: center;
+  margin-right: 0.4rem;
+}
+.deadline-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 2px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  border: 1px solid;
+}
+.deadline-chip.urgent { border-color: rgba(201,64,64,0.4); background: rgba(201,64,64,0.08); color: #e07070; }
+.deadline-chip.soon   { border-color: rgba(232,148,58,0.4); background: rgba(232,148,58,0.08); color: var(--amber); }
+.deadline-chip.fine   { border-color: rgba(106,158,94,0.3); background: rgba(106,158,94,0.06); color: #8ab87e; }
+.deadline-chip-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.deadline-strip-empty { font-size: 0.72rem; color: var(--text-dim); align-self: center; font-style: italic; }
+
+/* TABS */
+.tabs-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 0;
+  padding: 0 2.4rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--concrete);
+}
+.tab-btn {
+  padding: 0.9rem 1.2rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+/* MAIN CONTENT */
+.main {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 2.4rem;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* SECTION HEADINGS */
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.4rem;
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.section-sub {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 0.2rem;
+  letter-spacing: 0.06em;
+}
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--amber);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--amber);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.add-btn:hover { background: var(--amber-dim); }
+
+/* HOTSPOT TABLE */
+.hotspot-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.hotspot-table th {
+  text-align: left;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  font-weight: 400;
+}
+.hotspot-table td {
+  padding: 0.75rem 0.8rem;
+  border-bottom: 1px solid rgba(28,31,40,0.6);
+  vertical-align: middle;
+  color: var(--text);
+}
+.hotspot-table tr:hover td { background: rgba(232,148,58,0.03); }
+.hotspot-table tr:last-child td { border-bottom: none; }
+
+.table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.empty-state {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* STATUS BADGES */
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+.badge-spotted  { border-color: rgba(91,143,168,0.4); color: #5b8fa8; background: rgba(91,143,168,0.08); }
+.badge-applying { border-color: rgba(232,148,58,0.4); color: var(--amber); background: var(--amber-dim); }
+.badge-applied  { border-color: rgba(139,107,177,0.4); color: #8b6bb1; background: rgba(139,107,177,0.08); }
+.badge-heard    { border-color: rgba(106,158,94,0.4); color: #6a9e5e; background: rgba(106,158,94,0.08); }
+.badge-reading  { border-color: rgba(232,148,58,0.4); color: var(--amber); background: var(--amber-dim); }
+.badge-done     { border-color: rgba(106,158,94,0.4); color: #6a9e5e; background: rgba(106,158,94,0.08); }
+.badge-beginner { border-color: rgba(91,143,168,0.3); color: #5b8fa8; background: rgba(91,143,168,0.07); }
+.badge-building { border-color: rgba(232,148,58,0.3); color: var(--amber); background: var(--amber-dim); }
+.badge-solid    { border-color: rgba(106,158,94,0.3); color: #6a9e5e; background: rgba(106,158,94,0.07); }
+.badge-todo     { border-color: rgba(74,72,64,0.5); color: var(--text-dim); background: transparent; }
+.badge-inprog   { border-color: rgba(232,148,58,0.4); color: var(--amber); background: var(--amber-dim); }
+.badge-submitted{ border-color: rgba(139,107,177,0.4); color: #8b6bb1; background: rgba(139,107,177,0.08); }
+.badge-graded   { border-color: rgba(106,158,94,0.4); color: #6a9e5e; background: rgba(106,158,94,0.08); }
+
+/* LEVEL DOTS */
+.level-dots { display: flex; gap: 4px; align-items: center; }
+.level-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  border: 1px solid var(--amber);
+  transition: background 0.2s;
+}
+.level-dot.filled { background: var(--amber); }
+
+/* DEADLINE CELL */
+.deadline-cell { white-space: nowrap; }
+.deadline-cell.urgent { color: #e07070; }
+.deadline-cell.soon   { color: var(--amber); }
+.ics-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 0 0.3rem;
+  font-size: 0.75rem;
+  transition: color 0.2s;
+}
+.ics-btn:hover { color: var(--amber); }
+
+/* ACTION BTNS */
+.row-actions { display: flex; gap: 0.4rem; }
+.row-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 0.2rem;
+  transition: color 0.2s;
+  font-size: 0.75rem;
+}
+.row-btn:hover { color: var(--amber); }
+.row-btn.del:hover { color: var(--red); }
+
+/* BOOKS TAB SPECIFICS */
+.books-top { margin-bottom: 2.4rem; }
+.books-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin-bottom: 1.4rem;
+}
+.books-stat-ring {
+  position: relative;
+  width: 64px; height: 64px;
+  flex-shrink: 0;
+}
+.books-stat-ring svg { width: 64px; height: 64px; transform: rotate(-90deg); }
+.books-stat-ring .ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: none;
+}
+.books-stat-ring .ring-num {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  color: var(--amber);
+  line-height: 1;
+}
+.books-stat-ring .ring-sub {
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.books-stat-text .big {
+  font-family: 'Fraunces', serif;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+.books-stat-text .small {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 0.2rem;
+}
+
+/* CAROUSEL */
+.carousel-section { margin-top: 2rem; }
+.carousel-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.9rem;
+}
+.carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.8rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.carousel::-webkit-scrollbar { height: 3px; }
+.carousel::-webkit-scrollbar-track { background: transparent; }
+.carousel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.book-card {
+  flex-shrink: 0;
+  width: 90px;
+  cursor: default;
+}
+.book-cover {
+  width: 90px;
+  height: 130px;
+  border-radius: 2px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.book-cover img { width: 100%; height: 100%; object-fit: cover; }
+.book-cover-placeholder {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface2);
+  color: var(--text-dim);
+  font-size: 1.4rem;
+}
+.book-card-title   { 
+   font-size :  0.68rem ; 
+   color :  var ( --text ) ; 
+   margin-top :  0.4rem ; 
+   line-height :  1.3 ; 
+   display :  -webkit-box ; 
+   -webkit-line-clamp :  2 ; 
+   line-clamp :  2; /* Add this line */
+   -webkit-box-orient :  vertical ; 
+   overflow :  hidden ; 
+}
+.book-card-author {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  margin-top: 0.15rem;
+}
+.carousel-empty {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-style: italic;
+  padding: 1.5rem 0;
+}
+
+/* LAPTOP CARDS */
+.laptop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.2rem;
+}
+.laptop-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.4rem;
+  transition: border-color 0.3s;
+}
+.laptop-card:hover { border-color: rgba(232,148,58,0.3); }
+.laptop-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.laptop-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  color: var(--text);
+}
+.laptop-priority {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  background: var(--amber-dim);
+  border: 1px solid rgba(232,148,58,0.3);
+  border-radius: 2px;
+  padding: 0.2rem 0.5rem;
+}
+.laptop-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem 1rem;
+  margin-bottom: 1rem;
+}
+.laptop-spec { }
+.laptop-spec-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.15rem;
+}
+.laptop-spec-val {
+  font-size: 0.8rem;
+  color: var(--text);
+}
+.laptop-dealbreaker {
+  font-size: 0.75rem;
+  color: #e07070;
+  background: rgba(201,64,64,0.07);
+  border: 1px solid rgba(201,64,64,0.2);
+  border-radius: 2px;
+  padding: 0.4rem 0.7rem;
+  margin-bottom: 0.8rem;
+}
+.laptop-dealbreaker-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(201,64,64,0.6);
+  margin-bottom: 0.2rem;
+}
+.laptop-review {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-style: italic;
+  line-height: 1.5;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+.laptop-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+/* EXPLORING TAB */
+.exploring-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.2rem;
+}
+.explore-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.4rem;
+  transition: border-color 0.3s;
+}
+.explore-card:hover { border-color: rgba(232,148,58,0.3); }
+.explore-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.explore-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  color: var(--text);
+}
+.explore-dial {
+  position: relative;
+  width: 48px; height: 48px;
+  flex-shrink: 0;
+}
+.explore-dial svg { width: 48px; height: 48px; transform: rotate(-90deg); }
+.explore-dial-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-size: 0.9rem;
+  color: var(--amber);
+}
+.explore-row {
+  margin-bottom: 0.7rem;
+}
+.explore-row-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.2rem;
+}
+.explore-row-val {
+  font-size: 0.78rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+.explore-updated {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--border);
+}
+.explore-actions { display: flex; gap: 0.5rem; margin-top: 0.6rem; }
+
+/* SKILLS + COURSES sub-tabs */
+.sub-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 1.4rem;
+  border-bottom: 1px solid var(--border);
+}
+.sub-tab-btn {
+  padding: 0.6rem 1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  border-bottom: 1.5px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: -1px;
+}
+.sub-tab-btn:hover { color: var(--text); }
+.sub-tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+.sub-panel { display: none; }
+.sub-panel.active { display: block; }
+
+/* MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(7,8,13,0.88);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--concrete);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 2rem;
+  position: relative;
+  animation: modalIn 0.22s ease forwards;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+.modal-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: color 0.2s;
+  line-height: 1;
+}
+.modal-close:hover { color: var(--text); }
+.modal-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.1rem;
+  color: var(--amber);
+  margin-bottom: 1.4rem;
+}
+.form-group { margin-bottom: 1rem; }
+.form-label {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  padding: 0.55rem 0.8rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--amber);
+}
+.form-input::placeholder { color: var(--text-dim); }
+.form-textarea { resize: vertical; min-height: 72px; }
+.form-select option { background: var(--concrete); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.form-hint {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 0.3rem;
+  font-style: italic;
+}
+.form-actions {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1.4rem;
+  justify-content: flex-end;
+}
+.btn-primary {
+  padding: 0.55rem 1.3rem;
+  background: var(--amber);
+  border: none;
+  border-radius: 2px;
+  color: #0a0600;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.88; }
+.btn-secondary {
+  padding: 0.55rem 1.1rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--text-dim); color: var(--text); }
+.autofill-status {
+  font-size: 0.65rem;
+  color: var(--amber);
+  margin-top: 0.3rem;
+  font-style: italic;
+  min-height: 1em;
+}
+
+/* LINK */
+.table-link {
+  color: var(--amber);
+  text-decoration: none;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.table-link:hover { opacity: 1; }
+
+/* SCHOLARSHIP TOTAL BAR */
+.schol-stats {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 1.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  margin-bottom: 1.2rem;
+}
+.schol-stat-item .label {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.2rem;
+}
+.schol-stat-item .val {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  color: var(--amber);
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.78rem;
+  color: var(--text);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 200;
+  white-space: nowrap;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+</style>
+</head>
+<body>
+
+<div class="sky" id="sky"></div>
+
+<!-- HEADER -->
+<header class="page-header">
+  <a href="index.html" class="back-btn">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M10 3L5 8l5 5"/>
+    </svg>
+    back
+  </a>
+  <span class="page-title">Academic</span>
+  <button class="gcal-btn" id="gcalBtn" onclick="initGcal()">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="2" y="3" width="12" height="11" rx="1"/>
+      <path d="M2 7h12M5 2v2M11 2v2"/>
+    </svg>
+    <span id="gcalLabel">Connect Calendar</span>
+  </button>
+</header>
+
+<!-- DEADLINE STRIP -->
+<div class="deadline-strip" id="deadlineStrip">
+  <span class="deadline-strip-label">Upcoming</span>
+  <span class="deadline-strip-empty" id="deadlineEmpty">No deadlines yet — you're either on top of it or in denial.</span>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <button class="tab-btn active" onclick="switchTab('books', this)">Books</button>
+  <button class="tab-btn" onclick="switchTab('laptops', this)">Laptops</button>
+  <button class="tab-btn" onclick="switchTab('scholarships', this)">Scholarships</button>
+  <button class="tab-btn" onclick="switchTab('skills', this)">Skills & Courses</button>
+  <button class="tab-btn" onclick="switchTab('exploring', this)">Exploring</button>
+</div>
+
+<div class="main">
+
+  <!-- ═══════════════ BOOKS TAB ═══════════════ -->
+  <div class="tab-panel active" id="tab-books">
+    <div class="books-top">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Reading List</div>
+          <div class="section-sub">Books you're tracking — add one, mark it done when you're through.</div>
+        </div>
+        <button class="add-btn" onclick="openModal('book')">+ Add Book</button>
+      </div>
+      <div class="books-stats">
+        <div class="books-stat-ring">
+          <svg viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#1c1f28" stroke-width="5"/>
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#e8943a" stroke-width="5"
+              stroke-dasharray="163.36" id="booksRingProgress" stroke-dashoffset="163.36"
+              stroke-linecap="round"/>
+          </svg>
+          <div class="ring-label">
+            <span class="ring-num" id="booksReadCount">0</span>
+            <span class="ring-sub">read</span>
+          </div>
+        </div>
+        <div class="books-stat-text">
+          <div class="big" id="booksYearStat">0 books in 2025</div>
+          <div class="small" id="booksTotalStat">0 total tracked</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="hotspot-table" id="booksTable">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Genre</th>
+              <th>Started</th>
+              <th>Finished</th>
+              <th>Notion</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="booksBody">
+            <tr><td colspan="8" class="empty-state">Nothing here yet. Pick up a book, future genius.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="carousel-section">
+      <div class="carousel-label">Completed — <span id="carouselCount">0 books</span></div>
+      <div class="carousel" id="booksCarousel">
+        <span class="carousel-empty">Finish your first book and it'll show up here.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LAPTOPS TAB ═══════════════ -->
+  <div class="tab-panel" id="tab-laptops">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Laptop Research</div>
+        <div class="section-sub">Build your shortlist. Write your feelings. Find the one.</div>
+      </div>
+      <button class="add-btn" onclick="openModal('laptop')">+ Add Laptop</button>
+    </div>
+    <div class="laptop-grid" id="laptopGrid">
+      <div class="empty-state" style="grid-column:1/-1">No laptops yet. The research rabbit hole awaits.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SCHOLARSHIPS TAB ═══════════════ -->
+  <div class="tab-panel" id="tab-scholarships">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Scholarships</div>
+        <div class="section-sub">Free money doesn't chase itself.</div>
+      </div>
+      <button class="add-btn" onclick="openModal('scholarship')">+ Add Scholarship</button>
+    </div>
+    <div class="schol-stats">
+      <div class="schol-stat-item">
+        <div class="label">Total in Pipeline</div>
+        <div class="val" id="scholTotal">₹0</div>
+      </div>
+      <div class="schol-stat-item">
+        <div class="label">Actively Applying</div>
+        <div class="val" id="scholActive">0</div>
+      </div>
+      <div class="schol-stat-item">
+        <div class="label">Applied</div>
+        <div class="val" id="scholApplied">0</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="hotspot-table" id="scholTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Deadline</th>
+            <th>Eligibility</th>
+            <th>Status</th>
+            <th>Link</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="scholBody">
+          <tr><td colspan="7" class="empty-state">No scholarships tracked. Someone out there has money with your name on it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SKILLS & COURSES TAB ═══════════════ -->
+  <div class="tab-panel" id="tab-skills">
+    <div class="sub-tabs">
+      <button class="sub-tab-btn active" onclick="switchSub('skills-sub', this)">Skills</button>
+      <button class="sub-tab-btn" onclick="switchSub('courses-sub', this)">Courses</button>
+      <button class="sub-tab-btn" onclick="switchSub('assignments-sub', this)">Assignments</button>
+    </div>
+
+    <!-- SKILLS SUB -->
+    <div class="sub-panel active" id="sub-skills-sub">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Skills</div>
+          <div class="section-sub">What you're building in yourself.</div>
+        </div>
+        <button class="add-btn" onclick="openModal('skill')">+ Add Skill</button>
+      </div>
+      <div class="table-wrap">
+        <table class="hotspot-table">
+          <thead>
+            <tr>
+              <th>Skill</th>
+              <th>Level</th>
+              <th>Why I Want It</th>
+              <th>How I'm Learning</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="skillsBody">
+            <tr><td colspan="5" class="empty-state">No skills logged. Doesn't mean you don't have them — start tracking.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- COURSES SUB -->
+    <div class="sub-panel" id="sub-courses-sub">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Courses</div>
+          <div class="section-sub">Structured learning — online and otherwise.</div>
+        </div>
+        <button class="add-btn" onclick="openModal('course')">+ Add Course</button>
+      </div>
+      <div class="table-wrap">
+        <table class="hotspot-table">
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Platform</th>
+              <th>Cost</th>
+              <th>Hours</th>
+              <th>Feeds Into</th>
+              <th>Deadline</th>
+              <th>Link</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="coursesBody">
+            <tr><td colspan="8" class="empty-state">No courses yet. Knowledge is waiting, but it won't wait forever.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ASSIGNMENTS SUB -->
+    <div class="sub-panel" id="sub-assignments-sub">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Assignments</div>
+          <div class="section-sub">College work. The unavoidable kind.</div>
+        </div>
+        <button class="add-btn" onclick="openModal('assignment')">+ Add Assignment</button>
+      </div>
+      <div class="table-wrap">
+        <table class="hotspot-table">
+          <thead>
+            <tr>
+              <th>Assignment</th>
+              <th>Subject</th>
+              <th>Deadline</th>
+              <th>Status</th>
+              <th>Notes</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="assignmentsBody">
+            <tr><td colspan="6" class="empty-state">No assignments. Either you're ahead of the game or in deep denial.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ EXPLORING TAB ═══════════════ -->
+  <div class="tab-panel" id="tab-exploring">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Exploring</div>
+        <div class="section-sub">Career paths that make your brain light up. No commitment required.</div>
+      </div>
+      <button class="add-btn" onclick="openModal('explore')">+ Add Path</button>
+    </div>
+    <div class="exploring-grid" id="exploringGrid">
+      <div class="empty-state" style="grid-column:1/-1">Nothing here yet. What are you curious about?</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+
+<!-- BOOK MODAL -->
+<div class="modal-overlay" id="modal-book">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('book')">✕</button>
+    <div class="modal-title">Add a Book</div>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input class="form-input" id="book-title" placeholder="Start typing…" oninput="autofillBook()">
+      <div class="autofill-status" id="autofill-status"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Author</label>
+        <input class="form-input" id="book-author" placeholder="Auto-filled">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Genre</label>
+        <input class="form-input" id="book-genre" placeholder="Auto-filled">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Started</label>
+        <input class="form-input" type="date" id="book-start">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Finished</label>
+        <input class="form-input" type="date" id="book-end">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notion Link</label>
+      <input class="form-input" id="book-notion" placeholder="https://notion.so/…">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-select" id="book-status">
+        <option value="reading">Reading</option>
+        <option value="done">Done</option>
+      </select>
+    </div>
+    <input type="hidden" id="book-cover">
+    <input type="hidden" id="book-editId">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('book')">Cancel</button>
+      <button class="btn-primary" onclick="saveBook()">Save Book</button>
+    </div>
+  </div>
+</div>
+
+<!-- LAPTOP MODAL -->
+<div class="modal-overlay" id="modal-laptop">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('laptop')">✕</button>
+    <div class="modal-title">Add a Laptop</div>
+    <div class="form-group">
+      <label class="form-label">Name / Model</label>
+      <input class="form-input" id="laptop-name" placeholder="e.g. MacBook Air M3">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Price</label>
+        <input class="form-input" id="laptop-price" placeholder="₹1,20,000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Weight</label>
+        <input class="form-input" id="laptop-weight" placeholder="1.24 kg">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Battery</label>
+        <input class="form-input" id="laptop-battery" placeholder="18 hrs claimed">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Priority Score (1–10)</label>
+        <input class="form-input" type="number" min="1" max="10" id="laptop-priority" placeholder="8">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Key Specs</label>
+      <input class="form-input" id="laptop-specs" placeholder="M3, 16GB RAM, 512GB SSD, 13.6"">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Deal Breaker</label>
+      <input class="form-input" id="laptop-dealbreaker" placeholder="What would make you not buy it?">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Review / Word of Mouth</label>
+      <textarea class="form-textarea" id="laptop-review" placeholder="What people say, what you think, gut feelings…"></textarea>
+    </div>
+    <input type="hidden" id="laptop-editId">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('laptop')">Cancel</button>
+      <button class="btn-primary" onclick="saveLaptop()">Save Laptop</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCHOLARSHIP MODAL -->
+<div class="modal-overlay" id="modal-scholarship">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('scholarship')">✕</button>
+    <div class="modal-title">Add a Scholarship</div>
+    <div class="form-group">
+      <label class="form-label">Scholarship Name</label>
+      <input class="form-input" id="schol-name" placeholder="e.g. Tata Scholarship 2025">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Amount</label>
+        <input class="form-input" id="schol-amount" placeholder="₹50,000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deadline</label>
+        <input class="form-input" type="date" id="schol-deadline">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Eligibility</label>
+      <input class="form-input" id="schol-eligibility" placeholder="Who qualifies?">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-select" id="schol-status">
+        <option value="spotted">Spotted</option>
+        <option value="applying">Applying</option>
+        <option value="applied">Applied</option>
+        <option value="heard">Heard Back</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Link</label>
+      <input class="form-input" id="schol-link" placeholder="https://…">
+    </div>
+    <input type="hidden" id="schol-editId">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('scholarship')">Cancel</button>
+      <button class="btn-primary" onclick="saveScholarship()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- SKILL MODAL -->
+<div class="modal-overlay" id="modal-skill">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('skill')">✕</button>
+    <div class="modal-title">Add a Skill</div>
+    <div class="form-group">
+      <label class="form-label">Skill Name</label>
+      <input class="form-input" id="skill-name" placeholder="e.g. Python, Public Speaking">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Level</label>
+      <select class="form-select" id="skill-level">
+        <option value="beginner">Beginner</option>
+        <option value="building">Building</option>
+        <option value="solid">Solid</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Why I Want It</label>
+      <textarea class="form-textarea" id="skill-why" placeholder="What's the pull?"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">How I'm Learning</label>
+      <input class="form-input" id="skill-how" placeholder="Course, YouTube, practice, mentor…">
+    </div>
+    <input type="hidden" id="skill-editId">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('skill')">Cancel</button>
+      <button class="btn-primary" onclick="saveSkill()">Save Skill</button>
+    </div>
+  </div>
+</div>
+
+<!-- COURSE MODAL -->
+<div class="modal-overlay" id="modal-course">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('course')">✕</button>
+    <div class="modal-title">Add a Course</div>
+    <div class="form-group">
+      <label class="form-label">Course Name</label>
+      <input class="form-input" id="course-name" placeholder="e.g. CS50x">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Platform</label>
+        <input class="form-input" id="course-platform" placeholder="Coursera, edX, Udemy…">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cost</label>
+        <input class="form-input" id="course-cost" placeholder="Free / ₹799">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Hours</label>
+        <input class="form-input" id="course-hours" placeholder="40 hrs">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deadline</label>
+        <input class="form-input" type="date" id="course-deadline">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Feeds Into (Skill)</label>
+      <input class="form-input" id="course-skill" placeholder="Python, Design Thinking…">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Link</label>
+      <input class="form-input" id="course-link" placeholder="https://…">
+    </div>
+    <input type="hidden" id="course-editId">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('course')">Cancel</button>
+      <button class="btn-primary" onclick="saveCourse()">Save Course</button>
+    </div>
+  </div>
+</div>
+
+<!-- ASSIGNMENT MODAL -->
+<div class="modal-overlay" id="modal-assignment">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('assignment')">✕</button>
+    <div class="modal-title">Add an Assignment</div>
+    <div class="form-group">
+      <label class="form-label">Assignment Name</label>
+      <input class="form-input" id="asgn-name" placeholder="e.g. Research Paper — Sociology">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Subject</label>
+        <input class="form-input" id="asgn-subject" placeholder="Economics, CS…">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deadline</label>
+        <input class="form-input" type="date" id="asgn-deadline">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-select" id="asgn-status">
+        <option value="todo">To Do</option>
+        <option value="inprog">In Progress</option>
+        <option value="submitted">Submitted</option>
+        <option value="graded">Graded</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes</label>
+      <textarea class="form-textarea" id="asgn-notes" placeholder="Instructions, links, what you need to do…"></textarea>
+    </div>
+    <input type="hidden" id="asgn-editId">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('assignment')">Cancel</button>
+      <button class="btn-primary" onclick="saveAssignment()">Save Assignment</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPLORE MODAL -->
+<div class="modal-overlay" id="modal-explore">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('explore')">✕</button>
+    <div class="modal-title">Add a Career Path</div>
+    <div class="form-group">
+      <label class="form-label">Path / Title</label>
+      <input class="form-input" id="exp-title" placeholder="e.g. Product Manager, VC Analyst">
+    </div>
+    <div class="form-group">
+      <label class="form-label">What Excites Me About It</label>
+      <textarea class="form-textarea" id="exp-excites" placeholder="Be honest. What's the pull?"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">What I'd Need</label>
+      <textarea class="form-textarea" id="exp-need" placeholder="Skills, degrees, experience, connections…"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Someone I Admire In This Field</label>
+      <input class="form-input" id="exp-admire" placeholder="Name / handle / why">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Gut Score (1–10)</label>
+      <input class="form-input" type="number" min="1" max="10" id="exp-score" placeholder="8">
+    </div>
+    <input type="hidden" id="exp-editId">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('explore')">Cancel</button>
+      <button class="btn-primary" onclick="saveExplore()">Save Path</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── GOOGLE CALENDAR OAUTH ───────────────────────────────
+const GCAL_CLIENT_ID = 'paste_your_client_id_here';
+const GCAL_SCOPE = 'paste your_scope_here'; 
+let gcalToken = null;
+
+function initGcal() {
+  if (gcalToken) { showToast('Calendar already connected'); return; }
+  if (!window.google || !window.google.accounts) {
+    showToast('Google auth not loaded yet — try again in a moment');
+    return;
+  }
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: GCAL_CLIENT_ID,
+    scope: GCAL_SCOPE,
+    callback: (resp) => {
+      if (resp.error) { showToast('Calendar connection failed'); return; }
+      gcalToken = resp.access_token;
+      document.getElementById('gcalBtn').classList.add('connected');
+      document.getElementById('gcalLabel').textContent = 'Calendar Connected';
+      showToast('Google Calendar connected ✓');
+    }
+  });
+  client.requestAccessToken();
+}
+
+async function autofillBook() {
+  const title = document.getElementById('book-title').value.trim();
+  const status = document.getElementById('autofill-status');
+  clearTimeout(autofillTimer);
+  if (title.length < 3) { status.textContent = ''; return; }
+  autofillTimer = setTimeout(async () => {
+    status.textContent = 'Looking up…';
+    try {
+      // Try two query strategies: intitle: first, then plain search
+      const queries = [
+        `https://www.googleapis.com/books/v1/volumes?q=intitle:${encodeURIComponent(title)}&maxResults=3&langRestrict=en`,
+        `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(title)}&maxResults=3&langRestrict=en`
+      ];
+
+      let info = null;
+
+      for (const url of queries) {
+        const r = await fetch(url);
+        const d = await r.json();
+        if (d.items && d.items.length) {
+          // Pick first item that has at least an author
+          const match = d.items.find(item =>
+            item.volumeInfo.authors && item.volumeInfo.authors.length
+          ) || d.items[0];
+          info = match.volumeInfo;
+          break;
+        }
+      }
+
+      if (info) {
+        document.getElementById('book-author').value =
+          (info.authors || []).join(', ');
+        document.getElementById('book-genre').value =
+          (info.categories || []).join(', ');
+        const thumb = info.imageLinks
+          ? (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '')
+          : '';
+        document.getElementById('book-cover').value = thumb;
+        status.textContent = 'Details filled in ✓';
+      } else {
+        status.textContent = 'No match found — fill manually';
+      }
+    } catch {
+      status.textContent = 'Search failed — fill manually';
+    }
+  }, 600);
+}
+
+// ─── STORAGE HELPERS ────────────────────────────────────
+function load(key) {
+  try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; }
+}
+function save(key, arr) {
+  localStorage.setItem(key, JSON.stringify(arr));
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+// ─── TAB SWITCHING ──────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function switchSub(name, btn) {
+  document.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sub-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─── MODAL ──────────────────────────────────────────────
+function openModal(type, editId) {
+  if (editId) prefillModal(type, editId);
+  document.getElementById('modal-' + type).classList.add('open');
+}
+function closeModal(type) {
+  document.getElementById('modal-' + type).classList.remove('open');
+  clearModal(type);
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => {
+    if (e.target === o) o.classList.remove('open');
+  });
+});
+
+function clearModal(type) {
+  const m = document.getElementById('modal-' + type);
+  m.querySelectorAll('input, textarea, select').forEach(el => {
+    if (el.type === 'hidden') el.value = '';
+    else if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    else el.value = '';
+  });
+  const s = document.getElementById('autofill-status');
+  if (s) s.textContent = '';
+}
+
+// ─── TOAST ──────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ─── DEADLINE HELPERS ───────────────────────────────────
+function daysUntil(dateStr) {
+  if (!dateStr) return null;
+  const diff = new Date(dateStr) - new Date();
+  return Math.ceil(diff / 86400000);
+}
+function deadlineClass(days) {
+  if (days === null) return '';
+  if (days <= 3) return 'urgent';
+  if (days <= 7) return 'soon';
+  return 'fine';
+}
+function formatDate(dateStr) {
+  if (!dateStr) return '—';
+  return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function renderDeadlineStrip() {
+  const items = [];
+  load('scholarships').forEach(s => {
+    if (s.deadline) items.push({ label: s.name, date: s.deadline, tag: 'Scholarship' });
+  });
+  load('courses').forEach(c => {
+    if (c.deadline) items.push({ label: c.name, date: c.deadline, tag: 'Course' });
+  });
+  load('assignments').forEach(a => {
+    if (a.deadline) items.push({ label: a.name, date: a.deadline, tag: 'Assignment' });
+  });
+  load('internships').forEach(x => {
+    if (x.deadline) items.push({ label: x.role, date: x.deadline, tag: 'Internship' });
+  });
+  load('volunteering').forEach(x => {
+    if (x.deadline) items.push({ label: x.role, date: x.deadline, tag: 'Volunteering' });
+  });
+  load('ambassadors').forEach(x => {
+    if (x.deadline) items.push({ label: x.program, date: x.deadline, tag: 'Ambassador' });
+  });
+
+  items.sort((a, b) => new Date(a.date) - new Date(b.date));
+  const nearest = items.slice(0, 5);
+
+  const strip = document.getElementById('deadlineStrip');
+  const empty = document.getElementById('deadlineEmpty');
+  strip.querySelectorAll('.deadline-chip').forEach(e => e.remove());
+
+  if (!nearest.length) {
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  nearest.forEach(item => {
+    const days = daysUntil(item.date);
+    const cls  = deadlineClass(days);
+    const chip = document.createElement('div');
+    chip.className = 'deadline-chip ' + cls;
+    const dayLabel = days === 0 ? 'today' : days === 1 ? 'tomorrow' : days + 'd';
+    chip.innerHTML = `<div class="deadline-chip-dot"></div>${item.tag}: ${item.label} — ${dayLabel}`;
+    strip.appendChild(chip);
+  });
+}
+
+// ─── ICS EXPORT ─────────────────────────────────────────
+function downloadIcs(title, dateStr) {
+  if (!dateStr) { showToast('No deadline set'); return; }
+  const d = dateStr.replace(/-/g, '');
+  const ics = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Tamanna Dashboard//EN',
+    'BEGIN:VEVENT',
+    'DTSTART;VALUE=DATE:' + d,
+    'DTEND;VALUE=DATE:' + d,
+    'SUMMARY:' + title,
+    'END:VEVENT', 'END:VCALENDAR'
+  ].join('\r\n');
+  const blob = new Blob([ics], { type: 'text/calendar' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = title.replace(/\s+/g, '_') + '.ics';
+  a.click();
+}
+
+// ─── BOOKS ──────────────────────────────────────────────
+let autofillTimer;
+
+function saveBook() {
+  const title  = document.getElementById('book-title').value.trim();
+  if (!title) { showToast('Title is required'); return; }
+  const books  = load('books');
+  const editId = document.getElementById('book-editId').value;
+  const entry  = {
+    id: editId || uid(),
+    title,
+    author:  document.getElementById('book-author').value.trim(),
+    genre:   document.getElementById('book-genre').value.trim(),
+    start:   document.getElementById('book-start').value,
+    end:     document.getElementById('book-end').value,
+    notion:  document.getElementById('book-notion').value.trim(),
+    status:  document.getElementById('book-status').value,
+    cover:   document.getElementById('book-cover').value,
+  };
+  if (editId) {
+    const i = books.findIndex(b => b.id === editId);
+    if (i > -1) books[i] = entry; else books.push(entry);
+  } else {
+    books.push(entry);
+  }
+  save('books', books);
+  closeModal('book');
+  renderBooks();
+  showToast('Book saved');
+}
+
+function prefillModal(type, id) {
+  if (type === 'book') {
+    const b = load('books').find(x => x.id === id);
+    if (!b) return;
+    document.getElementById('book-title').value  = b.title;
+    document.getElementById('book-author').value = b.author;
+    document.getElementById('book-genre').value  = b.genre;
+    document.getElementById('book-start').value  = b.start;
+    document.getElementById('book-end').value    = b.end;
+    document.getElementById('book-notion').value = b.notion;
+    document.getElementById('book-status').value = b.status;
+    document.getElementById('book-cover').value  = b.cover;
+    document.getElementById('book-editId').value = b.id;
+  }
+  if (type === 'laptop') {
+    const b = load('laptops').find(x => x.id === id);
+    if (!b) return;
+    document.getElementById('laptop-name').value        = b.name;
+    document.getElementById('laptop-price').value       = b.price;
+    document.getElementById('laptop-weight').value      = b.weight;
+    document.getElementById('laptop-battery').value     = b.battery;
+    document.getElementById('laptop-priority').value    = b.priority;
+    document.getElementById('laptop-specs').value       = b.specs;
+    document.getElementById('laptop-dealbreaker').value = b.dealbreaker;
+    document.getElementById('laptop-review').value      = b.review;
+    document.getElementById('laptop-editId').value      = b.id;
+  }
+  if (type === 'scholarship') {
+    const b = load('scholarships').find(x => x.id === id);
+    if (!b) return;
+    document.getElementById('schol-name').value        = b.name;
+    document.getElementById('schol-amount').value      = b.amount;
+    document.getElementById('schol-deadline').value    = b.deadline;
+    document.getElementById('schol-eligibility').value = b.eligibility;
+    document.getElementById('schol-status').value      = b.status;
+    document.getElementById('schol-link').value        = b.link;
+    document.getElementById('schol-editId').value      = b.id;
+  }
+  if (type === 'skill') {
+    const b = load('skills').find(x => x.id === id);
+    if (!b) return;
+    document.getElementById('skill-name').value  = b.name;
+    document.getElementById('skill-level').value = b.level;
+    document.getElementById('skill-why').value   = b.why;
+    document.getElementById('skill-how').value   = b.how;
+    document.getElementById('skill-editId').value = b.id;
+  }
+  if (type === 'course') {
+    const b = load('courses').find(x => x.id === id);
+    if (!b) return;
+    document.getElementById('course-name').value     = b.name;
+    document.getElementById('course-platform').value = b.platform;
+    document.getElementById('course-cost').value     = b.cost;
+    document.getElementById('course-hours').value    = b.hours;
+    document.getElementById('course-deadline').value = b.deadline;
+    document.getElementById('course-skill').value    = b.skill;
+    document.getElementById('course-link').value     = b.link;
+    document.getElementById('course-editId').value   = b.id;
+  }
+  if (type === 'assignment') {
+    const b = load('assignments').find(x => x.id === id);
+    if (!b) return;
+    document.getElementById('asgn-name').value    = b.name;
+    document.getElementById('asgn-subject').value = b.subject;
+    document.getElementById('asgn-deadline').value= b.deadline;
+    document.getElementById('asgn-status').value  = b.status;
+    document.getElementById('asgn-notes').value   = b.notes;
+    document.getElementById('asgn-editId').value  = b.id;
+  }
+  if (type === 'explore') {
+    const b = load('exploring').find(x => x.id === id);
+    if (!b) return;
+    document.getElementById('exp-title').value   = b.title;
+    document.getElementById('exp-excites').value = b.excites;
+    document.getElementById('exp-need').value    = b.need;
+    document.getElementById('exp-admire').value  = b.admire;
+    document.getElementById('exp-score').value   = b.score;
+    document.getElementById('exp-editId').value  = b.id;
+  }
+}
+
+function deleteEntry(key, id, renderFn) {
+  const arr = load(key).filter(x => x.id !== id);
+  save(key, arr);
+  renderFn();
+  showToast('Deleted');
+}
+
+function renderBooks() {
+  const books = load('books');
+  const tbody = document.getElementById('booksBody');
+  const done  = books.filter(b => b.status === 'done');
+  const year  = new Date().getFullYear();
+  const doneThisYear = done.filter(b => b.end && b.end.startsWith(year));
+
+  // stats
+  document.getElementById('booksReadCount').textContent = done.length;
+  document.getElementById('booksYearStat').textContent  = doneThisYear.length + ' books in ' + year;
+  document.getElementById('booksTotalStat').textContent = books.length + ' total tracked';
+
+  // ring
+  const circ = 163.36;
+  const max  = Math.max(done.length, 10);
+  const pct  = done.length / max;
+  document.getElementById('booksRingProgress').style.strokeDashoffset = circ - pct * circ;
+
+  if (!books.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Nothing here yet. Pick up a book, future genius.</td></tr>';
+  } else {
+    tbody.innerHTML = books.map(b => `
+      <tr>
+        <td><strong>${b.title}</strong></td>
+        <td>${b.author || '—'}</td>
+        <td>${b.genre || '—'}</td>
+        <td>${formatDate(b.start)}</td>
+        <td>${formatDate(b.end)}</td>
+        <td>${b.notion ? `<a class="table-link" href="${b.notion}" target="_blank">↗ Notes</a>` : '—'}</td>
+        <td><span class="badge badge-${b.status}">${b.status}</span></td>
+        <td class="row-actions">
+          <button class="row-btn" onclick="openModal('book','${b.id}')">✎</button>
+          <button class="row-btn del" onclick="deleteEntry('books','${b.id}',renderBooks)">✕</button>
+        </td>
+      </tr>`).join('');
+  }
+
+  // carousel
+  const carousel = document.getElementById('booksCarousel');
+  document.getElementById('carouselCount').textContent = done.length + ' book' + (done.length !== 1 ? 's' : '');
+  if (!done.length) {
+    carousel.innerHTML = '<span class="carousel-empty">Finish your first book and it\'ll show up here.</span>';
+  } else {
+    carousel.innerHTML = done.map(b => `
+      <div class="book-card">
+        <div class="book-cover">
+          ${b.cover
+            ? `<img src="${b.cover}" alt="${b.title}" loading="lazy">`
+            : `<div class="book-cover-placeholder">📖</div>`}
+        </div>
+        <div class="book-card-title">${b.title}</div>
+        <div class="book-card-author">${b.author || ''}</div>
+      </div>`).join('');
+  }
+}
+
+// ─── LAPTOPS ────────────────────────────────────────────
+function saveLaptop() {
+  const name = document.getElementById('laptop-name').value.trim();
+  if (!name) { showToast('Name is required'); return; }
+  const laptops = load('laptops');
+  const editId  = document.getElementById('laptop-editId').value;
+  const entry = {
+    id: editId || uid(),
+    name,
+    price:       document.getElementById('laptop-price').value.trim(),
+    weight:      document.getElementById('laptop-weight').value.trim(),
+    battery:     document.getElementById('laptop-battery').value.trim(),
+    priority:    document.getElementById('laptop-priority').value.trim(),
+    specs:       document.getElementById('laptop-specs').value.trim(),
+    dealbreaker: document.getElementById('laptop-dealbreaker').value.trim(),
+    review:      document.getElementById('laptop-review').value.trim(),
+  };
+  if (editId) {
+    const i = laptops.findIndex(l => l.id === editId);
+    if (i > -1) laptops[i] = entry; else laptops.push(entry);
+  } else { laptops.push(entry); }
+  save('laptops', laptops);
+  closeModal('laptop');
+  renderLaptops();
+  showToast('Laptop saved');
+}
+
+function renderLaptops() {
+  const laptops = load('laptops');
+  const grid = document.getElementById('laptopGrid');
+  if (!laptops.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">No laptops yet. The research rabbit hole awaits.</div>';
+    return;
+  }
+  grid.innerHTML = laptops.map(l => `
+    <div class="laptop-card">
+      <div class="laptop-card-header">
+        <div class="laptop-name">${l.name}</div>
+        ${l.priority ? `<div class="laptop-priority">${l.priority}/10</div>` : ''}
+      </div>
+      <div class="laptop-specs">
+        ${l.price   ? `<div class="laptop-spec"><div class="laptop-spec-label">Price</div><div class="laptop-spec-val">${l.price}</div></div>` : ''}
+        ${l.weight  ? `<div class="laptop-spec"><div class="laptop-spec-label">Weight</div><div class="laptop-spec-val">${l.weight}</div></div>` : ''}
+        ${l.battery ? `<div class="laptop-spec"><div class="laptop-spec-label">Battery</div><div class="laptop-spec-val">${l.battery}</div></div>` : ''}
+        ${l.specs   ? `<div class="laptop-spec" style="grid-column:1/-1"><div class="laptop-spec-label">Key Specs</div><div class="laptop-spec-val">${l.specs}</div></div>` : ''}
+      </div>
+      ${l.dealbreaker ? `<div class="laptop-dealbreaker"><div class="laptop-dealbreaker-label">Deal Breaker</div>${l.dealbreaker}</div>` : ''}
+      ${l.review ? `<div class="laptop-review">"${l.review}"</div>` : ''}
+      <div class="laptop-card-actions">
+        <button class="row-btn" onclick="openModal('laptop','${l.id}')">✎ Edit</button>
+        <button class="row-btn del" onclick="deleteEntry('laptops','${l.id}',renderLaptops)">✕ Remove</button>
+      </div>
+    </div>`).join('');
+}
+
+// ─── SCHOLARSHIPS ───────────────────────────────────────
+function saveScholarship() {
+  const name = document.getElementById('schol-name').value.trim();
+  if (!name) { showToast('Name is required'); return; }
+  const list   = load('scholarships');
+  const editId = document.getElementById('schol-editId').value;
+  const entry  = {
+    id: editId || uid(),
+    name,
+    amount:      document.getElementById('schol-amount').value.trim(),
+    deadline:    document.getElementById('schol-deadline').value,
+    eligibility: document.getElementById('schol-eligibility').value.trim(),
+    status:      document.getElementById('schol-status').value,
+    link:        document.getElementById('schol-link').value.trim(),
+  };
+  if (editId) {
+    const i = list.findIndex(s => s.id === editId);
+    if (i > -1) list[i] = entry; else list.push(entry);
+  } else { list.push(entry); }
+  save('scholarships', list);
+  closeModal('scholarship');
+  renderScholarships();
+  renderDeadlineStrip();
+  showToast('Scholarship saved');
+  if (entry.deadline && gcalToken) addToGcal('Scholarship: ' + entry.name, entry.deadline);
+}
+
+function renderScholarships() {
+  const list  = load('scholarships');
+  const tbody = document.getElementById('scholBody');
+
+  const total   = list.reduce((acc, s) => {
+    const n = parseFloat((s.amount || '0').replace(/[^0-9.]/g, ''));
+    return acc + (isNaN(n) ? 0 : n);
+  }, 0);
+  const active  = list.filter(s => s.status === 'applying').length;
+  const applied = list.filter(s => s.status === 'applied').length;
+
+  document.getElementById('scholTotal').textContent  = total ? '₹' + total.toLocaleString('en-IN') : '₹0';
+  document.getElementById('scholActive').textContent  = active;
+  document.getElementById('scholApplied').textContent = applied;
+
+  const statusMap = { spotted: 'badge-spotted', applying: 'badge-applying', applied: 'badge-applied', heard: 'badge-heard' };
+  const statusLabel = { spotted: 'Spotted', applying: 'Applying', applied: 'Applied', heard: 'Heard Back' };
+
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No scholarships tracked. Someone out there has money with your name on it.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(s => {
+    const days = daysUntil(s.deadline);
+    const dc   = days !== null ? deadlineClass(days) : '';
+    return `<tr>
+      <td><strong>${s.name}</strong></td>
+      <td>${s.amount || '—'}</td>
+      <td>
+        <span class="deadline-cell ${dc}">${formatDate(s.deadline)}</span>
+        ${s.deadline ? `
+          <button class="ics-btn" title="Export .ics" onclick="downloadIcs('Scholarship: ${s.name}','${s.deadline}')">📅</button>
+          <button class="ics-btn" title="Add to Google Calendar" onclick="addToGcal('Scholarship: ${s.name}','${s.deadline}')">🗓</button>` : ''}
+      </td>
+      <td>${s.eligibility || '—'}</td>
+      <td><span class="badge ${statusMap[s.status]}">${statusLabel[s.status]}</span></td>
+      <td>${s.link ? `<a class="table-link" href="${s.link}" target="_blank">↗ Link</a>` : '—'}</td>
+      <td class="row-actions">
+        <button class="row-btn" onclick="openModal('scholarship','${s.id}')">✎</button>
+        <button class="row-btn del" onclick="deleteEntry('scholarships','${s.id}',renderScholarships)">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ─── SKILLS ─────────────────────────────────────────────
+function saveSkill() {
+  const name = document.getElementById('skill-name').value.trim();
+  if (!name) { showToast('Skill name required'); return; }
+  const list   = load('skills');
+  const editId = document.getElementById('skill-editId').value;
+  const entry  = {
+    id: editId || uid(),
+    name,
+    level: document.getElementById('skill-level').value,
+    why:   document.getElementById('skill-why').value.trim(),
+    how:   document.getElementById('skill-how').value.trim(),
+  };
+  if (editId) {
+    const i = list.findIndex(s => s.id === editId);
+    if (i > -1) list[i] = entry; else list.push(entry);
+  } else { list.push(entry); }
+  save('skills', list);
+  closeModal('skill');
+  renderSkills();
+  showToast('Skill saved');
+}
+
+function levelDots(level) {
+  const map = { beginner: 1, building: 2, solid: 3 };
+  const n = map[level] || 1;
+  return [1,2,3].map(i => `<div class="level-dot${i<=n?' filled':''}"></div>`).join('');
+}
+
+function renderSkills() {
+  const list  = load('skills');
+  const tbody = document.getElementById('skillsBody');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No skills logged. Doesn\'t mean you don\'t have them — start tracking.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(s => `
+    <tr>
+      <td><strong>${s.name}</strong></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="level-dots">${levelDots(s.level)}</div>
+          <span class="badge badge-${s.level}" style="font-size:0.58rem">${s.level}</span>
+        </div>
+      </td>
+      <td style="max-width:200px;font-size:0.76rem;color:var(--text-dim)">${s.why || '—'}</td>
+      <td style="font-size:0.76rem">${s.how || '—'}</td>
+      <td class="row-actions">
+        <button class="row-btn" onclick="openModal('skill','${s.id}')">✎</button>
+        <button class="row-btn del" onclick="deleteEntry('skills','${s.id}',renderSkills)">✕</button>
+      </td>
+    </tr>`).join('');
+}
+
+// ─── COURSES ────────────────────────────────────────────
+function saveCourse() {
+  const name = document.getElementById('course-name').value.trim();
+  if (!name) { showToast('Course name required'); return; }
+  const list   = load('courses');
+  const editId = document.getElementById('course-editId').value;
+  const entry  = {
+    id: editId || uid(),
+    name,
+    platform: document.getElementById('course-platform').value.trim(),
+    cost:     document.getElementById('course-cost').value.trim(),
+    hours:    document.getElementById('course-hours').value.trim(),
+    deadline: document.getElementById('course-deadline').value,
+    skill:    document.getElementById('course-skill').value.trim(),
+    link:     document.getElementById('course-link').value.trim(),
+  };
+  if (editId) {
+    const i = list.findIndex(c => c.id === editId);
+    if (i > -1) list[i] = entry; else list.push(entry);
+  } else { list.push(entry); }
+  save('courses', list);
+  closeModal('course');
+  renderCourses();
+  renderDeadlineStrip();
+  showToast('Course saved');
+  if (entry.deadline && gcalToken) addToGcal('Course: ' + entry.name, entry.deadline);
+}
+
+function renderCourses() {
+  const list  = load('courses');
+  const tbody = document.getElementById('coursesBody');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No courses yet. Knowledge is waiting, but it won\'t wait forever.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(c => {
+    const days = daysUntil(c.deadline);
+    const dc   = days !== null ? deadlineClass(days) : '';
+    return `<tr>
+      <td><strong>${c.name}</strong></td>
+      <td>${c.platform || '—'}</td>
+      <td>${c.cost || '—'}</td>
+      <td>${c.hours || '—'}</td>
+      <td>${c.skill || '—'}</td>
+      <td>
+        <span class="deadline-cell ${dc}">${formatDate(c.deadline)}</span>
+        ${c.deadline ? `
+          <button class="ics-btn" title="Export .ics" onclick="downloadIcs('Course: ${c.name}','${c.deadline}')">📅</button>
+          <button class="ics-btn" title="Add to Google Calendar" onclick="addToGcal('Course: ${c.name}','${c.deadline}')">🗓</button>` : ''}
+      </td>
+      <td>${c.link ? `<a class="table-link" href="${c.link}" target="_blank">↗ Link</a>` : '—'}</td>
+      <td class="row-actions">
+        <button class="row-btn" onclick="openModal('course','${c.id}')">✎</button>
+        <button class="row-btn del" onclick="deleteEntry('courses','${c.id}',renderCourses)">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ─── ASSIGNMENTS ─────────────────────────────────────────
+function saveAssignment() {
+  const name = document.getElementById('asgn-name').value.trim();
+  if (!name) { showToast('Assignment name required'); return; }
+  const list   = load('assignments');
+  const editId = document.getElementById('asgn-editId').value;
+  const entry  = {
+    id: editId || uid(),
+    name,
+    subject:  document.getElementById('asgn-subject').value.trim(),
+    deadline: document.getElementById('asgn-deadline').value,
+    status:   document.getElementById('asgn-status').value,
+    notes:    document.getElementById('asgn-notes').value.trim(),
+  };
+  if (editId) {
+    const i = list.findIndex(a => a.id === editId);
+    if (i > -1) list[i] = entry; else list.push(entry);
+  } else { list.push(entry); }
+  save('assignments', list);
+  closeModal('assignment');
+  renderAssignments();
+  renderDeadlineStrip();
+  showToast('Assignment saved');
+  if (entry.deadline && gcalToken) addToGcal('Assignment: ' + entry.name, entry.deadline);
+}
+
+function renderAssignments() {
+  const list  = load('assignments');
+  const tbody = document.getElementById('assignmentsBody');
+  const statusMap   = { todo: 'badge-todo', inprog: 'badge-inprog', submitted: 'badge-submitted', graded: 'badge-graded' };
+  const statusLabel = { todo: 'To Do', inprog: 'In Progress', submitted: 'Submitted', graded: 'Graded' };
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No assignments. Either you\'re ahead of the game or in deep denial.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(a => {
+    const days = daysUntil(a.deadline);
+    const dc   = days !== null ? deadlineClass(days) : '';
+    return `<tr>
+      <td><strong>${a.name}</strong></td>
+      <td>${a.subject || '—'}</td>
+      <td>
+        <span class="deadline-cell ${dc}">${formatDate(a.deadline)}</span>
+        ${a.deadline ? `
+          <button class="ics-btn" title="Export .ics" onclick="downloadIcs('${a.name}','${a.deadline}')">📅</button>
+          <button class="ics-btn" title="Add to Google Calendar" onclick="addToGcal('${a.name}','${a.deadline}')">🗓</button>` : ''}
+      </td>
+      <td><span class="badge ${statusMap[a.status]}">${statusLabel[a.status]}</span></td>
+      <td style="max-width:200px;font-size:0.75rem;color:var(--text-dim)">${a.notes || '—'}</td>
+      <td class="row-actions">
+        <button class="row-btn" onclick="openModal('assignment','${a.id}')">✎</button>
+        <button class="row-btn del" onclick="deleteEntry('assignments','${a.id}',renderAssignments)">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function addToGcal(title, dateStr) {
+  if (!gcalToken) {
+    showToast('Connect Google Calendar first');
+    return;
+  }
+  const start = dateStr; // YYYY-MM-DD
+  const end   = dateStr;
+  const event = {
+    summary: title,
+    start:   { date: start },
+    end:     { date: end },
+  };
+  try {
+    const r = await fetch(
+      'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+      {
+        method:  'POST',
+        headers: {
+          'Authorization': 'Bearer ' + gcalToken,
+          'Content-Type':  'application/json',
+        },
+        body: JSON.stringify(event),
+      }
+    );
+    if (r.ok) {
+      showToast('Added to Google Calendar ✓');
+    } else {
+      const err = await r.json();
+      console.error(err);
+      showToast('Calendar add failed — check console');
+    }
+  } catch {
+    showToast('Calendar add failed — network error');
+  }
+}
+
+// ─── EXPLORING ──────────────────────────────────────────
+function saveExplore() {
+  const title = document.getElementById('exp-title').value.trim();
+  if (!title) { showToast('Path title required'); return; }
+  const list   = load('exploring');
+  const editId = document.getElementById('exp-editId').value;
+  const entry  = {
+    id: editId || uid(),
+    title,
+    excites: document.getElementById('exp-excites').value.trim(),
+    need:    document.getElementById('exp-need').value.trim(),
+    admire:  document.getElementById('exp-admire').value.trim(),
+    score:   parseInt(document.getElementById('exp-score').value) || 5,
+    updated: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+  };
+  if (editId) {
+    const i = list.findIndex(e => e.id === editId);
+    if (i > -1) list[i] = entry; else list.push(entry);
+  } else { list.push(entry); }
+  save('exploring', list);
+  closeModal('explore');
+  renderExploring();
+  showToast('Path saved');
+}
+
+function renderExploring() {
+  const list = load('exploring');
+  const grid = document.getElementById('exploringGrid');
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">Nothing here yet. What are you curious about?</div>';
+    return;
+  }
+  grid.innerHTML = list.map(e => {
+    const circ = 125.66;
+    const pct  = e.score / 10;
+    const offset = circ - pct * circ;
+    return `
+    <div class="explore-card">
+      <div class="explore-card-header">
+        <div class="explore-title">${e.title}</div>
+        <div class="explore-dial">
+          <svg viewBox="0 0 48 48">
+            <circle cx="24" cy="24" r="20" fill="none" stroke="#1c1f28" stroke-width="4"/>
+            <circle cx="24" cy="24" r="20" fill="none" stroke="#e8943a" stroke-width="4"
+              stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+          </svg>
+          <div class="explore-dial-label">${e.score}</div>
+        </div>
+      </div>
+      ${e.excites ? `<div class="explore-row"><div class="explore-row-label">What Excites Me</div><div class="explore-row-val">${e.excites}</div></div>` : ''}
+      ${e.need    ? `<div class="explore-row"><div class="explore-row-label">What I'd Need</div><div class="explore-row-val">${e.need}</div></div>` : ''}
+      ${e.admire  ? `<div class="explore-row"><div class="explore-row-label">Someone I Admire</div><div class="explore-row-val">${e.admire}</div></div>` : ''}
+      <div class="explore-updated">Last updated ${e.updated}</div>
+      <div class="explore-actions">
+        <button class="row-btn" onclick="openModal('explore','${e.id}')">✎ Edit</button>
+        <button class="row-btn del" onclick="deleteEntry('exploring','${e.id}',renderExploring)">✕ Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── STARS ──────────────────────────────────────────────
+const sky = document.getElementById('sky');
+for (let i = 0; i < 90; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 1.8 + 0.3;
+  s.style.cssText = `
+    width:${size}px;height:${size}px;
+    top:${Math.random()*100}%;left:${Math.random()*100}%;
+    --d:${(Math.random()*4+2).toFixed(1)}s;
+    --delay:-${(Math.random()*6).toFixed(1)}s;
+    --max-op:${(Math.random()*0.5+0.2).toFixed(2)};
+  `;
+  sky.appendChild(s);
+}
+
+// ─── INIT ────────────────────────────────────────────────
+renderBooks();
+renderLaptops();
+renderScholarships();
+renderSkills();
+renderCourses();
+renderAssignments();
+renderExploring();
+renderDeadlineStrip();
+</script>
+</body>
+</html>
