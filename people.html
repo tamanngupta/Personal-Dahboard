@@ -99,7 +99,6 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
 }
 .add-btn:hover { background: var(--accent-dim); }
 
-/* FILTER BAR */
 .filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
 .filter-chip {
   padding: 0.3rem 0.8rem;
@@ -111,12 +110,10 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
 .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
 .filter-chip.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 
-/* SEARCH */
 .search-bar {
   display: flex; gap: 0.8rem; align-items: center;
   padding: 0.7rem 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--surface); border: 1px solid var(--border);
   border-radius: 2px; margin-bottom: 1rem;
 }
 .search-bar input {
@@ -127,7 +124,6 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
 .search-bar input::placeholder { color: var(--text-dim); }
 .search-icon { color: var(--text-dim); font-size: 0.85rem; }
 
-/* PEOPLE GRID */
 .people-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -135,34 +131,26 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
 }
 
 .person-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 1.2rem;
-  transition: border-color 0.3s;
-  position: relative;
-  cursor: pointer;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 2px; padding: 1.2rem;
+  transition: border-color 0.3s; position: relative; cursor: pointer;
 }
 .person-card:hover { border-color: rgba(196,126,58,0.35); }
 
 .person-card-top {
-  display: flex; align-items: flex-start;
-  gap: 0.9rem; margin-bottom: 0.9rem;
+  display: flex; align-items: flex-start; gap: 0.9rem; margin-bottom: 0.9rem;
 }
 .person-avatar {
   width: 44px; height: 44px; border-radius: 50%;
-  background: var(--surface2);
-  border: 1.5px solid var(--border);
+  background: var(--surface2); border: 1.5px solid var(--border);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; flex-shrink: 0;
-  overflow: hidden;
+  font-size: 1.1rem; flex-shrink: 0; overflow: hidden;
 }
 .person-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .person-info { flex: 1; min-width: 0; }
 .person-name {
   font-size: 0.88rem; font-weight: 500; color: var(--text);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  margin-bottom: 0.2rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.2rem;
 }
 .person-role {
   font-size: 0.68rem; color: var(--text-dim);
@@ -170,17 +158,15 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
 }
 .person-type-badge {
   font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 0.15rem 0.45rem; border-radius: 2px; border: 1px solid;
-  white-space: nowrap; flex-shrink: 0;
+  padding: 0.15rem 0.45rem; border-radius: 2px; border: 1px solid; white-space: nowrap; flex-shrink: 0;
 }
-.type-friend    { border-color: rgba(196,126,58,0.4); color: var(--accent); }
-.type-family    { border-color: rgba(106,158,94,0.4); color: var(--green); }
-.type-mentor    { border-color: rgba(91,143,168,0.4); color: var(--blue); }
-.type-network   { border-color: rgba(78,205,196,0.4); color: var(--teal); }
+.type-friend  { border-color: rgba(196,126,58,0.4); color: var(--accent); }
+.type-family  { border-color: rgba(106,158,94,0.4); color: var(--green); }
+.type-mentor  { border-color: rgba(91,143,168,0.4); color: var(--blue); }
+.type-network { border-color: rgba(78,205,196,0.4); color: var(--teal); }
 
 .person-company {
-  font-size: 0.7rem; color: var(--text-dim);
-  margin-bottom: 0.7rem;
+  font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.7rem;
   display: flex; align-items: center; gap: 0.3rem;
 }
 .person-company span { color: var(--accent); opacity: 0.8; }
@@ -189,187 +175,163 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
   font-size: 0.68rem; margin-bottom: 0.6rem;
   display: flex; align-items: center; gap: 0.4rem;
 }
-.last-talk-dot {
-  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
-}
-.dot-fresh  { background: var(--green); }
-.dot-ok     { background: var(--accent); }
-.dot-stale  { background: var(--red); }
+.last-talk-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.dot-fresh { background: var(--green); }
+.dot-ok    { background: var(--accent); }
+.dot-stale { background: var(--red); }
 
-.person-note { 
-   font-size: 0.72rem; 
-   color: var(--text-dim); 
-   font-style: italic; 
-   line-height: 1.5; 
-   border-top: 1px solid var(--border); 
-   padding-top: 0.6rem; 
-   margin-top: 0.4rem; 
-   overflow: hidden; 
-   display: -webkit-box; 
-   -webkit-line-clamp: 2; 
-   line-clamp: 2; /* Add this standard property */
-   -webkit-box-orient: vertical; 
+.person-note {
+  font-size: 0.72rem; color: var(--text-dim); font-style: italic; line-height: 1.5;
+  border-top: 1px solid var(--border); padding-top: 0.6rem; margin-top: 0.4rem;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
 }
 
-.person-card-actions {
-  display: flex; gap: 0.4rem; margin-top: 0.9rem;
-}
+.person-card-actions { display: flex; gap: 0.4rem; margin-top: 0.9rem; }
 .person-btn {
   flex: 1; padding: 0.3rem;
-  background: none; border: 1px solid var(--border);
-  border-radius: 2px; color: var(--text-dim);
-  font-size: 0.62rem; letter-spacing: 0.08em;
-  text-transform: uppercase; cursor: pointer;
-  transition: all 0.2s; text-align: center;
+  background: none; border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text-dim); font-size: 0.62rem; letter-spacing: 0.08em;
+  text-transform: uppercase; cursor: pointer; transition: all 0.2s; text-align: center;
 }
 .person-btn:hover { border-color: var(--accent); color: var(--accent); }
 .person-btn.del:hover { border-color: var(--red); color: var(--red); }
 
 .nudge-badge {
   position: absolute; top: 0.6rem; right: 0.6rem;
-  background: rgba(201,64,64,0.12);
-  border: 1px solid rgba(201,64,64,0.35);
-  color: var(--red); font-size: 0.55rem;
-  letter-spacing: 0.1em; text-transform: uppercase;
+  background: rgba(201,64,64,0.12); border: 1px solid rgba(201,64,64,0.35);
+  color: var(--red); font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase;
   padding: 0.15rem 0.4rem; border-radius: 2px;
 }
 
 .empty-state {
   padding: 3rem 2rem; text-align: center;
-  color: var(--text-dim); font-size: 0.82rem; font-style: italic;
-  grid-column: 1/-1;
+  color: var(--text-dim); font-size: 0.82rem; font-style: italic; grid-column: 1/-1;
 }
 
-/* ── GRAPH TAB ── */
-#graph-container {
-  width: 100%;
-  height: 72vh;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  position: relative;
-  overflow: hidden;
+/* ── GRAPH ── */
+.graph-fullscreen {
+  position: fixed; inset: 0; z-index: 50;
+  background: var(--bg);
+  display: flex; flex-direction: column;
 }
-
-#graph-canvas { width: 100%; height: 100%; display: block; }
+.graph-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.8rem 1.4rem;
+  background: var(--concrete); border-bottom: 1px solid var(--border);
+  flex-shrink: 0; gap: 1rem; flex-wrap: wrap;
+}
+.graph-topbar-left { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.graph-topbar-right { display: flex; align-items: center; gap: 0.7rem; }
 
 .graph-legend {
-  display: flex; gap: 1rem; flex-wrap: wrap;
-  margin-bottom: 1rem;
+  display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center;
 }
 .legend-item {
-  display: flex; align-items: center; gap: 0.4rem;
-  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--text-dim);
+  display: flex; align-items: center; gap: 0.35rem;
+  font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim);
 }
-.legend-dot {
-  width: 8px; height: 8px; border-radius: 50%;
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.graph-ctrl-btn {
+  padding: 0.3rem 0.7rem;
+  background: none; border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text-dim); font-size: 0.65rem; letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer; transition: all 0.2s;
 }
+.graph-ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* toggle */
+.toggle-wrap { display: flex; align-items: center; gap: 0.5rem; }
+.toggle-label {
+  font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-dim); transition: color 0.2s; white-space: nowrap;
+}
+.toggle-label.on { color: var(--accent); }
+#graph-toggle {
+  width: 38px; height: 20px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; position: relative; cursor: pointer; transition: border-color 0.3s;
+}
+#graph-toggle:hover { border-color: var(--accent); }
+#toggle-knob {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); position: absolute; top: 2px; left: 2px;
+  transition: left 0.25s; box-shadow: 0 0 5px rgba(196,126,58,0.5);
+}
+
+#graph-canvas-wrap {
+  flex: 1; position: relative; overflow: hidden; cursor: grab;
+}
+#graph-canvas { display: block; width: 100%; height: 100%; }
 
 .graph-tooltip {
   position: absolute;
-  background: var(--concrete);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 0.7rem 0.9rem;
-  font-size: 0.75rem;
-  pointer-events: none;
-  z-index: 10;
-  display: none;
-  max-width: 200px;
+  background: var(--concrete); border: 1px solid var(--border);
+  border-radius: 2px; padding: 0.65rem 0.9rem;
+  font-size: 0.75rem; pointer-events: none; z-index: 10;
+  display: none; max-width: 220px; min-width: 140px;
 }
-.graph-tooltip .tt-name { font-weight: 500; color: var(--text); margin-bottom: 0.2rem; }
-.graph-tooltip .tt-role { color: var(--text-dim); font-size: 0.68rem; margin-bottom: 0.15rem; }
-.graph-tooltip .tt-company { color: var(--accent); font-size: 0.68rem; }
+.graph-tooltip .tt-name { font-weight: 500; color: var(--text); margin-bottom: 0.2rem; font-size: 0.8rem; }
+.graph-tooltip .tt-role { color: var(--text-dim); font-size: 0.66rem; margin-bottom: 0.15rem; }
+.graph-tooltip .tt-company { color: var(--accent); font-size: 0.66rem; }
+.graph-tooltip .tt-cluster { color: var(--teal); font-size: 0.62rem; margin-top: 0.2rem; letter-spacing: 0.08em; text-transform: uppercase; }
 
-.graph-controls {
-  display: flex; gap: 0.5rem; margin-bottom: 1rem; align-items: center;
+/* inline graph trigger */
+.graph-open-btn {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text-dim); font-size: 0.75rem; letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer; transition: all 0.2s; width: 100%;
+  justify-content: center; margin-top: 0;
 }
-.graph-ctrl-btn {
-  padding: 0.35rem 0.8rem;
-  background: none; border: 1px solid var(--border);
-  border-radius: 2px; color: var(--text-dim);
-  font-size: 0.68rem; letter-spacing: 0.1em;
-  text-transform: uppercase; cursor: pointer;
-  transition: all 0.2s;
-}
-.graph-ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
-.graph-info {
-  font-size: 0.68rem; color: var(--text-dim); margin-left: auto; font-style: italic;
-}
+.graph-open-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 /* ── LINKEDIN TAB ── */
-.linkedin-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-}
+.linkedin-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
 .linkedin-bar {
   display: flex; align-items: center; gap: 0.8rem;
-  padding: 0.6rem 1rem;
-  background: var(--concrete);
-  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 1rem; background: var(--concrete); border-bottom: 1px solid var(--border);
 }
-.linkedin-bar span {
-  font-size: 0.65rem; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text-dim);
-}
+.linkedin-bar span { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); }
 .linkedin-bar a {
-  margin-left: auto; font-size: 0.68rem;
-  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-left: auto; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--accent); text-decoration: none;
-  border: 1px solid rgba(196,126,58,0.3);
-  padding: 0.25rem 0.7rem; border-radius: 2px;
-  transition: all 0.2s;
+  border: 1px solid rgba(196,126,58,0.3); padding: 0.25rem 0.7rem; border-radius: 2px; transition: all 0.2s;
 }
 .linkedin-bar a:hover { background: var(--accent-dim); }
-#linkedin-iframe {
-  width: 100%; height: 80vh; border: none; display: block;
-}
+#linkedin-iframe { width: 100%; height: 80vh; border: none; display: block; }
 
 /* ── MODAL ── */
 .modal-overlay {
   display: none; position: fixed; inset: 0;
-  background: rgba(7,8,13,0.88); z-index: 100;
+  background: rgba(7,8,13,0.88); z-index: 200;
   align-items: center; justify-content: center; padding: 1rem;
 }
 .modal-overlay.open { display: flex; }
 .modal {
-  background: var(--concrete);
-  border: 1px solid var(--border);
-  border-radius: 2px; width: 100%;
-  max-width: 520px; max-height: 88vh;
-  overflow-y: auto; padding: 2rem;
-  position: relative;
+  background: var(--concrete); border: 1px solid var(--border);
+  border-radius: 2px; width: 100%; max-width: 520px; max-height: 88vh;
+  overflow-y: auto; padding: 2rem; position: relative;
   animation: modalIn 0.22s ease forwards;
 }
-@keyframes modalIn {
-  from { opacity:0; transform:translateY(12px); }
-  to   { opacity:1; transform:none; }
-}
+@keyframes modalIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
 .modal-close {
   position: absolute; top: 1rem; right: 1rem;
   background: none; border: none; color: var(--text-dim);
   cursor: pointer; font-size: 1.1rem; transition: color 0.2s;
 }
 .modal-close:hover { color: var(--text); }
-.modal-title {
-  font-family: 'Fraunces', serif; font-size: 1.1rem;
-  color: var(--accent); margin-bottom: 1.4rem;
-}
+.modal-title { font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--accent); margin-bottom: 1.4rem; }
 .form-group { margin-bottom: 1rem; }
 .form-label {
-  display: block; font-size: 0.65rem;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-dim); margin-bottom: 0.4rem;
+  display: block; font-size: 0.65rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.4rem;
 }
 .form-input, .form-select, .form-textarea {
-  width: 100%; background: var(--surface);
-  border: 1px solid var(--border); border-radius: 2px;
-  color: var(--text); font-family: 'DM Sans', sans-serif;
-  font-size: 0.82rem; padding: 0.55rem 0.8rem;
-  outline: none; transition: border-color 0.2s;
+  width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+  padding: 0.55rem 0.8rem; outline: none; transition: border-color 0.2s;
 }
 .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
 .form-input::placeholder, .form-textarea::placeholder { color: var(--text-dim); }
@@ -377,22 +339,17 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
 .form-textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
 .form-hint { font-size: 0.65rem; color: var(--text-dim); margin-top: 0.3rem; font-style: italic; }
-.form-actions {
-  display: flex; gap: 0.7rem; margin-top: 1.4rem; justify-content: flex-end;
-}
+.form-actions { display: flex; gap: 0.7rem; margin-top: 1.4rem; justify-content: flex-end; }
 .btn-primary {
-  padding: 0.55rem 1.3rem;
-  background: var(--accent); border: none; border-radius: 2px;
-  color: white; font-family: 'DM Sans', sans-serif;
-  font-size: 0.78rem; font-weight: 500;
+  padding: 0.55rem 1.3rem; background: var(--accent); border: none; border-radius: 2px;
+  color: white; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500;
   letter-spacing: 0.08em; cursor: pointer; transition: opacity 0.2s;
 }
 .btn-primary:hover { opacity: 0.88; }
 .btn-secondary {
-  padding: 0.55rem 1.1rem; background: transparent;
-  border: 1px solid var(--border); border-radius: 2px;
-  color: var(--text-dim); font-family: 'DM Sans', sans-serif;
-  font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
+  padding: 0.55rem 1.1rem; background: transparent; border: 1px solid var(--border); border-radius: 2px;
+  color: var(--text-dim); font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+  cursor: pointer; transition: all 0.2s;
 }
 .btn-secondary:hover { border-color: var(--text-dim); color: var(--text); }
 
@@ -400,31 +357,23 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
 .toast {
   position: fixed; bottom: 2rem; left: 50%;
   transform: translateX(-50%) translateY(20px);
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: 2px; padding: 0.6rem 1.2rem;
-  font-size: 0.78rem; color: var(--text);
-  opacity: 0; transition: all 0.3s ease;
-  z-index: 200; white-space: nowrap;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 2px;
+  padding: 0.6rem 1.2rem; font-size: 0.78rem; color: var(--text);
+  opacity: 0; transition: all 0.3s ease; z-index: 300; white-space: nowrap;
 }
 .toast.show { opacity:1; transform: translateX(-50%) translateY(0); }
 
-/* BIRTHDAY ROW */
-.birthday-list {
-  display: flex; flex-direction: column; gap: 0.6rem;
-}
+/* BIRTHDAY */
+.birthday-list { display: flex; flex-direction: column; gap: 0.6rem; }
 .birthday-row {
   display: flex; align-items: center; gap: 1rem;
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 2px; padding: 0.8rem 1rem;
-  transition: border-color 0.2s;
+  border-radius: 2px; padding: 0.8rem 1rem; transition: border-color 0.2s;
 }
 .birthday-row:hover { border-color: rgba(196,126,58,0.25); }
 .bday-name { flex: 1; font-size: 0.82rem; color: var(--text); font-weight: 500; }
 .bday-date { font-size: 0.75rem; color: var(--text-dim); }
-.bday-countdown {
-  font-size: 0.68rem; padding: 0.15rem 0.5rem;
-  border-radius: 2px; border: 1px solid;
-}
+.bday-countdown { font-size: 0.68rem; padding: 0.15rem 0.5rem; border-radius: 2px; border: 1px solid; }
 .bday-soon { border-color: rgba(196,126,58,0.4); color: var(--accent); background: var(--accent-dim); }
 .bday-far  { border-color: var(--border); color: var(--text-dim); }
 </style>
@@ -435,9 +384,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
 
 <header class="page-header">
   <a href="index.html" class="back-btn">
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
-      <path d="M10 3L5 8l5 5"/>
-    </svg>
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3L5 8l5 5"/></svg>
     back
   </a>
   <span class="page-title">People</span>
@@ -466,11 +413,10 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
       <span class="search-icon">⌕</span>
       <input type="text" id="search-input" placeholder="Search by name, company, notes…" oninput="renderPeople()">
     </div>
-
     <div style="display:flex;gap:0.7rem;align-items:center;margin-bottom:1rem;padding:0.75rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:2px;">
       <input type="file" id="linkedin-csv" accept=".csv" style="display:none" onchange="importLinkedInCSV(event)">
       <span style="font-size:0.72rem;color:var(--text-dim);flex:1">Import your LinkedIn <code style="background:var(--surface2);padding:0.1rem 0.35rem;border-radius:2px;font-size:0.68rem">Connections.csv</code> — Settings → Data Privacy → Get a copy of your data → Connections</span>
-      <button class="add-btn" style="white-space:nowrap" onclick="document.getElementById('linkedin-csv').click()">⬆ Import LinkedIn CSV</button>
+      <button class="add-btn" style="white-space:nowrap" onclick="document.getElementById('linkedin-csv').click()">⬆ Import CSV</button>
     </div>
     <div class="filter-bar" id="type-filters"></div>
     <div class="people-grid" id="people-grid"></div>
@@ -481,29 +427,18 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
     <div class="section-head">
       <div>
         <div class="section-title">Connection Graph</div>
-        <div class="section-sub">Everyone linked by company, org, or context. Drag nodes around.</div>
-      </div>
-      <button class="add-btn" onclick="switchTab('people', document.querySelectorAll('.tab-btn')[0]); openModal()">+ Add Person</button>
-    </div>
-    <div class="graph-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Friend</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Family</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Mentor</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Network</div>
-    </div>
-    <div class="graph-controls">
-      <button class="graph-ctrl-btn" onclick="resetGraph()">Reset Layout</button>
-      <button class="graph-ctrl-btn" onclick="toggleLabels()">Toggle Labels</button>
-      <span class="graph-info">Nodes linked by shared company / org</span>
-    </div>
-    <div id="graph-container">
-      <canvas id="graph-canvas"></canvas>
-      <div class="graph-tooltip" id="graph-tooltip">
-        <div class="tt-name" id="tt-name"></div>
-        <div class="tt-role" id="tt-role"></div>
-        <div class="tt-company" id="tt-company"></div>
+        <div class="section-sub">People connected by shared institution or role. Opens fullscreen.</div>
       </div>
     </div>
+    <button class="graph-open-btn" onclick="openGraph()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="4" cy="4" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="4" cy="12" r="2"/>
+        <circle cx="12" cy="12" r="2"/><line x1="6" y1="4" x2="10" y2="4"/>
+        <line x1="4" y1="6" x2="4" y2="10"/><line x1="6" y1="12" x2="10" y2="12"/>
+        <line x1="12" y1="6" x2="12" y2="10"/>
+      </svg>
+      Open Network Graph — <span id="graph-count-label" style="color:var(--accent)">0 people</span>
+    </button>
   </div>
 
   <!-- LINKEDIN TAB -->
@@ -519,8 +454,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
         <span>linkedin.com</span>
         <a href="https://www.linkedin.com" target="_blank">Open in Tab ↗</a>
       </div>
-      <iframe id="linkedin-iframe" src="https://www.linkedin.com" loading="lazy"
-        title="LinkedIn"></iframe>
+      <iframe id="linkedin-iframe" src="https://www.linkedin.com" loading="lazy" title="LinkedIn"></iframe>
     </div>
   </div>
 
@@ -537,12 +471,41 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
 
 </div>
 
-<!-- ADD / EDIT PERSON MODAL -->
+<!-- FULLSCREEN GRAPH PANEL -->
+<div class="graph-fullscreen" id="graph-fullscreen" style="display:none">
+  <div class="graph-topbar">
+    <div class="graph-topbar-left">
+      <div class="toggle-wrap">
+        <span class="toggle-label on" id="toggle-lbl-inst">Institution</span>
+        <div id="graph-toggle" onclick="toggleGraphMode()">
+          <div id="toggle-knob"></div>
+        </div>
+        <span class="toggle-label" id="toggle-lbl-role">Role</span>
+      </div>
+      <div class="graph-legend" id="graphLegend"></div>
+    </div>
+    <div class="graph-topbar-right">
+      <button class="graph-ctrl-btn" onclick="toggleLabels()">Labels</button>
+      <button class="graph-ctrl-btn" onclick="resetGraphLayout()">Reset</button>
+      <button class="graph-ctrl-btn" onclick="closeGraph()">✕ Close</button>
+    </div>
+  </div>
+  <div id="graph-canvas-wrap">
+    <canvas id="graph-canvas"></canvas>
+    <div class="graph-tooltip" id="graph-tooltip">
+      <div class="tt-name" id="tt-name"></div>
+      <div class="tt-role" id="tt-role"></div>
+      <div class="tt-company" id="tt-company"></div>
+      <div class="tt-cluster" id="tt-cluster"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PERSON MODAL -->
 <div class="modal-overlay" id="modal-person">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-title" id="modal-person-title">Add Person</div>
-
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Name</label>
@@ -558,44 +521,37 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
         </select>
       </div>
     </div>
-
     <div class="form-group">
       <label class="form-label">Role / How you know them</label>
       <input class="form-input" id="p-role" placeholder="CS classmate, SRCC, met at Nirmaan…">
     </div>
-
     <div class="form-row">
       <div class="form-group">
         <label class="form-label">Company / Org</label>
-        <input class="form-input" id="p-company" placeholder="Microsoft, DU, SRCC…">
-        <div class="form-hint">Used to group nodes in the graph</div>
+        <input class="form-input" id="p-company" placeholder="Microsoft, DU, IISc…">
+        <div class="form-hint">Used to group nodes in graph</div>
       </div>
       <div class="form-group">
         <label class="form-label">Birthday</label>
         <input class="form-input" type="date" id="p-birthday">
       </div>
     </div>
-
     <div class="form-group">
       <label class="form-label">Last Talked</label>
       <input class="form-input" type="date" id="p-last-talk">
     </div>
-
     <div class="form-group">
       <label class="form-label">Notes / Memories</label>
-      <textarea class="form-textarea" id="p-notes" placeholder="What you want to remember about them, shared goals, things to catch up on…"></textarea>
+      <textarea class="form-textarea" id="p-notes" placeholder="What you want to remember, shared goals, things to follow up on…"></textarea>
     </div>
-
     <div class="form-group">
       <label class="form-label">LinkedIn URL</label>
       <input class="form-input" id="p-linkedin" placeholder="https://linkedin.com/in/…">
     </div>
-
     <div class="form-group">
       <label class="form-label">Photo URL</label>
       <input class="form-input" id="p-photo" placeholder="Paste image URL or leave blank">
     </div>
-
     <input type="hidden" id="p-edit-id">
     <div class="form-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancel</button>
@@ -607,7 +563,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; padding-bottom:
 <div class="toast" id="toast"></div>
 
 <script>
-// ── STORAGE HELPERS ──
+// ── STORAGE ──────────────────────────────────────────
 function load(k)    { try { return JSON.parse(localStorage.getItem(k)) || []; } catch { return []; } }
 function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
 function uid()      { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
@@ -619,7 +575,7 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// ── TABS ──
+// ── TABS ──────────────────────────────────────────────
 function switchTab(name, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -629,11 +585,16 @@ function switchTab(name, btn) {
     const idx = ['people','graph','linkedin','birthdays'].indexOf(name);
     if (idx > -1) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
   }
-  if (name === 'graph')     { initGraph(); }
-  if (name === 'birthdays') { renderBirthdays(); }
+  if (name === 'graph')     updateGraphCountLabel();
+  if (name === 'birthdays') renderBirthdays();
 }
 
-// ── MODAL ──
+function updateGraphCountLabel() {
+  const n = load('people').length;
+  document.getElementById('graph-count-label').textContent = n + ' people';
+}
+
+// ── MODAL ──────────────────────────────────────────────
 function openModal(editId) {
   clearModal();
   if (editId) prefillModal(editId);
@@ -648,8 +609,8 @@ function clearModal() {
   ['p-name','p-role','p-company','p-notes','p-linkedin','p-photo','p-edit-id'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  document.getElementById('p-birthday').value   = '';
-  document.getElementById('p-last-talk').value  = '';
+  document.getElementById('p-birthday').value  = '';
+  document.getElementById('p-last-talk').value = '';
   document.getElementById('p-type').selectedIndex = 0;
 }
 function prefillModal(id) {
@@ -666,7 +627,6 @@ function prefillModal(id) {
   document.getElementById('p-photo').value     = p.photo     || '';
   document.getElementById('p-edit-id').value   = p.id;
 }
-
 document.getElementById('modal-person').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-person'))
     document.getElementById('modal-person').classList.remove('open');
@@ -697,22 +657,20 @@ function savePerson() {
   save('people', list);
   closeModal();
   renderPeople();
-  if (graphInitialized) initGraph();
   showToast('Saved');
 }
 
 function deletePerson(id) {
   save('people', load('people').filter(x => x.id !== id));
   renderPeople();
-  if (graphInitialized) initGraph();
   showToast('Removed');
 }
 
-// ── PEOPLE TAB ──
+// ── PEOPLE TAB ───────────────────────────────────────
 let activeTypeFilter = 'all';
 
 function renderTypeFilters() {
-  const types = ['all','friend','family','mentor','network'];
+  const types  = ['all','friend','family','mentor','network'];
   const labels = { all:'All', friend:'Friends', family:'Family', mentor:'Mentors', network:'Network' };
   document.getElementById('type-filters').innerHTML = types.map(t =>
     `<button class="filter-chip ${activeTypeFilter === t ? 'active' : ''}"
@@ -730,9 +688,9 @@ function setTypeFilter(type, btn) {
 function getTalkStatus(lastTalk) {
   if (!lastTalk) return { cls: 'dot-stale', label: 'Never logged' };
   const days = Math.floor((Date.now() - new Date(lastTalk)) / 86400000);
-  if (days <= 14)  return { cls: 'dot-fresh', label: `${days}d ago` };
-  if (days <= 45)  return { cls: 'dot-ok',    label: `${days}d ago` };
-  return              { cls: 'dot-stale', label: `${days}d ago — check in?` };
+  if (days <= 14) return { cls: 'dot-fresh', label: `${days}d ago` };
+  if (days <= 45) return { cls: 'dot-ok',    label: `${days}d ago` };
+  return               { cls: 'dot-stale', label: `${days}d ago — check in?` };
 }
 
 function renderPeople() {
@@ -746,23 +704,20 @@ function renderPeople() {
     (p.notes   || '').toLowerCase().includes(query) ||
     (p.role    || '').toLowerCase().includes(query)
   );
-
   const grid = document.getElementById('people-grid');
   if (!list.length) {
     grid.innerHTML = `<div class="empty-state">${
       load('people').length === 0
-        ? "No one here yet. Add the people who matter."
-        : "No one matches that filter."
+        ? 'No one here yet. Add the people who matter.'
+        : 'No one matches that filter.'
     }</div>`;
     return;
   }
-
   const typeClass = { friend:'type-friend', family:'type-family', mentor:'type-mentor', network:'type-network' };
   const typeLabel = { friend:'Friend', family:'Family', mentor:'Mentor', network:'Network' };
-
   grid.innerHTML = list.map(p => {
-    const talk   = getTalkStatus(p.lastTalk);
-    const nudge  = talk.cls === 'dot-stale' && p.lastTalk ? `<div class="nudge-badge">reach out</div>` : '';
+    const talk  = getTalkStatus(p.lastTalk);
+    const nudge = talk.cls === 'dot-stale' && p.lastTalk ? `<div class="nudge-badge">reach out</div>` : '';
     const avatar = p.photo
       ? `<img src="${p.photo}" alt="${p.name}" onerror="this.parentElement.innerHTML='👤'">`
       : '👤';
@@ -804,26 +759,21 @@ function logTalk(id) {
   }
 }
 
-// ── BIRTHDAYS ──
+// ── BIRTHDAYS ─────────────────────────────────────────
 function renderBirthdays() {
   const people = load('people').filter(p => p.birthday);
   const el = document.getElementById('birthday-list');
-
   if (!people.length) {
-    el.innerHTML = `<div style="padding:3rem 2rem;text-align:center;color:var(--text-dim);font-style:italic;font-size:0.82rem">
-      No birthdays logged yet. Add them when you add people.</div>`;
+    el.innerHTML = `<div style="padding:3rem 2rem;text-align:center;color:var(--text-dim);font-style:italic;font-size:0.82rem">No birthdays logged yet.</div>`;
     return;
   }
-
   const today = new Date();
   const withDays = people.map(p => {
-    const bday  = new Date(p.birthday);
-    const next  = new Date(today.getFullYear(), bday.getMonth(), bday.getDate());
+    const bday = new Date(p.birthday);
+    const next = new Date(today.getFullYear(), bday.getMonth(), bday.getDate());
     if (next < today) next.setFullYear(today.getFullYear() + 1);
-    const days  = Math.ceil((next - today) / 86400000);
-    return { ...p, daysUntil: days, next };
+    return { ...p, daysUntil: Math.ceil((next - today) / 86400000) };
   }).sort((a,b) => a.daysUntil - b.daysUntil);
-
   el.innerHTML = withDays.map(p => {
     const fmt   = new Date(p.birthday).toLocaleDateString('en-IN', { day:'numeric', month:'long' });
     const soon  = p.daysUntil <= 30;
@@ -836,276 +786,29 @@ function renderBirthdays() {
   }).join('');
 }
 
-// ── GRAPH ──
-let graphInitialized = false;
-let nodes = [], edges = [], showLabels = true;
-let dragging = null, dragOffX = 0, dragOffY = 0;
-let camX = 0, camY = 0, zoom = 1;
-let isPanning = false, panStartX = 0, panStartY = 0, camStartX = 0, camStartY = 0;
-let animFrame = null;
-
-const TYPE_COLORS = {
-  friend:  '#c47e3a',
-  family:  '#6a9e5e',
-  mentor:  '#5b8fa8',
-  network: '#4ecdc4',
-};
-
-function buildGraph() {
-  const people = load('people');
-  nodes = people.map((p, i) => {
-    const existing = nodes.find(n => n.id === p.id);
-    return {
-      id:      p.id,
-      name:    p.name,
-      role:    p.role || '',
-      company: p.company || '',
-      type:    p.type || 'friend',
-      x:       existing ? existing.x : Math.random() * 600 + 100,
-      y:       existing ? existing.y : Math.random() * 400 + 100,
-      vx: 0, vy: 0,
-    };
-  });
-
-  // link nodes that share the same company
-  edges = [];
-  const byCompany = {};
-  nodes.forEach(n => {
-    if (!n.company) return;
-    const key = n.company.toLowerCase().trim();
-    if (!byCompany[key]) byCompany[key] = [];
-    byCompany[key].push(n.id);
-  });
-  Object.values(byCompany).forEach(group => {
-    for (let i = 0; i < group.length; i++)
-      for (let j = i+1; j < group.length; j++)
-        edges.push({ a: group[i], b: group[j] });
-  });
-}
-
-function initGraph() {
-  graphInitialized = true;
-  buildGraph();
-  const canvas = document.getElementById('graph-canvas');
-  const container = document.getElementById('graph-container');
-  canvas.width  = container.clientWidth;
-  canvas.height = container.clientHeight;
-  if (animFrame) cancelAnimationFrame(animFrame);
-  simulate();
-  setupGraphEvents();
-}
-
-function resetGraph() {
-  nodes.forEach(n => {
-    n.x = Math.random() * 600 + 100;
-    n.y = Math.random() * 400 + 100;
-    n.vx = 0; n.vy = 0;
-  });
-  camX = 0; camY = 0; zoom = 1;
-}
-
-function toggleLabels() { showLabels = !showLabels; }
-
-function simulate() {
-  const canvas = document.getElementById('graph-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-
-  // force-directed layout
-  const REPEL = 3200, ATTRACT = 0.012, DAMP = 0.82, EDGE_LEN = 140;
-
-  nodes.forEach(n => { n.vx = 0; n.vy = 0; });
-
-  // repulsion
-  for (let i = 0; i < nodes.length; i++) {
-    for (let j = i+1; j < nodes.length; j++) {
-      const a = nodes[i], b = nodes[j];
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-      const f = REPEL / (dist * dist);
-      const fx = (dx/dist)*f, fy = (dy/dist)*f;
-      a.vx -= fx; a.vy -= fy;
-      b.vx += fx; b.vy += fy;
-    }
-  }
-
-  // attraction along edges
-  edges.forEach(e => {
-    const a = nodes.find(n => n.id === e.a);
-    const b = nodes.find(n => n.id === e.b);
-    if (!a || !b) return;
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-    const f = (dist - EDGE_LEN) * ATTRACT;
-    const fx = (dx/dist)*f, fy = (dy/dist)*f;
-    a.vx += fx; a.vy += fy;
-    b.vx -= fx; b.vy -= fy;
-  });
-
-  // center gravity
-  const cx = W/2, cy = H/2;
-  nodes.forEach(n => {
-    n.vx += (cx - n.x) * 0.0008;
-    n.vy += (cy - n.y) * 0.0008;
-  });
-
-  // integrate
-  nodes.forEach(n => {
-    if (n === dragging) return;
-    n.x += n.vx * DAMP;
-    n.y += n.vy * DAMP;
-    n.x = Math.max(30, Math.min(W - 30, n.x));
-    n.y = Math.max(30, Math.min(H - 30, n.y));
-  });
-
-  // draw
-  ctx.clearRect(0, 0, W, H);
-  ctx.save();
-  ctx.translate(camX, camY);
-  ctx.scale(zoom, zoom);
-
-  // edges
-  edges.forEach(e => {
-    const a = nodes.find(n => n.id === e.a);
-    const b = nodes.find(n => n.id === e.b);
-    if (!a || !b) return;
-    ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.lineTo(b.x, b.y);
-    ctx.strokeStyle = 'rgba(196,126,58,0.18)';
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-
-    // company label on edge midpoint
-    if (a.company) {
-      const mx = (a.x + b.x)/2, my = (a.y + b.y)/2;
-      ctx.font = '9px DM Sans, sans-serif';
-      ctx.fillStyle = 'rgba(196,126,58,0.45)';
-      ctx.textAlign = 'center';
-      ctx.fillText(a.company, mx, my - 5);
-    }
-  });
-
-  // nodes
-  nodes.forEach(n => {
-    const color = TYPE_COLORS[n.type] || '#c47e3a';
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, 14, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(15,16,21,0.95)';
-    ctx.fill();
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 1.8;
-    ctx.stroke();
-
-    // initials
-    ctx.font = 'bold 10px DM Sans, sans-serif';
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(n.name.slice(0,2).toUpperCase(), n.x, n.y);
-
-    // label
-    if (showLabels) {
-      ctx.font = '10px DM Sans, sans-serif';
-      ctx.fillStyle = 'rgba(200,194,180,0.75)';
-      ctx.textBaseline = 'top';
-      ctx.fillText(n.name, n.x, n.y + 18);
-    }
-  });
-
-  ctx.restore();
-  animFrame = requestAnimationFrame(simulate);
-}
-
-function getNodeAt(canvasX, canvasY) {
-  const wx = (canvasX - camX) / zoom;
-  const wy = (canvasY - camY) / zoom;
-  return nodes.find(n => Math.hypot(n.x - wx, n.y - wy) < 16) || null;
-}
-
-function setupGraphEvents() {
-  const canvas  = document.getElementById('graph-canvas');
-  const tooltip = document.getElementById('graph-tooltip');
-
-  canvas.onmousedown = e => {
-    const rect = canvas.getBoundingClientRect();
-    const cx = e.clientX - rect.left, cy = e.clientY - rect.top;
-    const hit = getNodeAt(cx, cy);
-    if (hit) {
-      dragging = hit;
-      dragOffX = (cx - camX)/zoom - hit.x;
-      dragOffY = (cy - camY)/zoom - hit.y;
-    } else {
-      isPanning = true;
-      panStartX = e.clientX; panStartY = e.clientY;
-      camStartX = camX; camStartY = camY;
-    }
-  };
-
-  canvas.onmousemove = e => {
-    const rect = canvas.getBoundingClientRect();
-    const cx = e.clientX - rect.left, cy = e.clientY - rect.top;
-    if (dragging) {
-      dragging.x = (cx - camX)/zoom - dragOffX;
-      dragging.y = (cy - camY)/zoom - dragOffY;
-    } else if (isPanning) {
-      camX = camStartX + (e.clientX - panStartX);
-      camY = camStartY + (e.clientY - panStartY);
-    } else {
-      const hit = getNodeAt(cx, cy);
-      if (hit) {
-        tooltip.style.display = 'block';
-        tooltip.style.left = (cx + 16) + 'px';
-        tooltip.style.top  = (cy - 10) + 'px';
-        document.getElementById('tt-name').textContent    = hit.name;
-        document.getElementById('tt-role').textContent    = hit.role || '';
-        document.getElementById('tt-company').textContent = hit.company || '';
-      } else {
-        tooltip.style.display = 'none';
-      }
-    }
-  };
-
-  canvas.onmouseup = () => { dragging = null; isPanning = false; };
-  canvas.onmouseleave = () => { dragging = null; isPanning = false; tooltip.style.display = 'none'; };
-
-  canvas.onwheel = e => {
-    e.preventDefault();
-    const factor = e.deltaY < 0 ? 1.1 : 0.9;
-    zoom = Math.max(0.3, Math.min(3, zoom * factor));
-  };
-}
-
-// ── LINKEDIN CSV IMPORT ──
+// ── LINKEDIN CSV IMPORT ───────────────────────────────
 function importLinkedInCSV(e) {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
     const lines = ev.target.result.split('\n');
-
-    // find header row (LinkedIn prepends a note row before the actual header)
     let headerIdx = lines.findIndex(l => l.toLowerCase().includes('first name'));
-    if (headerIdx === -1) { showToast('Could not read CSV — check the file'); return; }
-
+    if (headerIdx === -1) { showToast('Could not read CSV'); return; }
     const header = lines[headerIdx].split(',').map(h => h.replace(/"/g,'').trim().toLowerCase());
     const col = k => header.indexOf(k);
-
     const iFirst    = col('first name');
     const iLast     = col('last name');
     const iCompany  = col('company');
     const iPosition = col('position');
     const iDate     = col('connected on');
-
-    const existing     = load('people');
+    const iURL      = col('url');
+    const existing      = load('people');
     const existingNames = new Set(existing.map(p => p.name.toLowerCase()));
     let added = 0, skipped = 0;
     const newPeople = [...existing];
-
     lines.slice(headerIdx + 1).forEach(line => {
       if (!line.trim()) return;
-      // handle quoted fields that may contain commas
       const cols = [];
       let cur = '', inQ = false;
       for (const ch of line) {
@@ -1114,42 +817,573 @@ function importLinkedInCSV(e) {
         else { cur += ch; }
       }
       cols.push(cur.trim());
-
-      const clean = i => (cols[i] || '').replace(/^"|"$/g,'').trim();
-      const firstName = clean(iFirst);
-      const lastName  = clean(iLast);
-      const name      = [firstName, lastName].filter(Boolean).join(' ');
-      if (!name) return;
-
+      const clean = i => i >= 0 ? (cols[i] || '').replace(/^"|"$/g,'').trim() : '';
+      const name = [clean(iFirst), clean(iLast)].filter(Boolean).join(' ');
+      if (!name || name === '-') return;
       if (existingNames.has(name.toLowerCase())) { skipped++; return; }
-
       newPeople.push({
-        id:       uid(),
-        name,
+        id: uid(), name,
         type:     'network',
-        role:     iPosition > -1 ? clean(iPosition) : '',
-        company:  iCompany  > -1 ? clean(iCompany)  : '',
+        role:     clean(iPosition),
+        company:  clean(iCompany),
         birthday: '',
         lastTalk: '',
-        notes:    iDate > -1 && clean(iDate) ? `Connected on LinkedIn: ${clean(iDate)}` : '',
-        linkedin: '',
+        notes:    clean(iDate) ? `Connected on LinkedIn: ${clean(iDate)}` : '',
+        linkedin: clean(iURL),
         photo:    '',
         added:    new Date().toISOString().slice(0,10),
       });
       existingNames.add(name.toLowerCase());
       added++;
     });
-
     save('people', newPeople);
     renderPeople();
-    if (graphInitialized) initGraph();
-    showToast(`${added} imported${skipped ? `, ${skipped} already existed` : ''}`);
+    showToast(`${added} imported${skipped ? `, ${skipped} skipped` : ''}`);
     e.target.value = '';
   };
   reader.readAsText(file);
 }
 
-// ── STARS ──
+// ══════════════════════════════════════════════════════
+// ── GRAPH ENGINE ─────────────────────────────────────
+// ══════════════════════════════════════════════════════
+let gNodes = [], gEdges = [];
+let graphMode = 'institution'; // 'institution' | 'role'
+let showLabels = true;
+let dragging = null, dragOffX = 0, dragOffY = 0;
+let hoveredNode = null;
+let camX = 0, camY = 0, zoom = 1;
+let isPanning = false, panStartX = 0, panStartY = 0, camStartX = 0, camStartY = 0;
+let animFrame = null;
+let graphOpen = false;
+// energy cooling
+let energy = 1.0;
+
+// ── NORMALIZATION ─────────────────────────────────────
+// Company: minimal normalization — only clean obvious suffix noise
+// so two people at "IISc" actually connect, but unrelated ones don't
+function normalizeCompany(raw) {
+  if (!raw || !raw.trim()) return null;
+  let s = raw.trim();
+  // remove trailing location suffixes after last comma
+  // e.g. "Symbiosis Center, NOIDA" → "Symbiosis Center"
+  // but only if the part after comma looks like a short location word
+  const lastComma = s.lastIndexOf(',');
+  if (lastComma > -1) {
+    const after = s.slice(lastComma + 1).trim();
+    if (/^[A-Z][a-z]*(\s+[A-Z][a-z]*){0,2}$/.test(after) && after.length < 20) {
+      s = s.slice(0, lastComma).trim();
+    }
+  }
+  // strip common legal suffixes
+  s = s
+    .replace(/\bPvt\.?\s*Ltd\.?\b/gi, '')
+    .replace(/\bPrivate\s+Limited\b/gi, '')
+    .replace(/\bLimited\b/gi, 'Ltd')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+  // skip junk values
+  if (!s || ['self-employed','freelance','confidential','n/a','-',''].includes(s)) return null;
+  return s;
+}
+
+// Role: bucket into clear categories
+const ROLE_BUCKETS = [
+  { label: 'Founder',    re: /\b(founder|co.?founder)\b/i },
+  { label: 'CEO / MD',   re: /\b(chief executive officer|ceo|managing director)\b/i },
+  { label: 'Engineer',   re: /\b(engineer|developer|swe|software|devops|backend|frontend|fullstack|programmer)\b/i },
+  { label: 'Designer',   re: /\b(design|ux|ui|graphic|visual|creative)\b/i },
+  { label: 'Intern',     re: /\bintern\b/i },
+  { label: 'Student',    re: /\b(student|undergraduate|graduate|scholar|btech|mtech)\b/i },
+  { label: 'Marketing',  re: /\b(marketing|growth|brand|content|pr|social media|campaign)\b/i },
+  { label: 'Analyst',    re: /\b(analyst|research|strategy|consultant|associate|investment)\b/i },
+  { label: 'Operations', re: /\b(operations|manager|executive|head of|director|president|vp|vice president|senior)\b/i },
+  { label: 'Community',  re: /\b(ambassador|volunteer|community|outreach|representative)\b/i },
+  { label: 'Creator',    re: /\b(creator|influencer|writer|editor|journalist)\b/i },
+  { label: 'Entrepreneur',re: /\b(entrepreneur|startup|venture)\b/i },
+];
+
+function normalizeRole(raw) {
+  if (!raw || !raw.trim() || raw === '-') return null;
+  for (const b of ROLE_BUCKETS) {
+    if (b.re.test(raw)) return b.label;
+  }
+  return null; // don't bucket into "Other" — unconnected is honest
+}
+
+// ── PALETTE ───────────────────────────────────────────
+const PALETTE = [
+  '#c47e3a','#4ecdc4','#5b8fa8','#8b6bb1','#6a9e5e',
+  '#c94040','#d4b84a','#e87d5a','#7ab8d4','#a8906a',
+  '#5e8b6b','#b06bb1','#4a7ec4','#c4a43a','#e8943a',
+];
+const _colorMap = {};
+let _colorIdx = 0;
+function clusterColor(key) {
+  if (!key) return '#2a2d35';
+  if (!_colorMap[key]) {
+    _colorMap[key] = PALETTE[_colorIdx % PALETTE.length];
+    _colorIdx++;
+  }
+  return _colorMap[key];
+}
+
+// ── BUILD ─────────────────────────────────────────────
+function buildGraph() {
+  // reset color map so colors are consistent per session
+  Object.keys(_colorMap).forEach(k => delete _colorMap[k]);
+  _colorIdx = 0;
+  energy = 1.0;
+
+  const people = load('people');
+  const canvas = document.getElementById('graph-canvas');
+  const W = canvas.width, H = canvas.height;
+
+  // preserve positions of existing nodes
+  const posMap = {};
+  gNodes.forEach(n => { posMap[n.id] = { x: n.x, y: n.y }; });
+
+  gNodes = people.map(p => {
+    const ex = posMap[p.id];
+    return {
+      id:      p.id,
+      name:    p.name,
+      role:    p.role     || '',
+      company: p.company  || '',
+      normC:   normalizeCompany(p.company),
+      normR:   normalizeRole(p.role),
+      x:  ex ? ex.x : (Math.random() * (W - 200) + 100),
+      y:  ex ? ex.y : (Math.random() * (H - 200) + 100),
+      vx: 0, vy: 0,
+    };
+  });
+
+  rebuildEdges();
+}
+
+function clusterKeyOf(n) {
+  return graphMode === 'institution' ? n.normC : n.normR;
+}
+
+function rebuildEdges() {
+  gEdges = [];
+  // group by cluster key
+  const byCluster = {};
+  gNodes.forEach(n => {
+    const key = clusterKeyOf(n);
+    if (!key) return;
+    if (!byCluster[key]) byCluster[key] = [];
+    byCluster[key].push(n);
+  });
+
+  // only connect nodes that share the EXACT same normalized key
+  const seen = new Set();
+  Object.entries(byCluster).forEach(([key, group]) => {
+    if (group.length < 2) return; // lone node, no connections
+    for (let i = 0; i < group.length; i++) {
+      for (let j = i + 1; j < group.length; j++) {
+        const k = [group[i].id, group[j].id].sort().join('|');
+        if (seen.has(k)) continue;
+        seen.add(k);
+        gEdges.push({ a: group[i].id, b: group[j].id, cluster: key });
+      }
+    }
+  });
+}
+
+// ── LEGEND ────────────────────────────────────────────
+function renderLegend() {
+  const keys = [...new Set(
+    gNodes.map(n => clusterKeyOf(n)).filter(Boolean)
+  )].sort().slice(0, 10);
+  document.getElementById('graphLegend').innerHTML = keys.map(k => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${clusterColor(k)}"></div>
+      ${k}
+    </div>`).join('');
+}
+
+// ── TOGGLE ────────────────────────────────────────────
+function toggleGraphMode() {
+  graphMode = graphMode === 'institution' ? 'role' : 'institution';
+  document.getElementById('toggle-knob').style.left = graphMode === 'role' ? '20px' : '2px';
+  document.getElementById('toggle-lbl-inst').classList.toggle('on', graphMode === 'institution');
+  document.getElementById('toggle-lbl-role').classList.toggle('on', graphMode === 'role');
+  rebuildEdges();
+  energy = 1.0; // re-energise so nodes re-settle
+  renderLegend();
+}
+
+function toggleLabels() { showLabels = !showLabels; }
+
+function resetGraphLayout() {
+  const canvas = document.getElementById('graph-canvas');
+  const W = canvas.width, H = canvas.height;
+  gNodes.forEach(n => {
+    n.x  = Math.random() * (W - 200) + 100;
+    n.y  = Math.random() * (H - 200) + 100;
+    n.vx = 0; n.vy = 0;
+  });
+  camX = 0; camY = 0; zoom = 1;
+  energy = 1.0;
+}
+
+// ── OPEN / CLOSE ──────────────────────────────────────
+function openGraph() {
+  const panel = document.getElementById('graph-fullscreen');
+  panel.style.display = 'flex';
+  graphOpen = true;
+  document.body.style.overflow = 'hidden';
+
+  // size canvas to fill panel
+  const wrap = document.getElementById('graph-canvas-wrap');
+  const canvas = document.getElementById('graph-canvas');
+  canvas.width  = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+
+  buildGraph();
+  renderLegend();
+  setupGraphEvents();
+  if (animFrame) cancelAnimationFrame(animFrame);
+  animFrame = requestAnimationFrame(simulate);
+}
+
+function closeGraph() {
+  document.getElementById('graph-fullscreen').style.display = 'none';
+  graphOpen = false;
+  document.body.style.overflow = '';
+  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+}
+
+// ── SIMULATION ────────────────────────────────────────
+function simulate() {
+  if (!graphOpen) return;
+  const canvas = document.getElementById('graph-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  // cool down over time — nodes settle after ~8 seconds
+  energy = Math.max(0.02, energy * 0.995);
+
+  const REPEL      = 2200 * energy;
+  const ATTRACT    = 0.014;
+  const DAMP       = 0.75;
+  const EDGE_LEN   = 100;
+  const HOVER_PUSH = 4000;
+  const HOVER_R    = 150;
+
+  // reset accelerations
+  gNodes.forEach(n => { n.ax = 0; n.ay = 0; });
+
+  // node-node repulsion
+  for (let i = 0; i < gNodes.length; i++) {
+    for (let j = i + 1; j < gNodes.length; j++) {
+      const a = gNodes[i], b = gNodes[j];
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const d2 = dx*dx + dy*dy || 1;
+      const d  = Math.sqrt(d2);
+      const f  = REPEL / d2;
+      a.ax -= (dx/d)*f;  a.ay -= (dy/d)*f;
+      b.ax += (dx/d)*f;  b.ay += (dy/d)*f;
+    }
+  }
+
+  // hover push — only when hovered, gentle continuous repulsion
+  if (hoveredNode) {
+    gNodes.forEach(n => {
+      if (n === hoveredNode || n === dragging) return;
+      const dx = n.x - hoveredNode.x, dy = n.y - hoveredNode.y;
+      const d  = Math.sqrt(dx*dx + dy*dy) || 1;
+      if (d < HOVER_R) {
+        const f = HOVER_PUSH / (d * d);
+        n.ax += (dx/d)*f;
+        n.ay += (dy/d)*f;
+      }
+    });
+  }
+
+  // edge attraction
+  gEdges.forEach(e => {
+    const a = gNodes.find(n => n.id === e.a);
+    const b = gNodes.find(n => n.id === e.b);
+    if (!a || !b) return;
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const d  = Math.sqrt(dx*dx + dy*dy) || 1;
+    const f  = (d - EDGE_LEN) * ATTRACT;
+    a.ax += (dx/d)*f;  a.ay += (dy/d)*f;
+    b.ax -= (dx/d)*f;  b.ay -= (dy/d)*f;
+  });
+
+  // gentle center gravity
+  gNodes.forEach(n => {
+    n.ax += (W/2 - n.x) * 0.0005;
+    n.ay += (H/2 - n.y) * 0.0005;
+  });
+
+  // integrate — skip dragged node
+  gNodes.forEach(n => {
+    if (n === dragging) return;
+    n.vx = (n.vx + n.ax) * DAMP;
+    n.vy = (n.vy + n.ay) * DAMP;
+    // clamp velocity when nearly settled
+    if (energy < 0.1) {
+      n.vx *= 0.85;
+      n.vy *= 0.85;
+    }
+    n.x = Math.max(18, Math.min(W - 18, n.x + n.vx));
+    n.y = Math.max(18, Math.min(H - 18, n.y + n.vy));
+  });
+
+  // ── DRAW ──────────────────────────────────────────────
+  ctx.clearRect(0, 0, W, H);
+  ctx.save();
+  ctx.translate(camX, camY);
+  ctx.scale(zoom, zoom);
+
+  const connectedIds = new Set();
+  if (hoveredNode) {
+    gEdges.forEach(e => {
+      if (e.a === hoveredNode.id) connectedIds.add(e.b);
+      if (e.b === hoveredNode.id) connectedIds.add(e.a);
+    });
+  }
+
+  // draw edges
+  gEdges.forEach(e => {
+    const a = gNodes.find(n => n.id === e.a);
+    const b = gNodes.find(n => n.id === e.b);
+    if (!a || !b) return;
+    const isHl = hoveredNode && (e.a === hoveredNode.id || e.b === hoveredNode.id);
+    const isDim = hoveredNode && !isHl;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = isDim
+      ? 'rgba(42,45,53,0.3)'
+      : isHl
+        ? clusterColor(e.cluster) + 'cc'
+        : clusterColor(e.cluster) + '55';
+    ctx.lineWidth = isHl ? 1.6 : 0.9;
+    ctx.stroke();
+  });
+
+  // draw nodes
+  gNodes.forEach(n => {
+    const key   = clusterKeyOf(n);
+    const color = key ? clusterColor(key) : '#3a3d45';
+    const isHov = n === hoveredNode;
+    const isCon = connectedIds.has(n.id);
+    const isDim = hoveredNode && !isHov && !isCon;
+    const r     = isHov ? 17 : 12;
+
+    ctx.globalAlpha = isDim ? 0.22 : 1;
+
+    // glow ring on hover
+    if (isHov) {
+      const grad = ctx.createRadialGradient(n.x, n.y, r, n.x, n.y, r + 10);
+      grad.addColorStop(0, color + '66');
+      grad.addColorStop(1, 'transparent');
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r + 10, 0, Math.PI*2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+
+    // node body
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r, 0, Math.PI*2);
+    ctx.fillStyle = isHov ? color + '18' : '#0c0d12';
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth   = isHov ? 2.2 : isCon ? 1.6 : 1.2;
+    ctx.stroke();
+
+    // initials
+    const initials = n.name.split(' ').slice(0,2).map(w => w[0] || '').join('').toUpperCase();
+    ctx.font        = `${isHov ? 'bold ' : ''}${isHov ? 10 : 8}px DM Sans,sans-serif`;
+    ctx.fillStyle   = isHov ? color : color + 'cc';
+    ctx.textAlign   = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(initials, n.x, n.y);
+
+    // label — only on hover, connected nodes, or when no hover at all
+    if (showLabels) {
+      const showFull = isHov || (!hoveredNode);
+      const showFirst = isCon;
+      if (showFull || showFirst) {
+        const lbl = showFull ? n.name : n.name.split(' ')[0];
+        ctx.font      = isHov ? 'bold 11px DM Sans,sans-serif' : '9px DM Sans,sans-serif';
+        ctx.fillStyle = isHov ? 'rgba(200,194,180,1)' : 'rgba(200,194,180,0.6)';
+        ctx.textBaseline = 'top';
+        ctx.textAlign    = 'center';
+        ctx.fillText(lbl, n.x, n.y + r + 3);
+      }
+    }
+
+    ctx.globalAlpha = 1;
+  });
+
+  ctx.restore();
+  animFrame = requestAnimationFrame(simulate);
+}
+
+// ── EVENTS ────────────────────────────────────────────
+function canvasToWorld(canvas, clientX, clientY) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (clientX - rect.left  - camX) / zoom,
+    y: (clientY - rect.top   - camY) / zoom,
+  };
+}
+
+function nodeAt(canvas, clientX, clientY) {
+  const { x, y } = canvasToWorld(canvas, clientX, clientY);
+  return gNodes.find(n => Math.hypot(n.x - x, n.y - y) < 18) || null;
+}
+
+let dragStartWorld = null;
+
+function setupGraphEvents() {
+  const canvas  = document.getElementById('graph-canvas');
+  const wrap    = document.getElementById('graph-canvas-wrap');
+  const tooltip = document.getElementById('graph-tooltip');
+
+  // remove old listeners by cloning
+  const fresh = canvas.cloneNode(true);
+  canvas.parentNode.replaceChild(fresh, canvas);
+  const c = document.getElementById('graph-canvas');
+
+  c.onmousedown = e => {
+    const hit = nodeAt(c, e.clientX, e.clientY);
+    if (hit) {
+      dragging = hit;
+      dragStartWorld = canvasToWorld(c, e.clientX, e.clientY);
+      dragOffX = dragStartWorld.x - hit.x;
+      dragOffY = dragStartWorld.y - hit.y;
+      wrap.style.cursor = 'grabbing';
+    } else {
+      isPanning = true;
+      panStartX = e.clientX; panStartY = e.clientY;
+      camStartX = camX;      camStartY = camY;
+      wrap.style.cursor = 'grabbing';
+    }
+  };
+
+  c.onmousemove = e => {
+    const rect = c.getBoundingClientRect();
+    const px = e.clientX - rect.left, py = e.clientY - rect.top;
+
+    if (dragging) {
+      const w = canvasToWorld(c, e.clientX, e.clientY);
+      dragging.x  = w.x - dragOffX;
+      dragging.y  = w.y - dragOffY;
+      dragging.vx = 0; dragging.vy = 0;
+      tooltip.style.display = 'none';
+      return;
+    }
+    if (isPanning) {
+      camX = camStartX + (e.clientX - panStartX);
+      camY = camStartY + (e.clientY - panStartY);
+      tooltip.style.display = 'none';
+      return;
+    }
+
+    const hit = nodeAt(c, e.clientX, e.clientY);
+    hoveredNode = hit || null;
+
+    if (hit) {
+      wrap.style.cursor = 'pointer';
+      const key = clusterKeyOf(hit);
+      document.getElementById('tt-name').textContent    = hit.name;
+      document.getElementById('tt-role').textContent    = hit.role    || '';
+      document.getElementById('tt-company').textContent = hit.company || '';
+      document.getElementById('tt-cluster').textContent = key ? `cluster: ${key}` : '';
+      tooltip.style.display = 'block';
+      tooltip.style.left = Math.min(px + 16, c.clientWidth  - 230) + 'px';
+      tooltip.style.top  = Math.max(py - 10, 4) + 'px';
+    } else {
+      wrap.style.cursor = 'grab';
+      tooltip.style.display = 'none';
+    }
+  };
+
+  c.onmouseup = e => {
+    if (dragging && dragStartWorld) {
+      const w     = canvasToWorld(c, e.clientX, e.clientY);
+      const moved = Math.hypot(w.x - dragStartWorld.x, w.y - dragStartWorld.y);
+      if (moved < 5) {
+        // treat as click — open person modal
+        openModal(dragging.id);
+      }
+    }
+    dragging = null; isPanning = false; dragStartWorld = null;
+    wrap.style.cursor = 'grab';
+  };
+
+  c.onmouseleave = () => {
+    dragging = null; isPanning = false;
+    hoveredNode = null;
+    tooltip.style.display = 'none';
+    wrap.style.cursor = 'grab';
+  };
+
+  c.onwheel = e => {
+    e.preventDefault();
+    const rect   = c.getBoundingClientRect();
+    const px     = e.clientX - rect.left;
+    const py     = e.clientY - rect.top;
+    const factor = e.deltaY < 0 ? 1.1 : 0.91;
+    const nz     = Math.max(0.15, Math.min(5, zoom * factor));
+    camX = px - (px - camX) * (nz / zoom);
+    camY = py - (py - camY) * (nz / zoom);
+    zoom = nz;
+  };
+
+  // touch pinch zoom
+  let lastTouchDist = null;
+  c.ontouchstart = e => {
+    if (e.touches.length === 1) {
+      const t   = e.touches[0];
+      const hit = nodeAt(c, t.clientX, t.clientY);
+      if (hit) {
+        dragging = hit;
+        dragStartWorld = canvasToWorld(c, t.clientX, t.clientY);
+        dragOffX = dragStartWorld.x - hit.x;
+        dragOffY = dragStartWorld.y - hit.y;
+      } else {
+        isPanning = true;
+        panStartX = t.clientX; panStartY = t.clientY;
+        camStartX = camX; camStartY = camY;
+      }
+    }
+  };
+  c.ontouchmove = e => {
+    e.preventDefault();
+    if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const d  = Math.sqrt(dx*dx + dy*dy);
+      if (lastTouchDist) zoom = Math.max(0.15, Math.min(5, zoom * (d / lastTouchDist)));
+      lastTouchDist = d;
+      return;
+    }
+    lastTouchDist = null;
+    const t = e.touches[0];
+    if (dragging) {
+      const w = canvasToWorld(c, t.clientX, t.clientY);
+      dragging.x = w.x - dragOffX;
+      dragging.y = w.y - dragOffY;
+    } else if (isPanning) {
+      camX = camStartX + (t.clientX - panStartX);
+      camY = camStartY + (t.clientY - panStartY);
+    }
+  };
+  c.ontouchend = () => { dragging = null; isPanning = false; lastTouchDist = null; };
+}
+
+// ── STARS ─────────────────────────────────────────────
 const sky = document.getElementById('sky');
 for (let i = 0; i < 90; i++) {
   const s = document.createElement('div');
@@ -1165,7 +1399,7 @@ for (let i = 0; i < 90; i++) {
   sky.appendChild(s);
 }
 
-// ── INIT ──
+// ── INIT ──────────────────────────────────────────────
 renderPeople();
 </script>
 </body>
