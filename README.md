@@ -104,7 +104,7 @@ You can change the `src` to a specific LinkedIn URL like your own profile or net
 
 ---
 
-### 🏠 Home (`index.html`)
+### Home (`index.html`)
 
 - Apartment building at night with twinkling stars
 - Each of the 10 windows links to a section
@@ -115,7 +115,7 @@ You can change the `src` to a specific LinkedIn URL like your own profile or net
 
 ---
 
-### 📚 Academic (`academic.html`)
+### Academic (`academic.html`)
 
 **Books**
 - Hotspot table for your reading list
@@ -150,14 +150,14 @@ You can change the `src` to a specific LinkedIn URL like your own profile or net
 
 ---
 
-### 👗 Wardrobe (`wardrobe.html`)
+### Wardrobe (`wardrobe.html`)
 
 **Wishlist**
 - Add items with image URL (right-click any Pinterest pin → copy image address) or upload from device
 - Fields: name, image, category, price, priority (need / want / dream), season, notes
 - Filter by category
 - Mark as Bought → item moves to Owned + auto-logs the spend in history
-- Pinterest board panel (toggle with 📌 Pinterest button — requires extension)
+- Pinterest board panel (toggle with Pinterest button — requires extension)
 - Import from Pinterest CSV (Settings → Privacy → Export your data → unzip → Connections.csv... actually for Pinterest: Settings → Privacy and data → Request your data)
 
 **Owned**
@@ -208,7 +208,7 @@ You can change the `src` to a specific LinkedIn URL like your own profile or net
 
 ---
 
-### 👥 People (`people.html`)
+### People (`people.html`)
 
 **People Tab**
 - Cards with avatar, name, role, company, last-talked indicator, notes preview
