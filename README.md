@@ -131,8 +131,8 @@ You can change the `src` to a specific LinkedIn URL like your own profile or net
 **Scholarships**
 - Hotspot table with deadline countdown (turns red under 7 days, amber under 14)
 - Fields: name, amount, deadline, eligibility, status (spotted / applying / applied / heard back), link
-- 📅 button exports a `.ics` file for any deadline (opens in Google Calendar, Apple Calendar, etc.)
-- 🗓 button adds directly to Google Calendar (requires OAuth setup above)
+- button exports a `.ics` file for any deadline (opens in Google Calendar, Apple Calendar, etc.)
+- button adds directly to Google Calendar (requires OAuth setup above)
 - Stats bar shows total pipeline value, actively applying count, applied count
 
 **Skills + Courses + Assignments** (three sub-tabs)
@@ -186,7 +186,7 @@ You can change the `src` to a specific LinkedIn URL like your own profile or net
 
 ---
 
-### 🛠 Tools (`tools.html`)
+### Tools (`tools.html`)
 
 - iOS-style app grid — rounded icons, name below, coloured status dot
 - Status dot colours: green (daily use), amber (trying), red (dropped), grey (paused)
