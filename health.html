@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health — Tamanna's Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #07080d;
+  --concrete: #0f1015;
+  --border: #1c1f28;
+  --text: #c8c2b4;
+  --text-dim: #4a4840;
+  --surface: #0c0d12;
+  --surface2: #13141a;
+  --accent: #4ecdc4;
+  --accent-dim: rgba(78,205,196,0.1);
+  --amber: #e8943a;
+  --green: #6a9e5e;
+  --red: #c94040;
+  --purple: #8b6bb1;
+}
+html, body { min-height:100%; background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; }
+body { display:flex; flex-direction:column; min-height:100vh; padding-bottom:4rem; }
+
+.sky { position:fixed; inset:0; z-index:0; pointer-events:none; }
+.star { position:absolute; border-radius:50%; background:white; opacity:0; animation:twinkle var(--d,3s) ease-in-out infinite var(--delay,0s); }
+@keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:var(--max-op,0.6)} }
+
+.page-header {
+  position:relative; z-index:2;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.6rem 2.4rem 1.2rem;
+  border-bottom:1px solid var(--border);
+  background:var(--concrete);
+}
+.back-btn {
+  display:flex; align-items:center; gap:0.5rem;
+  color:var(--text-dim); text-decoration:none;
+  font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; transition:color 0.2s;
+}
+.back-btn:hover { color:var(--accent); }
+.back-btn svg { width:14px; height:14px; }
+.page-title { font-family:'Fraunces',serif; font-size:1.5rem; font-weight:600; color:var(--accent); }
+
+.tabs-wrap {
+  position:relative; z-index:2;
+  display:flex; padding:0 2.4rem;
+  border-bottom:1px solid var(--border);
+  background:var(--concrete);
+  overflow-x:auto; scrollbar-width:none;
+}
+.tabs-wrap::-webkit-scrollbar { display:none; }
+.tab-btn {
+  padding:0.9rem 1.1rem;
+  font-family:'DM Sans',sans-serif; font-size:0.72rem;
+  letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--text-dim); background:none; border:none;
+  border-bottom:2px solid transparent; cursor:pointer; transition:all 0.2s; white-space:nowrap;
+}
+.tab-btn:hover { color:var(--text); }
+.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+.main {
+  position:relative; z-index:2;
+  width:100%; max-width:1100px; margin:0 auto; padding:2rem 2.4rem;
+}
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* STATS ROW */
+.stats-row {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:1rem; margin-bottom:2rem;
+}
+.stat-card {
+  background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:1.1rem;
+  transition:border-color 0.3s;
+}
+.stat-card:hover { border-color:rgba(78,205,196,0.3); }
+.stat-label { font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.4rem; }
+.stat-val { font-family:'Fraunces',serif; font-size:1.4rem; color:var(--accent); line-height:1; }
+.stat-sub { font-size:0.65rem; color:var(--text-dim); margin-top:0.25rem; }
+
+/* STREAK */
+.streak-bar {
+  display:flex; align-items:center; gap:1.2rem;
+  padding:1rem 1.4rem;
+  background:var(--surface); border:1px solid var(--border); border-radius:2px;
+  margin-bottom:2rem;
+}
+.streak-flame { font-size:1.8rem; line-height:1; }
+.streak-info { flex:1; }
+.streak-num { font-family:'Fraunces',serif; font-size:1.6rem; color:var(--amber); line-height:1; }
+.streak-label { font-size:0.68rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; margin-top:0.2rem; }
+.streak-dots { display:flex; gap:0.35rem; margin-top:0.7rem; flex-wrap:wrap; }
+.streak-dot {
+  width:10px; height:10px; border-radius:50%; border:1px solid var(--border);
+  transition:background 0.2s;
+}
+.streak-dot.active { background:var(--amber); border-color:var(--amber); }
+.streak-dot.today  { background:var(--accent); border-color:var(--accent); box-shadow:0 0 6px rgba(78,205,196,0.5); }
+
+/* HEATMAP */
+.heatmap-wrap { margin-bottom:2rem; }
+.heatmap-label { font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.7rem; }
+.heatmap-grid {
+  display:grid; grid-template-columns:repeat(52,1fr); gap:3px;
+}
+.hm-cell {
+  aspect-ratio:1; border-radius:2px; background:var(--surface2);
+  transition:background 0.2s; cursor:default;
+}
+.hm-cell.l1 { background:rgba(78,205,196,0.2); }
+.hm-cell.l2 { background:rgba(78,205,196,0.45); }
+.hm-cell.l3 { background:rgba(78,205,196,0.7); }
+.hm-cell.l4 { background:var(--accent); }
+
+/* XP BAR */
+.xp-section { margin-bottom:2rem; }
+.xp-header { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:0.5rem; }
+.xp-level { font-family:'Fraunces',serif; font-size:1rem; color:var(--accent); }
+.xp-points { font-size:0.72rem; color:var(--text-dim); }
+.xp-bar-wrap { height:6px; background:var(--surface2); border-radius:3px; overflow:hidden; }
+.xp-bar { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--accent),#7eeee8); transition:width 0.6s ease; }
+
+/* ACHIEVEMENTS */
+.achievements-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:0.8rem; margin-bottom:2rem;
+}
+.achievement {
+  background:var(--surface); border:1px solid var(--border); border-radius:2px;
+  padding:0.9rem 1rem; display:flex; align-items:center; gap:0.8rem;
+  transition:border-color 0.3s;
+}
+.achievement.unlocked { border-color:rgba(78,205,196,0.35); }
+.achievement.locked { opacity:0.45; }
+.ach-icon { font-size:1.4rem; flex-shrink:0; }
+.ach-name { font-size:0.75rem; font-weight:500; color:var(--text); }
+.ach-desc { font-size:0.62rem; color:var(--text-dim); margin-top:0.15rem; }
+
+/* MAP */
+#map-container {
+  width:100%; height:75vh;
+  border:1px solid var(--border); border-radius:2px;
+  position:relative; overflow:hidden;
+}
+#map { width:100%; height:100%; }
+.map-controls {
+  display:flex; gap:0.7rem; margin-bottom:1rem; flex-wrap:wrap; align-items:center;
+}
+.map-stat-strip {
+  display:flex; gap:1.4rem; padding:0.8rem 1.2rem;
+  background:var(--surface); border:1px solid var(--border); border-radius:2px;
+  margin-bottom:1rem; flex-wrap:wrap;
+}
+.map-stat .label { font-size:0.58rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.2rem; }
+.map-stat .val { font-family:'Fraunces',serif; font-size:1rem; color:var(--accent); }
+
+/* RIDE LOG TABLE */
+.table-wrap { background:var(--surface); border:1px solid var(--border); border-radius:2px; overflow:hidden; margin-top:1.4rem; }
+.hotspot-table { width:100%; border-collapse:collapse; font-size:0.82rem; }
+.hotspot-table th {
+  text-align:left; font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--text-dim); padding:0.5rem 0.8rem; border-bottom:1px solid var(--border); font-weight:400;
+}
+.hotspot-table td { padding:0.7rem 0.8rem; border-bottom:1px solid rgba(28,31,40,0.5); vertical-align:middle; }
+.hotspot-table tr:last-child td { border-bottom:none; }
+.hotspot-table tr:hover td { background:rgba(78,205,196,0.02); }
+
+/* SLEEP */
+.sleep-week { display:grid; grid-template-columns:repeat(7,1fr); gap:0.6rem; margin-bottom:1.8rem; }
+.sleep-day {
+  background:var(--surface); border:1px solid var(--border); border-radius:2px;
+  padding:0.8rem 0.5rem; text-align:center;
+}
+.sleep-day-name { font-size:0.6rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.5rem; }
+.sleep-bar-wrap { height:80px; display:flex; align-items:flex-end; justify-content:center; margin-bottom:0.4rem; }
+.sleep-bar {
+  width:24px; border-radius:2px 2px 0 0;
+  background:rgba(78,205,196,0.25); border:1px solid rgba(78,205,196,0.3);
+  transition:height 0.4s ease;
+}
+.sleep-bar.good { background:rgba(78,205,196,0.55); border-color:var(--accent); }
+.sleep-bar.great { background:var(--accent); border-color:var(--accent); }
+.sleep-hrs { font-family:'Fraunces',serif; font-size:0.85rem; color:var(--text); }
+
+.sleep-log-table { }
+
+/* SECTION HEADS */
+.section-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.4rem; }
+.section-title { font-family:'Fraunces',serif; font-size:1.1rem; font-weight:600; color:var(--text); }
+.section-sub { font-size:0.72rem; color:var(--text-dim); margin-top:0.2rem; }
+.add-btn {
+  display:flex; align-items:center; gap:0.4rem; padding:0.45rem 1rem;
+  border:1px solid var(--accent); border-radius:2px;
+  background:transparent; color:var(--accent);
+  font-family:'DM Sans',sans-serif; font-size:0.72rem;
+  letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:all 0.2s;
+}
+.add-btn:hover { background:var(--accent-dim); }
+
+/* MODAL */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(7,8,13,0.88); z-index:100;
+  align-items:center; justify-content:center; padding:1rem;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:var(--concrete); border:1px solid var(--border); border-radius:2px;
+  width:100%; max-width:480px; max-height:88vh; overflow-y:auto; padding:2rem;
+  position:relative; animation:modalIn 0.22s ease forwards;
+}
+@keyframes modalIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+.modal-close { position:absolute; top:1rem; right:1rem; background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1.1rem; transition:color 0.2s; }
+.modal-close:hover { color:var(--text); }
+.modal-title { font-family:'Fraunces',serif; font-size:1.1rem; color:var(--accent); margin-bottom:1.4rem; }
+.form-group { margin-bottom:1rem; }
+.form-label { display:block; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.4rem; }
+.form-input, .form-select, .form-textarea {
+  width:100%; background:var(--surface); border:1px solid var(--border); border-radius:2px;
+  color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.82rem;
+  padding:0.55rem 0.8rem; outline:none; transition:border-color 0.2s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color:var(--accent); }
+.form-input::placeholder { color:var(--text-dim); }
+.form-select option { background:var(--concrete); }
+.form-textarea { resize:vertical; min-height:72px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+.form-hint { font-size:0.65rem; color:var(--text-dim); margin-top:0.3rem; font-style:italic; }
+.form-actions { display:flex; gap:0.7rem; margin-top:1.4rem; justify-content:flex-end; }
+.btn-primary {
+  padding:0.55rem 1.3rem; background:var(--accent); border:none; border-radius:2px;
+  color:#030e0d; font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:500;
+  letter-spacing:0.08em; cursor:pointer; transition:opacity 0.2s;
+}
+.btn-primary:hover { opacity:0.85; }
+.btn-secondary {
+  padding:0.55rem 1.1rem; background:transparent; border:1px solid var(--border); border-radius:2px;
+  color:var(--text-dim); font-family:'DM Sans',sans-serif; font-size:0.78rem; cursor:pointer; transition:all 0.2s;
+}
+.btn-secondary:hover { border-color:var(--text-dim); color:var(--text); }
+
+.row-btn { background:none; border:none; color:var(--text-dim); cursor:pointer; padding:0.2rem; transition:color 0.2s; font-size:0.75rem; }
+.row-btn:hover { color:var(--accent); }
+.row-btn.del:hover { color:var(--red); }
+.row-actions { display:flex; gap:0.4rem; }
+
+.badge { display:inline-block; padding:0.2rem 0.5rem; border-radius:2px; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; border:1px solid; }
+.badge-new { border-color:rgba(78,205,196,0.4); color:var(--accent); background:var(--accent-dim); }
+
+.empty-state { padding:3rem 2rem; text-align:center; color:var(--text-dim); font-size:0.82rem; font-style:italic; }
+
+.toast {
+  position:fixed; bottom:2rem; left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--surface2); border:1px solid var(--border); border-radius:2px;
+  padding:0.6rem 1.2rem; font-size:0.78rem; color:var(--text);
+  opacity:0; transition:all 0.3s ease; z-index:200; white-space:nowrap;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* leaflet dark theme overrides */
+.leaflet-container { background:#07080d; }
+.leaflet-tile { filter:brightness(0.35) saturate(0.4) hue-rotate(180deg); }
+.leaflet-control-zoom a { background:var(--concrete); color:var(--text-dim); border-color:var(--border); }
+.leaflet-control-zoom a:hover { background:var(--surface2); color:var(--accent); }
+.leaflet-control-attribution { display:none; }
+
+/* fog canvas sits on top of map tiles, under markers */
+#fog-canvas { position:absolute; top:0; left:0; pointer-events:none; z-index:400; }
+</style>
+</head>
+<body>
+
+<div class="sky" id="sky"></div>
+
+<header class="page-header">
+  <a href="index.html" class="back-btn">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3L5 8l5 5"/></svg>
+    back
+  </a>
+  <span class="page-title">Health</span>
+  <div style="width:80px"></div>
+</header>
+
+<div class="tabs-wrap">
+  <button class="tab-btn active" onclick="switchTab('overview',this)">Overview</button>
+  <button class="tab-btn" onclick="switchTab('map',this)">Exploration Map</button>
+  <button class="tab-btn" onclick="switchTab('sleep',this)">Sleep</button>
+  <button class="tab-btn" onclick="switchTab('rides',this)">Ride Log</button>
+</div>
+
+<div class="main">
+
+  <!-- ═══ OVERVIEW ═══ -->
+  <div class="tab-panel active" id="tab-overview">
+
+    <!-- XP + LEVEL -->
+    <div class="xp-section">
+      <div class="xp-header">
+        <span class="xp-level" id="xp-level-label">Level 1 — Rookie Cyclist</span>
+        <span class="xp-points" id="xp-pts-label">0 / 500 XP</span>
+      </div>
+      <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar" style="width:0%"></div></div>
+    </div>
+
+    <!-- STREAK -->
+    <div class="streak-bar">
+      <div class="streak-flame">🔥</div>
+      <div class="streak-info">
+        <div class="streak-num" id="streak-num">0</div>
+        <div class="streak-label">Day Streak</div>
+        <div class="streak-dots" id="streak-dots"></div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:0.68rem;color:var(--text-dim);margin-bottom:0.3rem">Multiplier</div>
+        <div style="font-family:'Fraunces',serif;font-size:1.2rem;color:var(--amber)" id="streak-mult">1×</div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total Rides</div>
+        <div class="stat-val" id="stat-rides">0</div>
+        <div class="stat-sub">all time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total XP</div>
+        <div class="stat-val" id="stat-xp">0</div>
+        <div class="stat-sub">points earned</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Streets Explored</div>
+        <div class="stat-val" id="stat-cells">0</div>
+        <div class="stat-sub">grid cells revealed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">City Coverage</div>
+        <div class="stat-val" id="stat-coverage">0%</div>
+        <div class="stat-sub">of explored grid</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Sleep</div>
+        <div class="stat-val" id="stat-sleep">—</div>
+        <div class="stat-sub">last 7 days</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Best Streak</div>
+        <div class="stat-val" id="stat-best-streak">0</div>
+        <div class="stat-sub">days</div>
+      </div>
+    </div>
+
+    <!-- HEATMAP -->
+    <div class="heatmap-wrap">
+      <div class="heatmap-label">Activity — last 52 weeks</div>
+      <div class="heatmap-grid" id="heatmap"></div>
+    </div>
+
+    <!-- ACHIEVEMENTS -->
+    <div class="section-head">
+      <div><div class="section-title">Achievements</div></div>
+    </div>
+    <div class="achievements-grid" id="achievements-grid"></div>
+
+  </div>
+
+  <!-- ═══ MAP ═══ -->
+  <div class="tab-panel" id="tab-map">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Exploration Map</div>
+        <div class="section-sub">Every ride reveals the fog. New streets = bonus points.</div>
+      </div>
+    </div>
+
+    <div class="map-stat-strip">
+      <div class="map-stat"><div class="label">Cells Revealed</div><div class="val" id="map-cells">0</div></div>
+      <div class="map-stat"><div class="label">New This Ride</div><div class="val" id="map-new-cells">—</div></div>
+      <div class="map-stat"><div class="label">XP from Exploration</div><div class="val" id="map-xp">0</div></div>
+      <div class="map-stat"><div class="label">Rides Mapped</div><div class="val" id="map-rides">0</div></div>
+    </div>
+
+    <div class="map-controls">
+      <input type="file" id="gpx-file" accept=".gpx" style="display:none" onchange="importGPX(event)">
+      <button class="add-btn" onclick="document.getElementById('gpx-file').click()">⬆ Import GPX</button>
+      <button class="add-btn" onclick="openModal('ride')">+ Log Ride Manually</button>
+      <button class="add-btn" style="border-color:var(--text-dim);color:var(--text-dim)" onclick="clearFog()">Clear Fog (reset)</button>
+      <span style="font-size:0.68rem;color:var(--text-dim);font-style:italic;margin-left:auto">Export from Adidas Running → Share → GPX</span>
+    </div>
+
+    <div id="map-container">
+      <div id="map"></div>
+      <canvas id="fog-canvas"></canvas>
+    </div>
+  </div>
+
+  <!-- ═══ SLEEP ═══ -->
+  <div class="tab-panel" id="tab-sleep">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Sleep</div>
+        <div class="section-sub">Log it. See the pattern. Fix it.</div>
+      </div>
+      <button class="add-btn" onclick="openModal('sleep')">+ Log Sleep</button>
+    </div>
+
+    <div class="sleep-week" id="sleep-week"></div>
+
+    <div class="table-wrap">
+      <table class="hotspot-table">
+        <thead><tr>
+          <th>Date</th><th>Bedtime</th><th>Wake</th><th>Duration</th><th>Quality</th><th></th>
+        </tr></thead>
+        <tbody id="sleep-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ RIDE LOG ═══ -->
+  <div class="tab-panel" id="tab-rides">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Ride Log</div>
+        <div class="section-sub">Every ride, logged.</div>
+      </div>
+      <button class="add-btn" onclick="openModal('ride')">+ Log Ride</button>
+    </div>
+    <div class="table-wrap">
+      <table class="hotspot-table">
+        <thead><tr>
+          <th>Date</th><th>Distance</th><th>Duration</th><th>New Streets</th><th>XP</th><th>Notes</th><th></th>
+        </tr></thead>
+        <tbody id="rides-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- RIDE MODAL -->
+<div class="modal-overlay" id="modal-ride">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('ride')">✕</button>
+    <div class="modal-title">Log a Ride</div>
+    <div class="form-group">
+      <label class="form-label">Date</label>
+      <input class="form-input" type="date" id="ride-date">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Distance (km)</label>
+        <input class="form-input" type="number" step="0.1" id="ride-dist" placeholder="12.5">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Duration (mins)</label>
+        <input class="form-input" type="number" id="ride-dur" placeholder="45">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes</label>
+      <input class="form-input" id="ride-notes" placeholder="Route, how it felt, discoveries…">
+    </div>
+    <div class="form-hint" style="margin-top:-0.5rem;margin-bottom:1rem">For fog of war, import a GPX from Adidas Running instead.</div>
+    <input type="hidden" id="ride-editId">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('ride')">Cancel</button>
+      <button class="btn-primary" onclick="saveRide()">Log It</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLEEP MODAL -->
+<div class="modal-overlay" id="modal-sleep">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('sleep')">✕</button>
+    <div class="modal-title">Log Sleep</div>
+    <div class="form-group">
+      <label class="form-label">Date (morning you woke up)</label>
+      <input class="form-input" type="date" id="sleep-date">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Bedtime</label>
+        <input class="form-input" type="time" id="sleep-bed" placeholder="23:30">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Wake Time</label>
+        <input class="form-input" type="time" id="sleep-wake" placeholder="06:30">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Feel</label>
+      <select class="form-select" id="sleep-feel">
+        <option value="5">😌 Rested</option>
+        <option value="4">🙂 Pretty good</option>
+        <option value="3">😐 Okay</option>
+        <option value="2">😪 Tired</option>
+        <option value="1">💀 Wrecked</option>
+      </select>
+    </div>
+    <input type="hidden" id="sleep-editId">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('sleep')">Cancel</button>
+      <button class="btn-primary" onclick="saveSleep()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// PRIVACY: coordinates are offset + stored at coarse grid
+// ═══════════════════════════════════════════════════
+
+// Fixed random offset applied to ALL coordinates before storing/displaying
+// This shifts your real location by ~800m-1.2km — visually identical, not locatable
+// Change these two values to any small decimals you like (keep secret)
+const COORD_OFFSET_LAT =  0.0091;  // ~1km north
+const COORD_OFFSET_LNG = -0.0074;  // ~600m west
+
+// Coarse grid: each cell is ~500m × 500m (0.005 degrees)
+// Larger = more privacy, less precision
+const GRID_SIZE = 0.005;
+
+function offsetCoord(lat, lng) {
+  return [lat + COORD_OFFSET_LAT, lng + COORD_OFFSET_LNG];
+}
+function toGridCell(lat, lng) {
+  return [
+    Math.floor(lat / GRID_SIZE),
+    Math.floor(lng / GRID_SIZE),
+  ];
+}
+function cellKey(r, c) { return `${r},${c}`; }
+function cellCenter(r, c) {
+  return [(r + 0.5) * GRID_SIZE, (c + 0.5) * GRID_SIZE];
+}
+
+// ═══ STORAGE ════════════════════════════════════════
+function load(k) { try { return JSON.parse(localStorage.getItem(k)) || []; } catch { return []; } }
+function loadObj(k) { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch { return {}; } }
+function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ═══ TABS ════════════════════════════════════════════
+let mapInitialized = false;
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'map' && !mapInitialized) { initMap(); mapInitialized = true; }
+  if (name === 'map') { setTimeout(redrawFog, 100); }
+  if (name === 'sleep') renderSleep();
+  if (name === 'rides') renderRides();
+  if (name === 'overview') renderOverview();
+}
+
+// ═══ MODAL ═══════════════════════════════════════════
+function openModal(type, editId) {
+  if (type === 'ride') {
+    document.getElementById('ride-date').value = new Date().toISOString().slice(0,10);
+    if (editId) {
+      const r = load('rides').find(x => x.id === editId);
+      if (r) {
+        document.getElementById('ride-date').value  = r.date;
+        document.getElementById('ride-dist').value  = r.dist || '';
+        document.getElementById('ride-dur').value   = r.dur  || '';
+        document.getElementById('ride-notes').value = r.notes|| '';
+        document.getElementById('ride-editId').value= r.id;
+      }
+    }
+  }
+  if (type === 'sleep') {
+    document.getElementById('sleep-date').value = new Date().toISOString().slice(0,10);
+    if (editId) {
+      const s = load('sleeplog').find(x => x.id === editId);
+      if (s) {
+        document.getElementById('sleep-date').value  = s.date;
+        document.getElementById('sleep-bed').value   = s.bed;
+        document.getElementById('sleep-wake').value  = s.wake;
+        document.getElementById('sleep-feel').value  = s.feel;
+        document.getElementById('sleep-editId').value= s.id;
+      }
+    }
+  }
+  document.getElementById('modal-' + type).classList.add('open');
+}
+function closeModal(type) {
+  document.getElementById('modal-' + type).classList.remove('open');
+  ['ride-dist','ride-dur','ride-notes','ride-editId',
+   'sleep-bed','sleep-wake','sleep-editId'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+// ═══ LEVELS ══════════════════════════════════════════
+const LEVELS = [
+  { min:0,    max:500,  name:'Rookie Cyclist' },
+  { min:500,  max:1200, name:'Street Wanderer' },
+  { min:1200, max:2500, name:'Night Rider' },
+  { min:2500, max:4500, name:'Urban Explorer' },
+  { min:4500, max:7000, name:'City Ghost' },
+  { min:7000, max:10000,name:'Phantom of the Roads' },
+  { min:10000,max:15000,name:'Legend of the Streets' },
+  { min:15000,max:Infinity,name:'Delhi Untamed' },
+];
+function getLevel(xp) {
+  return LEVELS.find(l => xp >= l.min && xp < l.max) || LEVELS[LEVELS.length-1];
+}
+
+// ═══ STREAK ══════════════════════════════════════════
+function computeStreak(rides) {
+  if (!rides.length) return { current: 0, best: 0 };
+  const dates = new Set(rides.map(r => r.date));
+  const today = new Date().toISOString().slice(0,10);
+  let current = 0, best = 0, d = new Date();
+  // walk back from today
+  for (let i = 0; i < 365; i++) {
+    const ds = d.toISOString().slice(0,10);
+    if (dates.has(ds)) {
+      current++;
+      best = Math.max(best, current);
+    } else {
+      if (i > 0) break; // gap — streak broken (allow today to be missing)
+    }
+    d.setDate(d.getDate() - 1);
+  }
+  return { current, best };
+}
+function streakMultiplier(s) {
+  if (s >= 30) return 3;
+  if (s >= 14) return 2;
+  if (s >= 7)  return 1.5;
+  return 1;
+}
+
+// ═══ XP CALCULATION ══════════════════════════════════
+function totalXP() {
+  const rides  = load('rides');
+  const cells  = loadObj('fog-cells');
+  const cellCount = Object.keys(cells).length;
+  let xp = 0;
+  rides.forEach(r => {
+    const base = 10;
+    const dist = parseFloat(r.dist) || 0;
+    const distPts = Math.floor(dist);
+    const newStreetPts = (r.newCells || 0) * 5;
+    const mult = streakMultiplier(r.streakAtRide || 0);
+    xp += Math.round((base + distPts + newStreetPts) * mult);
+  });
+  return xp;
+}
+
+// ═══ ACHIEVEMENTS ════════════════════════════════════
+const ACHIEVEMENTS = [
+  { id:'first_ride',  icon:'🚲', name:'First Pedal',      desc:'Log your first ride',           check: (r) => r.length >= 1 },
+  { id:'ride_5',      icon:'🔟', name:'Five Down',         desc:'Complete 5 rides',               check: (r) => r.length >= 5 },
+  { id:'ride_30',     icon:'📅', name:'Month of Miles',    desc:'Complete 30 rides',              check: (r) => r.length >= 30 },
+  { id:'streak_7',    icon:'🔥', name:'Week Warrior',      desc:'7-day streak',                   check: (r) => computeStreak(r).best >= 7 },
+  { id:'streak_30',   icon:'💎', name:'Iron Legs',         desc:'30-day streak',                  check: (r) => computeStreak(r).best >= 30 },
+  { id:'cells_10',    icon:'🗺️', name:'Explorer',          desc:'Reveal 10 new grid cells',       check: (r,c) => Object.keys(c).length >= 10 },
+  { id:'cells_50',    icon:'🌆', name:'City Wanderer',     desc:'Reveal 50 grid cells',           check: (r,c) => Object.keys(c).length >= 50 },
+  { id:'cells_200',   icon:'🏙️', name:'Delhi Knows You',  desc:'Reveal 200 grid cells',          check: (r,c) => Object.keys(c).length >= 200 },
+  { id:'dist_10',     icon:'📍', name:'First Ten',         desc:'Ride 10km in a single ride',     check: (r) => r.some(x => parseFloat(x.dist) >= 10) },
+  { id:'dist_50_tot', icon:'🛣️', name:'Fifty Klicks',      desc:'100km total distance',           check: (r) => r.reduce((a,x) => a+(parseFloat(x.dist)||0),0) >= 50 },
+  { id:'early_bird',  icon:'🌅', name:'Early Bird',        desc:'Log a ride before 8am',          check: (r) => r.some(x => x.time && parseInt(x.time) < 800) },
+  { id:'night_owl',   icon:'🦉', name:'Night Owl',         desc:'Log a ride after 9pm',           check: (r) => r.some(x => x.time && parseInt(x.time) >= 2100) },
+];
+
+// ═══ OVERVIEW RENDER ═════════════════════════════════
+function renderOverview() {
+  const rides  = load('rides');
+  const cells  = loadObj('fog-cells');
+  const sleep  = load('sleeplog');
+  const xp     = totalXP();
+  const streak = computeStreak(rides);
+  const level  = getLevel(xp);
+  const mult   = streakMultiplier(streak.current);
+  const cellCount = Object.keys(cells).length;
+
+  // XP bar
+  const pct = Math.min(100, ((xp - level.min) / (level.max - level.min)) * 100);
+  document.getElementById('xp-level-label').textContent = `Level ${LEVELS.indexOf(level)+1} — ${level.name}`;
+  document.getElementById('xp-pts-label').textContent   = `${xp.toLocaleString()} / ${level.max.toLocaleString()} XP`;
+  document.getElementById('xp-bar').style.width = pct + '%';
+
+  // streak
+  document.getElementById('streak-num').textContent = streak.current;
+  document.getElementById('streak-mult').textContent = mult + '×';
+
+  // streak dots (last 14 days)
+  const rideDates = new Set(rides.map(r => r.date));
+  const dotsEl = document.getElementById('streak-dots');
+  dotsEl.innerHTML = '';
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const ds = d.toISOString().slice(0,10);
+    const dot = document.createElement('div');
+    dot.className = 'streak-dot' + (i===0 ? ' today' : rideDates.has(ds) ? ' active' : '');
+    dotsEl.appendChild(dot);
+  }
+
+  // stats
+  document.getElementById('stat-rides').textContent    = rides.length;
+  document.getElementById('stat-xp').textContent       = xp.toLocaleString();
+  document.getElementById('stat-cells').textContent    = cellCount;
+  document.getElementById('stat-best-streak').textContent = streak.best;
+
+  // coverage — rough estimate vs a 20×20 grid around delhi center
+  const maxCells = 2000;
+  document.getElementById('stat-coverage').textContent = Math.min(100, Math.round(cellCount/maxCells*100)) + '%';
+
+  // avg sleep
+  if (sleep.length) {
+    const recent = sleep.slice(-7);
+    const avg = recent.reduce((a,s) => a + sleepDuration(s), 0) / recent.length;
+    document.getElementById('stat-sleep').textContent = avg.toFixed(1) + 'h';
+  }
+
+  // heatmap
+  renderHeatmap(rides);
+
+  // achievements
+  renderAchievements(rides, cells);
+}
+
+function renderHeatmap(rides) {
+  const grid = document.getElementById('heatmap');
+  grid.innerHTML = '';
+  const counts = {};
+  rides.forEach(r => { counts[r.date] = (counts[r.date] || 0) + 1; });
+  const today = new Date();
+  const start = new Date(today);
+  start.setDate(start.getDate() - 363);
+  for (let i = 0; i < 364; i++) {
+    const d = new Date(start); d.setDate(d.getDate() + i);
+    const ds = d.toISOString().slice(0,10);
+    const n  = counts[ds] || 0;
+    const cell = document.createElement('div');
+    cell.className = 'hm-cell' + (n===0?'':n===1?' l1':n===2?' l2':n===3?' l3':' l4');
+    cell.title = ds + (n ? ` — ${n} ride${n>1?'s':''}` : '');
+    grid.appendChild(cell);
+  }
+}
+
+function renderAchievements(rides, cells) {
+  const grid = document.getElementById('achievements-grid');
+  grid.innerHTML = ACHIEVEMENTS.map(a => {
+    const unlocked = a.check(rides, cells);
+    return `<div class="achievement ${unlocked?'unlocked':'locked'}">
+      <div class="ach-icon">${a.icon}</div>
+      <div>
+        <div class="ach-name">${a.name}</div>
+        <div class="ach-desc">${a.desc}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══ MAP ══════════════════════════════════════════════
+let leafMap = null;
+let fogCanvas = null, fogCtx = null;
+let routeLayers = [];
+
+// Delhi center — offset applied so it's not exact
+const MAP_CENTER_LAT = 28.6139 + COORD_OFFSET_LAT;
+const MAP_CENTER_LNG = 77.2090 + COORD_OFFSET_LNG;
+
+function initMap() {
+  leafMap = L.map('map', {
+    center: [MAP_CENTER_LAT, MAP_CENTER_LNG],
+    zoom: 13,
+    zoomControl: true,
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+  }).addTo(leafMap);
+
+  // fog canvas overlay
+  fogCanvas = document.getElementById('fog-canvas');
+  fogCtx = fogCanvas.getContext('2d');
+
+  leafMap.on('moveend zoomend resize', redrawFog);
+  leafMap.on('move zoom', redrawFog);
+
+  // size canvas
+  function resizeFog() {
+    const c = document.getElementById('map-container');
+    fogCanvas.width  = c.clientWidth;
+    fogCanvas.height = c.clientHeight;
+    redrawFog();
+  }
+  resizeFog();
+  window.addEventListener('resize', resizeFog);
+
+  // draw existing routes
+  drawAllRoutes();
+  redrawFog();
+  updateMapStats();
+}
+
+function redrawFog() {
+  if (!leafMap || !fogCtx) return;
+  const W = fogCanvas.width, H = fogCanvas.height;
+  fogCtx.clearRect(0, 0, W, H);
+
+  // full dark fog
+  fogCtx.fillStyle = 'rgba(7, 8, 13, 0.88)';
+  fogCtx.fillRect(0, 0, W, H);
+
+  // cut holes for each revealed cell
+  fogCtx.globalCompositeOperation = 'destination-out';
+  const cells = loadObj('fog-cells');
+
+  Object.keys(cells).forEach(key => {
+    const [r, c] = key.split(',').map(Number);
+    const [lat, lng] = cellCenter(r, c);
+    const pt  = leafMap.latLngToContainerPoint([lat, lng]);
+    // each cell reveals a radius — coarse grid means ~250px at zoom 13
+    const zoom = leafMap.getZoom();
+    const radius = Math.max(12, 28 * Math.pow(2, zoom - 13));
+    fogCtx.beginPath();
+    fogCtx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
+    fogCtx.fill();
+  });
+
+  fogCtx.globalCompositeOperation = 'source-over';
+
+  // soft edge on revealed areas
+  fogCtx.globalCompositeOperation = 'destination-out';
+  Object.keys(cells).forEach(key => {
+    const [r, c] = key.split(',').map(Number);
+    const [lat, lng] = cellCenter(r, c);
+    const pt = leafMap.latLngToContainerPoint([lat, lng]);
+    const zoom = leafMap.getZoom();
+    const radius = Math.max(12, 28 * Math.pow(2, zoom - 13));
+    const grad = fogCtx.createRadialGradient(pt.x, pt.y, radius*0.5, pt.x, pt.y, radius*1.3);
+    grad.addColorStop(0, 'rgba(0,0,0,0.6)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    fogCtx.beginPath();
+    fogCtx.arc(pt.x, pt.y, radius*1.3, 0, Math.PI*2);
+    fogCtx.fillStyle = grad;
+    fogCtx.fill();
+  });
+
+  fogCtx.globalCompositeOperation = 'source-over';
+}
+
+function drawAllRoutes() {
+  if (!leafMap) return;
+  routeLayers.forEach(l => leafMap.removeLayer(l));
+  routeLayers = [];
+  load('rides').forEach(r => {
+    if (r.coords && r.coords.length > 1) {
+      const line = L.polyline(r.coords, {
+        color: 'rgba(78,205,196,0.55)', weight: 2.5, opacity: 0.8,
+      }).addTo(leafMap);
+      routeLayers.push(line);
+    }
+  });
+}
+
+function updateMapStats() {
+  const cells = loadObj('fog-cells');
+  const rides = load('rides');
+  const cellCount = Object.keys(cells).length;
+  const explorationXP = cellCount * 5;
+  document.getElementById('map-cells').textContent  = cellCount;
+  document.getElementById('map-xp').textContent     = explorationXP;
+  document.getElementById('map-rides').textContent  = rides.filter(r => r.coords).length;
+  if (document.getElementById('stat-cells'))
+    document.getElementById('stat-cells').textContent = cellCount;
+}
+
+// ═══ GPX IMPORT ══════════════════════════════════════
+function parseGPX(text) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(text, 'text/xml');
+  const trkpts = doc.querySelectorAll('trkpt');
+  if (!trkpts.length) return null;
+  const coords = [];
+  trkpts.forEach(pt => {
+    const lat = parseFloat(pt.getAttribute('lat'));
+    const lng = parseFloat(pt.getAttribute('lon'));
+    if (!isNaN(lat) && !isNaN(lng)) {
+      const [olat, olng] = offsetCoord(lat, lng);
+      coords.push([olat, olng]);
+    }
+  });
+  // total distance (haversine)
+  let dist = 0;
+  for (let i = 1; i < coords.length; i++) {
+    dist += haversine(coords[i-1][0], coords[i-1][1], coords[i][0], coords[i][1]);
+  }
+  return { coords, dist: Math.round(dist * 10) / 10 };
+}
+
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2-lat1) * Math.PI/180;
+  const dLon = (lon2-lon1) * Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function revealCells(coords) {
+  const cells = loadObj('fog-cells');
+  let newCount = 0;
+  // sample every Nth point for performance
+  const step = Math.max(1, Math.floor(coords.length / 200));
+  for (let i = 0; i < coords.length; i += step) {
+    const [lat, lng] = coords[i];
+    const [r, c] = toGridCell(lat, lng);
+    // reveal the cell + its 8 neighbours for smoother fog clearing
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        const k = cellKey(r+dr, c+dc);
+        if (!cells[k]) { cells[k] = 1; newCount++; }
+      }
+    }
+  }
+  save('fog-cells', cells);
+  return newCount;
+}
+
+async function importGPX(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const text = await file.text();
+  const result = parseGPX(text);
+  if (!result || !result.coords.length) { showToast('Could not parse GPX file'); return; }
+
+  const rides = load('rides');
+  const streak = computeStreak(rides);
+  const newCells = revealCells(result.coords);
+  const base = 10;
+  const distPts = Math.floor(result.dist);
+  const newStreetPts = newCells * 5;
+  const mult = streakMultiplier(streak.current);
+  const xpEarned = Math.round((base + distPts + newStreetPts) * mult);
+
+  const ride = {
+    id:           uid(),
+    date:         new Date().toISOString().slice(0,10),
+    dist:         result.dist,
+    dur:          '',
+    notes:        `Imported from GPX`,
+    coords:       result.coords,
+    newCells,
+    streakAtRide: streak.current,
+    xp:           xpEarned,
+    source:       'gpx',
+  };
+  rides.push(ride);
+  save('rides', rides);
+
+  // draw route on map
+  if (leafMap) {
+    const line = L.polyline(result.coords, {
+      color: 'rgba(78,205,196,0.6)', weight: 2.5,
+    }).addTo(leafMap);
+    routeLayers.push(line);
+    leafMap.fitBounds(line.getBounds(), { padding: [30,30] });
+  }
+
+  redrawFog();
+  updateMapStats();
+  document.getElementById('map-new-cells').textContent = '+' + newCells;
+  showToast(`Ride imported — ${newCells} new streets, +${xpEarned} XP!`);
+  renderOverview();
+  e.target.value = '';
+}
+
+function clearFog() {
+  if (!confirm('Clear all fog data? Your rides stay logged, just the map resets.')) return;
+  localStorage.removeItem('fog-cells');
+  redrawFog();
+  updateMapStats();
+  showToast('Fog reset');
+}
+
+// ═══ RIDE LOG ════════════════════════════════════════
+function saveRide() {
+  const date = document.getElementById('ride-date').value;
+  if (!date) { showToast('Date required'); return; }
+  const rides  = load('rides');
+  const editId = document.getElementById('ride-editId').value;
+  const streak = computeStreak(rides);
+  const dist   = parseFloat(document.getElementById('ride-dist').value) || 0;
+  const mult   = streakMultiplier(streak.current);
+  const xp     = Math.round((10 + Math.floor(dist)) * mult);
+  const entry  = {
+    id:    editId || uid(),
+    date,
+    dist:  document.getElementById('ride-dist').value,
+    dur:   document.getElementById('ride-dur').value,
+    notes: document.getElementById('ride-notes').value.trim(),
+    newCells: 0,
+    streakAtRide: streak.current,
+    xp,
+    source: 'manual',
+  };
+  if (editId) {
+    const i = rides.findIndex(x => x.id === editId);
+    if (i > -1) rides[i] = entry; else rides.push(entry);
+  } else { rides.push(entry); }
+  save('rides', rides);
+  closeModal('ride');
+  renderRides();
+  renderOverview();
+  showToast(`Ride logged — +${xp} XP`);
+}
+
+function renderRides() {
+  const rides  = load('rides').slice().reverse();
+  const tbody  = document.getElementById('rides-body');
+  if (!rides.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No rides yet. Get out there.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rides.map(r => `
+    <tr>
+      <td>${formatDate(r.date)}</td>
+      <td>${r.dist ? r.dist + ' km' : '—'}</td>
+      <td>${r.dur  ? r.dur  + ' min': '—'}</td>
+      <td>${r.newCells ? `<span class="badge badge-new">+${r.newCells}</span>` : '—'}</td>
+      <td style="color:var(--accent)">+${r.xp || 0}</td>
+      <td style="font-size:0.75rem;color:var(--text-dim)">${r.notes || '—'}</td>
+      <td class="row-actions">
+        <button class="row-btn" onclick="openModal('ride','${r.id}')">✎</button>
+        <button class="row-btn del" onclick="deleteRide('${r.id}')">✕</button>
+      </td>
+    </tr>`).join('');
+}
+
+function deleteRide(id) {
+  save('rides', load('rides').filter(x => x.id !== id));
+  renderRides();
+  renderOverview();
+  showToast('Ride removed');
+}
+
+// ═══ SLEEP ═══════════════════════════════════════════
+function sleepDuration(s) {
+  if (!s.bed || !s.wake) return 0;
+  const [bh, bm] = s.bed.split(':').map(Number);
+  const [wh, wm] = s.wake.split(':').map(Number);
+  let hrs = wh - bh + (wm - bm)/60;
+  if (hrs < 0) hrs += 24; // crossed midnight
+  return Math.round(hrs * 10) / 10;
+}
+
+function saveSleep() {
+  const date = document.getElementById('sleep-date').value;
+  if (!date) { showToast('Date required'); return; }
+  const list   = load('sleeplog');
+  const editId = document.getElementById('sleep-editId').value;
+  const entry  = {
+    id:   editId || uid(),
+    date,
+    bed:  document.getElementById('sleep-bed').value,
+    wake: document.getElementById('sleep-wake').value,
+    feel: document.getElementById('sleep-feel').value,
+  };
+  if (editId) {
+    const i = list.findIndex(x => x.id === editId);
+    if (i > -1) list[i] = entry; else list.push(entry);
+  } else { list.push(entry); }
+  save('sleeplog', list);
+  closeModal('sleep');
+  renderSleep();
+  renderOverview();
+  showToast('Sleep logged');
+}
+
+function renderSleep() {
+  const logs  = load('sleeplog');
+  const tbody = document.getElementById('sleep-body');
+  const weekEl = document.getElementById('sleep-week');
+  const feelEmoji = { '5':'😌','4':'🙂','3':'😐','2':'😪','1':'💀' };
+
+  // last 7 days bars
+  const today = new Date();
+  weekEl.innerHTML = '';
+  for (let i = 6; i >= 0; i--) {
+    const d  = new Date(today); d.setDate(d.getDate() - i);
+    const ds = d.toISOString().slice(0,10);
+    const log = logs.find(s => s.date === ds);
+    const hrs = log ? sleepDuration(log) : 0;
+    const pct = Math.min(100, (hrs / 10) * 100);
+    const cls = hrs >= 8 ? 'great' : hrs >= 6 ? 'good' : '';
+    const dayName = d.toLocaleDateString('en-IN', { weekday:'short' });
+    weekEl.innerHTML += `
+      <div class="sleep-day">
+        <div class="sleep-day-name">${dayName}</div>
+        <div class="sleep-bar-wrap">
+          <div class="sleep-bar ${cls}" style="height:${pct}%"></div>
+        </div>
+        <div class="sleep-hrs">${hrs ? hrs + 'h' : '—'}</div>
+      </div>`;
+  }
+
+  // table
+  if (!logs.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No sleep logged. Add last night\'s data.</td></tr>';
+    return;
+  }
+  const sorted = [...logs].sort((a,b) => b.date.localeCompare(a.date));
+  tbody.innerHTML = sorted.map(s => {
+    const hrs = sleepDuration(s);
+    const hrsColor = hrs >= 8 ? 'var(--green)' : hrs >= 6 ? 'var(--amber)' : 'var(--red)';
+    return `<tr>
+      <td>${formatDate(s.date)}</td>
+      <td>${s.bed  || '—'}</td>
+      <td>${s.wake || '—'}</td>
+      <td style="color:${hrsColor};font-family:'Fraunces',serif">${hrs ? hrs + ' hrs' : '—'}</td>
+      <td>${feelEmoji[s.feel] || '—'}</td>
+      <td class="row-actions">
+        <button class="row-btn" onclick="openModal('sleep','${s.id}')">✎</button>
+        <button class="row-btn del" onclick="deleteSleep('${s.id}')">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function deleteSleep(id) {
+  save('sleeplog', load('sleeplog').filter(x => x.id !== id));
+  renderSleep();
+  renderOverview();
+  showToast('Removed');
+}
+
+function formatDate(ds) {
+  if (!ds) return '—';
+  return new Date(ds).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+}
+
+// ═══ STARS ═══════════════════════════════════════════
+const sky = document.getElementById('sky');
+for (let i = 0; i < 90; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 1.8 + 0.3;
+  s.style.cssText = `
+    width:${size}px;height:${size}px;
+    top:${Math.random()*100}%;left:${Math.random()*100}%;
+    --d:${(Math.random()*4+2).toFixed(1)}s;
+    --delay:-${(Math.random()*6).toFixed(1)}s;
+    --max-op:${(Math.random()*0.5+0.2).toFixed(2)};
+  `;
+  sky.appendChild(s);
+}
+
+// ═══ INIT ════════════════════════════════════════════
+renderOverview();
+</script>
+</body>
+</html>
