@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Overview — Tamanna's Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #07080d;
+  --concrete: #0f1015;
+  --concrete-edge: #1c1f28;
+  --text: #c8c2b4;
+  --text-dim: #4a4840;
+  --text-mid: #7a7268;
+  --amber: #e8943a;
+  --amber-dim: rgba(232,148,58,0.10);
+  --amber-mid: rgba(232,148,58,0.22);
+  --amber-glow: rgba(232,148,58,0.06);
+  --teal: #4ecdc4;
+  --red: #c94040;
+  --green: #6a9e5e;
+  --purple: #8b6bb1;
+  --surface: #0c0d12;
+  --surface2: #13141a;
+  --border: #1c1f28;
+  --border-mid: #252830;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-bottom: 5rem;
+}
+
+/* STARS */
+.sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  opacity: 0;
+  animation: twinkle var(--d, 3s) ease-in-out infinite var(--delay, 0s);
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0; }
+  50% { opacity: var(--max-op, 0.5); }
+}
+
+/* HEADER */
+.page-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.6rem 2.4rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--concrete);
+}
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.back-btn:hover { color: var(--amber); }
+.back-btn svg { width: 14px; height: 14px; }
+.page-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--amber);
+  letter-spacing: 0.02em;
+}
+.header-date {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: right;
+}
+
+/* MAIN */
+.main {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 2.4rem;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  grid-template-rows: auto;
+  gap: 1.6rem;
+}
+
+/* GREETING STRIP */
+.greeting-strip {
+  grid-column: 1 / -1;
+  padding: 1.4rem 1.8rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  border-radius: 2px;
+  display: flex;
+  align-items: baseline;
+  gap: 1.2rem;
+  justify-content: space-between;
+}
+.greeting-text {
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.5;
+}
+.quote-text {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-style: italic;
+  max-width: 380px;
+  text-align: right;
+  line-height: 1.6;
+}
+
+/* ═══ TRAJECTORY SCORE ═══ */
+.trajectory-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.traj-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.traj-title {
+  font-family: 'Fraunces', serif;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+.traj-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+
+.score-display {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.8rem;
+}
+.score-number {
+  font-family: 'Fraunces', serif;
+  font-size: 4.5rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--amber);
+  letter-spacing: -0.02em;
+  transition: color 0.4s;
+}
+.score-number.low { color: var(--red); }
+.score-number.mid { color: #d4b84a; }
+
+.score-meta {
+  padding-bottom: 0.6rem;
+}
+.score-delta {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-bottom: 0.2rem;
+}
+.score-delta.up { color: var(--green); }
+.score-delta.down { color: var(--red); }
+.score-verdict {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-style: italic;
+  max-width: 140px;
+  line-height: 1.4;
+}
+
+/* trajectory bar */
+.traj-bar-wrap {
+  width: 100%;
+}
+.traj-bar-track {
+  width: 100%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.traj-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--amber);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.traj-bar-fill.low { background: var(--red); }
+.traj-bar-fill.mid { background: #d4b84a; }
+.traj-bar-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.4rem;
+}
+.traj-tick { font-size: 0.58rem; color: var(--text-dim); }
+
+/* weekly history dots */
+.traj-history {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+.traj-hist-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-right: 0.4rem;
+  white-space: nowrap;
+}
+.hist-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  border: 1px solid var(--border-mid);
+  position: relative;
+  cursor: default;
+  transition: transform 0.15s;
+}
+.hist-dot:hover { transform: scale(1.4); }
+.hist-dot.yes { background: var(--green); border-color: var(--green); }
+.hist-dot.no  { background: var(--red);   border-color: var(--red); }
+.hist-dot.streak-fire::after {
+  content: '🔥';
+  position: absolute;
+  top: -16px;
+  left: -4px;
+  font-size: 0.65rem;
+}
+
+/* HOW SCORE WORKS */
+.score-formula {
+  font-size: 0.67rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+.score-formula strong { color: var(--text-mid); font-weight: 500; }
+
+/* ═══ DAILY NEEDLE CHECK-IN ═══ */
+.checkin-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.4rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.checkin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.checkin-title {
+  font-family: 'Fraunces', serif;
+  font-size: 0.82rem;
+  color: var(--text);
+  font-style: italic;
+}
+.checkin-streak {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.checkin-streak.fire { color: var(--amber); }
+
+.checkin-question {
+  font-size: 0.88rem;
+  color: var(--text);
+  line-height: 1.5;
+  font-weight: 500;
+}
+.checkin-question span {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: var(--amber);
+}
+
+.checkin-needle-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  padding: 0.55rem 0.8rem;
+  outline: none;
+  transition: border-color 0.2s;
+  placeholder-color: var(--text-dim);
+}
+.checkin-needle-input:focus { border-color: var(--amber); }
+.checkin-needle-input::placeholder { color: var(--text-dim); }
+
+.checkin-btns {
+  display: flex;
+  gap: 0.7rem;
+}
+.yn-btn {
+  flex: 1;
+  padding: 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+.yn-btn.yes-btn { color: var(--green); }
+.yn-btn.yes-btn:hover, .yn-btn.yes-btn.selected {
+  background: rgba(106,158,94,0.12);
+  border-color: var(--green);
+  color: var(--green);
+}
+.yn-btn.no-btn { color: #e07070; }
+.yn-btn.no-btn:hover, .yn-btn.no-btn.selected {
+  background: rgba(201,64,64,0.1);
+  border-color: var(--red);
+  color: #e07070;
+}
+.checkin-done {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-style: italic;
+  text-align: center;
+  min-height: 1.2em;
+}
+
+/* ═══ GOALS ═══ */
+.goals-block {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.goals-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+.goals-sub {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+.goal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.4rem;
+  transition: border-color 0.3s;
+  cursor: default;
+}
+.goal-card:hover { border-color: rgba(232,148,58,0.25); }
+
+.goal-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+}
+.goal-icon { font-size: 1.1rem; margin-right: 0.6rem; }
+.goal-name {
+  font-family: 'Fraunces', serif;
+  font-size: 0.98rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+}
+.goal-pct {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--amber);
+  line-height: 1;
+}
+.goal-pct-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: right;
+  margin-top: 0.1rem;
+}
+
+/* goal progress bar */
+.goal-bar-track {
+  width: 100%;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+.goal-bar-fill {
+  height: 100%;
+  background: var(--amber);
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* sub-tasks */
+.goal-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+.goal-task {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.78rem;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+  padding: 0.3rem 0;
+  transition: color 0.2s;
+}
+.goal-task:hover { color: var(--amber); }
+.goal-task.done { color: var(--text-dim); text-decoration: line-through; }
+.task-check {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--border-mid);
+  border-radius: 2px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  font-size: 0.6rem;
+}
+.goal-task.done .task-check {
+  background: rgba(106,158,94,0.2);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+/* add task inline */
+.goal-add-task {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.task-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  padding: 0.4rem 0.6rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.task-input::placeholder { color: var(--text-dim); }
+.task-input:focus { border-color: var(--amber); }
+.task-add-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  transition: all 0.2s;
+}
+.task-add-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+/* unhinged action prompt */
+.goal-unhinged {
+  border-top: 1px solid var(--border);
+  padding-top: 0.9rem;
+}
+.unhinged-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  opacity: 0.7;
+  margin-bottom: 0.35rem;
+}
+.unhinged-text {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* ═══ RIGHT COLUMN ═══ */
+.right-col {
+  grid-column: 2;
+  grid-row: 2 / 5;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* EVERYONE ELSE BLOCK */
+.noise-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.4rem 1.6rem;
+}
+.noise-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.noise-title {
+  font-family: 'Fraunces', serif;
+  font-size: 0.85rem;
+  color: var(--text);
+  font-style: italic;
+}
+.noise-rotate-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  padding: 0.1rem 0;
+}
+.noise-rotate-btn:hover { color: var(--amber); }
+
+.noise-card {
+  border: 1px solid rgba(232,148,58,0.15);
+  border-radius: 2px;
+  padding: 1rem 1.1rem;
+  background: var(--amber-glow);
+  animation: fadeCard 0.4s ease;
+}
+@keyframes fadeCard {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+.noise-age {
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  opacity: 0.7;
+  margin-bottom: 0.4rem;
+}
+.noise-fact {
+  font-size: 0.82rem;
+  color: var(--text);
+  line-height: 1.5;
+  font-weight: 400;
+}
+.noise-name {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  margin-top: 0.5rem;
+}
+.noise-cta {
+  font-size: 0.7rem;
+  color: var(--amber);
+  margin-top: 0.7rem;
+  font-style: italic;
+  border-top: 1px solid rgba(232,148,58,0.12);
+  padding-top: 0.6rem;
+  line-height: 1.4;
+}
+
+/* DEADLINES BLOCK */
+.deadlines-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.4rem 1.6rem;
+}
+.deadlines-title {
+  font-family: 'Fraunces', serif;
+  font-size: 0.85rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+.deadline-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  gap: 0.8rem;
+}
+.deadline-item:last-child { border-bottom: none; }
+.dl-left { flex: 1; }
+.dl-tag {
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.15rem;
+}
+.dl-name {
+  font-size: 0.78rem;
+  color: var(--text);
+  line-height: 1.3;
+}
+.dl-days {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-align: right;
+}
+.dl-days.urgent { color: var(--red); }
+.dl-days.soon   { color: #d4b84a; }
+.dl-days.fine   { color: var(--text-dim); }
+.dl-empty {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-style: italic;
+  padding: 0.5rem 0;
+}
+
+/* SECTIONS QUICK NAV */
+.quicknav-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.2rem 1.4rem;
+}
+.quicknav-title {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.9rem;
+}
+.quicknav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+.quicknav-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.68rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  letter-spacing: 0.04em;
+}
+.quicknav-btn:hover { border-color: var(--amber); color: var(--amber); }
+.quicknav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(7,8,13,0.88);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--concrete);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  width: 100%;
+  max-width: 480px;
+  padding: 2rem;
+  position: relative;
+  animation: modalIn 0.2s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.modal-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+.modal-close:hover { color: var(--text); }
+.modal-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  color: var(--amber);
+  margin-bottom: 1.4rem;
+}
+.form-group { margin-bottom: 1rem; }
+.form-label {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+}
+.form-input, .form-textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  padding: 0.55rem 0.8rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-textarea:focus { border-color: var(--amber); }
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text-dim); }
+.form-textarea { resize: vertical; min-height: 60px; }
+.form-actions {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1.4rem;
+  justify-content: flex-end;
+}
+.btn-primary {
+  padding: 0.55rem 1.3rem;
+  background: var(--amber);
+  border: none;
+  border-radius: 2px;
+  color: #0a0600;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.88; }
+.btn-secondary {
+  padding: 0.55rem 1.1rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text-dim);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--text-dim); color: var(--text); }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.78rem;
+  color: var(--text);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 200;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* EDIT GOAL MODAL */
+.goal-edit-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  transition: color 0.2s;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.goal-edit-btn:hover { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<div class="sky" id="sky"></div>
+
+<!-- HEADER -->
+<header class="page-header">
+  <a href="index.html" class="back-btn">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M10 3L5 8l5 5"/>
+    </svg>
+    back
+  </a>
+  <span class="page-title">Overview</span>
+  <div class="header-date" id="headerDate"></div>
+</header>
+
+<div class="main">
+
+  <!-- GREETING -->
+  <div class="greeting-strip">
+    <div class="greeting-text" id="greetingText"></div>
+    <div class="quote-text" id="quoteText"></div>
+  </div>
+
+  <!-- ═══ LEFT COL — TRAJECTORY + GOALS ═══ -->
+
+  <!-- TRAJECTORY SCORE -->
+  <div class="trajectory-block">
+    <div class="traj-header">
+      <div>
+        <div class="traj-title">Trajectory Score</div>
+        <div style="font-size:0.62rem;color:var(--text-dim);margin-top:0.2rem;">How cooked are you, actually</div>
+      </div>
+      <button class="goal-edit-btn" onclick="openScoreInfo()">how this works</button>
+    </div>
+
+    <div class="score-display">
+      <div class="score-number" id="scoreNum">—</div>
+      <div class="score-meta">
+        <div class="score-delta" id="scoreDelta"></div>
+        <div class="score-verdict" id="scoreVerdict"></div>
+      </div>
+    </div>
+
+    <div class="traj-bar-wrap">
+      <div class="traj-bar-track">
+        <div class="traj-bar-fill" id="trajBarFill" style="width:0%"></div>
+      </div>
+      <div class="traj-bar-ticks">
+        <span class="traj-tick">0 (cooked)</span>
+        <span class="traj-tick">50</span>
+        <span class="traj-tick">100 (locked in)</span>
+      </div>
+    </div>
+
+    <div class="traj-history">
+      <span class="traj-hist-label">Last 14 days</span>
+      <div id="histDots"></div>
+    </div>
+  </div>
+
+  <!-- DAILY CHECK-IN -->
+  <div class="checkin-block">
+    <div class="checkin-header">
+      <div class="checkin-title">Daily needle-mover</div>
+      <div class="checkin-streak" id="checkinStreakLabel"></div>
+    </div>
+    <div class="checkin-question">
+      What's your <span>one move</span> today?
+    </div>
+    <input class="checkin-needle-input" id="needleInput" placeholder="e.g. DM 3 founders, push the Alchemy demo, apply to that SaaS role" />
+    <div class="checkin-question" style="font-size:0.8rem;font-weight:400;color:var(--text-dim);" id="checkinStatusQ">
+      Did you do yesterday's?
+    </div>
+    <div class="checkin-btns" id="checkinBtns">
+      <button class="yn-btn yes-btn" onclick="logCheckin(true)">✓ yes, I did the thing</button>
+      <button class="yn-btn no-btn"  onclick="logCheckin(false)">✕ nope, I fumbled</button>
+    </div>
+    <div class="checkin-done" id="checkinDone"></div>
+  </div>
+
+  <!-- GOALS -->
+  <div class="goals-block">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.6rem;">
+      <div>
+        <div class="goals-title">Summer goals</div>
+        <div class="goals-sub">The three things that actually matter before Day 1</div>
+      </div>
+    </div>
+    <div id="goalsContainer"></div>
+  </div>
+
+  <!-- ═══ RIGHT COLUMN ═══ -->
+  <div class="right-col">
+
+    <!-- EVERYONE ELSE -->
+    <div class="noise-block">
+      <div class="noise-header">
+        <div class="noise-title">while you were sleeping</div>
+        <button class="noise-rotate-btn" onclick="nextNoiseFact()">next →</button>
+      </div>
+      <div id="noiseCard"></div>
+    </div>
+
+    <!-- DEADLINES -->
+    <div class="deadlines-block">
+      <div class="deadlines-title">What's coming for you</div>
+      <div id="deadlinesList"></div>
+    </div>
+
+    <!-- QUICK NAV -->
+    <div class="quicknav-block">
+      <div class="quicknav-title">Sections</div>
+      <div class="quicknav-grid">
+        <a class="quicknav-btn" href="academic.html"><div class="quicknav-dot" style="background:#e8943a"></div>Academic</a>
+        <a class="quicknav-btn" href="opportunities.html"><div class="quicknav-dot" style="background:#4ecdc4"></div>Opportunities</a>
+        <a class="quicknav-btn" href="wardrobe.html"><div class="quicknav-dot" style="background:#c94040"></div>Wardrobe</a>
+        <a class="quicknav-btn" href="tools.html"><div class="quicknav-dot" style="background:#5b8fa8"></div>Tools</a>
+        <a class="quicknav-btn" href="ideas.html"><div class="quicknav-dot" style="background:#8b6bb1"></div>Ideas</a>
+        <a class="quicknav-btn" href="people.html"><div class="quicknav-dot" style="background:#c47e3a"></div>People</a>
+        <a class="quicknav-btn" href="budgeting.html"><div class="quicknav-dot" style="background:#6a9e5e"></div>Budgeting</a>
+        <a class="quicknav-btn" href="health.html"><div class="quicknav-dot" style="background:#4ecdc4"></div>Health</a>
+        <a class="quicknav-btn" href="buildlog.html"><div class="quicknav-dot" style="background:#e8943a"></div>Build Log</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SCORE INFO MODAL -->
+<div class="modal-overlay" id="modal-scoreinfo">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('scoreinfo')">✕</button>
+    <div class="modal-title">How the Trajectory Score works</div>
+    <p style="font-size:0.82rem;color:var(--text);line-height:1.7;margin-bottom:1rem;">
+      The score starts at <strong style="color:var(--amber)">50</strong>. Every day you do your needle-mover and mark Yes: <strong style="color:var(--green)">+3</strong>. Every No: <strong style="color:var(--red)">−4</strong>. Miss logging entirely: <strong style="color:var(--red)">−2</strong>.
+    </p>
+    <p style="font-size:0.82rem;color:var(--text);line-height:1.7;margin-bottom:1rem;">
+      Every goal sub-task you tick: <strong style="color:var(--green)">+2</strong>. Score is capped between 0–100.
+    </p>
+    <p style="font-size:0.82rem;color:var(--text-dim);line-height:1.7;font-style:italic;">
+      Under 30 = full send on something drastic. 30–60 = you're trying, now try harder. 60–80 = don't coast. 80+ = stay paranoid, that's when you get complacent.
+    </p>
+    <div class="form-actions">
+      <button class="btn-primary" onclick="closeModal('scoreinfo')">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- GOAL EDIT MODAL -->
+<div class="modal-overlay" id="modal-goaledit">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('goaledit')">✕</button>
+    <div class="modal-title" id="goaledit-title">Edit Goal</div>
+    <div class="form-group">
+      <label class="form-label">Goal Name</label>
+      <input class="form-input" id="ge-name" placeholder="What's the goal">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Deadline / Target</label>
+      <input class="form-input" id="ge-deadline" placeholder="e.g. Before Aug 1" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Most unhinged move I could make this week</label>
+      <textarea class="form-textarea" id="ge-unhinged" placeholder="Don't be boring here."></textarea>
+    </div>
+    <input type="hidden" id="ge-goalindex">
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('goaledit')">Cancel</button>
+      <button class="btn-primary" onclick="saveGoalEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────
+function ls(k)       { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }
+function lsArr(k)    { return ls(k) || []; }
+function lsSave(k,v) { localStorage.setItem(k, JSON.stringify(v)); }
+function uid()       { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+// ─── GREETING + QUOTE ────────────────────────────────────
+const GREETINGS = [
+  "The gap between who you are and who you want to be is what you do today.",
+  "Your peers are already sending cold emails. Just saying.",
+  "The only thing separating you from where you want to be is reps.",
+  "You have the whole summer. That's either a gift or a warning.",
+  "Locked in isn't a vibe, it's a decision you make before breakfast.",
+  "The version of you that gets the internship is already building. Where are you?",
+  "Urgency is a skill. Train it.",
+];
+const QUOTES = [
+  "\"I have no special talent. I am only passionately curious.\" — Einstein, who definitely wasn't talking about doom-scrolling",
+  "\"Do what you can, with what you have, where you are.\" — Roosevelt, who also had summers",
+  "\"The best time was yesterday. The second best is now.\" — every founder you want to intern for",
+  "\"Be so good they can't ignore you.\" — Cal Newport, aggressively",
+  "\"Luck is what happens when preparation meets opportunity.\" — Seneca, before LinkedIn existed",
+  "\"Stay hungry, stay foolish.\" — Jobs, at a commencement speech you should have given",
+  "\"The people who are crazy enough to think they can change the world are the ones who do.\" — also Jobs, who dropped out, context matters",
+];
+
+function initGreeting() {
+  const day = new Date().getDay();
+  document.getElementById('greetingText').textContent = GREETINGS[day % GREETINGS.length];
+  document.getElementById('quoteText').textContent    = QUOTES[day % QUOTES.length];
+
+  const now = new Date();
+  document.getElementById('headerDate').innerHTML =
+    now.toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' })
+       .toUpperCase();
+}
+
+// ─── NOISE FACTS ─────────────────────────────────────────
+const NOISE_FACTS = [
+  { age: "18", fact: "Vitalik Buterin published the Ethereum whitepaper. Not the code. The whitepaper. Then built it.", name: "Vitalik Buterin", cta: "What's your whitepaper? Write down the idea you've been sitting on." },
+  { age: "19", fact: "Arash Ferdowsi dropped out of MIT to co-found Dropbox. The acceptance rate to MIT is 4%. He left anyway.", name: "Arash Ferdowsi", cta: "You haven't even applied to the thing you're scared of yet. Do that today." },
+  { age: "18", fact: "Malala Yousafzai became the youngest Nobel Peace Prize laureate. While recovering from a gunshot wound. What's your excuse?", name: "Malala Yousafzai", cta: "The thing you've been 'too busy' for — schedule it in the next 10 minutes." },
+  { age: "17", fact: "Alia Bhatt completed her first film Udaan before anyone knew her name. Nobody was handing her opportunities.", name: "Alia Bhatt, before Student of the Year", cta: "Build the thing. Ship it. Then talk about it publicly." },
+  { age: "19", fact: "Jensen Huang left Stanford and co-founded NVIDIA. He was working at Denny's before that. The company is now worth more than most countries.", name: "Jensen Huang", cta: "The boring work before the breakthrough is still the work. Do it." },
+  { age: "18", fact: "Cleo Wade was already performing spoken word and building a creative career. She didn't wait for a platform.", name: "Cleo Wade", cta: "Post the thing. LinkedIn, Twitter, wherever. Your insights have value now, not later." },
+  { age: "19", fact: "Ritesh Agarwal founded OYO Rooms from a hostel room with ₹30 lakh he pitched to investors without a product yet.", name: "Ritesh Agarwal", cta: "You have skills, a laptop, and internet. What are you building with that?" },
+  { age: "18", fact: "Nora Ali (now a VC) was cold-emailing executives for informational interviews before college even started. She kept a spreadsheet.", name: "Nora Ali, VC & entrepreneur", cta: "Write 3 cold DMs today. Not perfect ones. Real ones." },
+];
+
+let noiseIndex = ls('noiseIndex') || 0;
+
+function renderNoiseFact() {
+  const f = NOISE_FACTS[noiseIndex % NOISE_FACTS.length];
+  document.getElementById('noiseCard').innerHTML = `
+    <div class="noise-card">
+      <div class="noise-age">At ${f.age}</div>
+      <div class="noise-fact">${f.fact}</div>
+      <div class="noise-name">— ${f.name}</div>
+      <div class="noise-cta">${f.cta}</div>
+    </div>`;
+}
+function nextNoiseFact() {
+  noiseIndex = (noiseIndex + 1) % NOISE_FACTS.length;
+  lsSave('noiseIndex', noiseIndex);
+  renderNoiseFact();
+}
+
+// ─── TRAJECTORY SCORE ────────────────────────────────────
+function getScore()     { return ls('trajScore') ?? 50; }
+function setScore(v)    { lsSave('trajScore', Math.max(0, Math.min(100, v))); }
+function getHistory()   { return lsArr('checkinHistory'); } // [{date, did, needle}]
+
+function scoreColor(s) {
+  if (s < 30) return 'low';
+  if (s < 65) return 'mid';
+  return '';
+}
+function scoreVerdict(s) {
+  if (s < 20) return "full send on something drastic. right now.";
+  if (s < 30) return "you're falling behind your own timeline.";
+  if (s < 50) return "trying, but not hard enough yet.";
+  if (s < 65) return "decent. don't mistake decent for enough.";
+  if (s < 80) return "locked in. stay paranoid.";
+  return "rare. don't get comfortable.";
+}
+
+function renderScore() {
+  const s = getScore();
+  const history = getHistory();
+  const cls = scoreColor(s);
+
+  const num = document.getElementById('scoreNum');
+  num.textContent = s;
+  num.className = 'score-number ' + cls;
+
+  const fill = document.getElementById('trajBarFill');
+  fill.style.width = s + '%';
+  fill.className = 'traj-bar-fill ' + cls;
+
+  document.getElementById('scoreVerdict').textContent = scoreVerdict(s);
+
+  // delta
+  const last7 = history.slice(-7);
+  const delta  = document.getElementById('scoreDelta');
+  if (last7.length >= 2) {
+    const yeses = last7.filter(h => h.did).length;
+    const nos   = last7.filter(h => h.did === false).length;
+    const net   = (yeses * 3) - (nos * 4);
+    delta.textContent = (net >= 0 ? '+' : '') + net + ' this week';
+    delta.className   = 'score-delta ' + (net >= 0 ? 'up' : 'down');
+  } else {
+    delta.textContent = 'start checking in to see movement';
+    delta.className   = 'score-delta';
+  }
+
+  // history dots
+  const last14 = history.slice(-14);
+  const dots   = document.getElementById('histDots');
+  dots.style.display = 'flex';
+  dots.style.gap = '4px';
+  dots.innerHTML = Array.from({length: 14}, (_, i) => {
+    const entry = last14[i];
+    if (!entry) return `<div class="hist-dot" title="No data"></div>`;
+    const cls2 = entry.did ? 'yes' : 'no';
+    const streakFire = entry.did && i > 0 && last14[i-1]?.did && i === last14.length - 1 ? ' streak-fire' : '';
+    return `<div class="hist-dot ${cls2}${streakFire}" title="${entry.date}: ${entry.did ? 'did it' : 'fumbled'}"></div>`;
+  }).join('');
+}
+
+// ─── CHECK-IN ────────────────────────────────────────────
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+
+function getCheckinState() {
+  return ls('checkinState') || { date: null, did: null, needle: null, yesterdayAnswered: false };
+}
+
+function initCheckin() {
+  const state   = getCheckinState();
+  const history = getHistory();
+  const today   = todayStr();
+
+  const streak    = computeStreak(history);
+  const streakEl  = document.getElementById('checkinStreakLabel');
+  if (streak >= 3) {
+    streakEl.textContent = '🔥 ' + streak + '-day streak';
+    streakEl.className   = 'checkin-streak fire';
+  } else if (streak > 0) {
+    streakEl.textContent = streak + '-day streak';
+    streakEl.className   = 'checkin-streak';
+  } else {
+    streakEl.textContent = 'no streak yet';
+    streakEl.className   = 'checkin-streak';
+  }
+
+  // restore needle input if already entered today
+  if (state.date === today && state.needle) {
+    document.getElementById('needleInput').value = state.needle;
+  }
+
+  // if already answered yesterday's check-in today, hide buttons
+  const alreadyDone = state.date === today && state.did !== null;
+  if (alreadyDone) {
+    document.getElementById('checkinBtns').style.display = 'none';
+    document.getElementById('checkinStatusQ').style.display = 'none';
+    document.getElementById('checkinDone').textContent =
+      state.did ? '✓ you said yes. trajectory updated.' : '✕ you said no. score took a hit. tomorrow.';
+  }
+
+  // yesterday's needle
+  const yesterday = history[history.length - 1];
+  if (yesterday && yesterday.needle && yesterday.date !== today) {
+    document.getElementById('checkinStatusQ').innerHTML =
+      `Did you do yesterday's move? <em style="color:var(--amber)">"${yesterday.needle}"</em>`;
+  }
+}
+
+function logCheckin(did) {
+  const today   = todayStr();
+  const needle  = document.getElementById('needleInput').value.trim();
+  const history = getHistory();
+  const state   = getCheckinState();
+
+  // save or update today's needle
+  const todayEntry = {
+    date:   today,
+    did:    did,
+    needle: needle || state.needle || '(no move logged)',
+  };
+
+  // upsert
+  const existing = history.findIndex(h => h.date === today);
+  if (existing > -1) history[existing] = todayEntry;
+  else history.push(todayEntry);
+  lsSave('checkinHistory', history);
+
+  // update state
+  lsSave('checkinState', { date: today, did, needle: needle || state.needle });
+
+  // update score
+  const oldScore = getScore();
+  setScore(oldScore + (did ? 3 : -4));
+
+  document.getElementById('checkinBtns').style.display   = 'none';
+  document.getElementById('checkinStatusQ').style.display = 'none';
+  document.getElementById('checkinDone').textContent =
+    did ? '✓ +3 to trajectory. build on it.' : '✕ −4 to trajectory. don\'t let it compound.';
+
+  renderScore();
+  showToast(did ? '+3 trajectory. nice.' : '−4 trajectory. reset tomorrow.');
+}
+
+function computeStreak(history) {
+  let streak = 0;
+  const sorted = [...history].sort((a,b) => b.date.localeCompare(a.date));
+  for (const h of sorted) {
+    if (h.did) streak++;
+    else break;
+  }
+  return streak;
+}
+
+// ─── GOALS ───────────────────────────────────────────────
+const DEFAULT_GOALS = [
+  {
+    id: 'g1',
+    icon: '💼',
+    name: 'Land an internship / outreach role',
+    deadline: 'Before college starts',
+    tasks: [],
+    unhinged: 'Cold DM 10 founders on LinkedIn today. Not 1. Ten.',
+  },
+  {
+    id: 'g2',
+    icon: '🛠️',
+    name: 'Build 2 projects worth showing',
+    deadline: 'July end',
+    tasks: [],
+    unhinged: 'Ship something live before this week ends. Doesn\'t have to be perfect. Has to exist.',
+  },
+  {
+    id: 'g3',
+    icon: '🧭',
+    name: 'Figure out what I actually want to do',
+    deadline: 'Ongoing — but make progress',
+    tasks: [],
+    unhinged: 'Interview 3 people in roles you think you want. This week. DM them now.',
+  },
+];
+
+function getGoals() {
+  return ls('overviewGoals') || DEFAULT_GOALS;
+}
+function saveGoals(g) { lsSave('overviewGoals', g); }
+
+function pct(tasks) {
+  if (!tasks.length) return 0;
+  return Math.round(tasks.filter(t => t.done).length / tasks.length * 100);
+}
+
+function renderGoals() {
+  const goals = getGoals();
+  const container = document.getElementById('goalsContainer');
+  container.innerHTML = goals.map((g, i) => {
+    const p = pct(g.tasks);
+    return `
+    <div class="goal-card" id="goal-${g.id}">
+      <div class="goal-card-top">
+        <div class="goal-name"><span class="goal-icon">${g.icon}</span>${g.name}</div>
+        <div style="text-align:right">
+          <div class="goal-pct">${p}%</div>
+          <div class="goal-pct-label">${g.deadline || ''}</div>
+        </div>
+      </div>
+      <div class="goal-bar-track"><div class="goal-bar-fill" style="width:${p}%"></div></div>
+
+      <div class="goal-tasks" id="tasks-${g.id}">
+        ${g.tasks.length ? g.tasks.map((t,ti) => `
+          <div class="goal-task${t.done?' done':''}" onclick="toggleTask('${g.id}',${ti})">
+            <div class="task-check">${t.done?'✓':''}</div>
+            ${t.text}
+          </div>`).join('') : '<div style="font-size:0.72rem;color:var(--text-dim);font-style:italic;padding:0.2rem 0">No sub-tasks yet. Add one below.</div>'}
+      </div>
+
+      <div class="goal-add-task">
+        <input class="task-input" id="task-input-${g.id}" placeholder="Add a step…" onkeydown="if(event.key==='Enter')addTask('${g.id}')">
+        <button class="task-add-btn" onclick="addTask('${g.id}')">+ Add</button>
+      </div>
+
+      <div class="goal-unhinged">
+        <div class="unhinged-label">Most unhinged move this week</div>
+        <div class="unhinged-text" id="unhinged-${g.id}">${g.unhinged || 'Edit this goal to add your move.'}</div>
+        <div style="margin-top:0.6rem">
+          <button class="goal-edit-btn" onclick="openGoalEdit(${i})">edit goal →</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleTask(goalId, taskIndex) {
+  const goals = getGoals();
+  const g = goals.find(x => x.id === goalId);
+  if (!g) return;
+  g.tasks[taskIndex].done = !g.tasks[taskIndex].done;
+
+  // score bump for completion
+  if (g.tasks[taskIndex].done) {
+    setScore(getScore() + 2);
+    showToast('+2 trajectory for ticking that off.');
+  }
+
+  saveGoals(goals);
+  renderGoals();
+  renderScore();
+}
+
+function addTask(goalId) {
+  const input = document.getElementById('task-input-' + goalId);
+  const text  = input.value.trim();
+  if (!text) return;
+  const goals = getGoals();
+  const g     = goals.find(x => x.id === goalId);
+  if (!g) return;
+  g.tasks.push({ id: uid(), text, done: false });
+  saveGoals(goals);
+  renderGoals();
+  document.getElementById('task-input-' + goalId)?.focus();
+}
+
+function openGoalEdit(index) {
+  const g = getGoals()[index];
+  document.getElementById('ge-name').value     = g.name;
+  document.getElementById('ge-deadline').value = g.deadline || '';
+  document.getElementById('ge-unhinged').value = g.unhinged || '';
+  document.getElementById('ge-goalindex').value = index;
+  document.getElementById('goaledit-title').textContent = 'Edit: ' + g.name;
+  document.getElementById('modal-goaledit').classList.add('open');
+}
+function saveGoalEdit() {
+  const i   = parseInt(document.getElementById('ge-goalindex').value);
+  const goals = getGoals();
+  goals[i].name     = document.getElementById('ge-name').value.trim() || goals[i].name;
+  goals[i].deadline = document.getElementById('ge-deadline').value.trim();
+  goals[i].unhinged = document.getElementById('ge-unhinged').value.trim();
+  saveGoals(goals);
+  closeModal('goaledit');
+  renderGoals();
+  showToast('Goal updated.');
+}
+
+// ─── DEADLINES ────────────────────────────────────────────
+function daysUntil(d) {
+  if (!d) return null;
+  return Math.ceil((new Date(d) - new Date()) / 86400000);
+}
+function renderDeadlines() {
+  const items = [];
+  const keys = [
+    ['scholarships', s => ({ label: s.name,   date: s.deadline,  tag: 'Scholarship' })],
+    ['courses',      c => ({ label: c.name,   date: c.deadline,  tag: 'Course' })],
+    ['assignments',  a => ({ label: a.name,   date: a.deadline,  tag: 'Assignment' })],
+  ];
+  keys.forEach(([k, fn]) => {
+    lsArr(k).forEach(x => { if (x.deadline) items.push(fn(x)); });
+  });
+  items.sort((a, b) => new Date(a.date) - new Date(b.date));
+  const nearest = items.filter(i => daysUntil(i.date) !== null && daysUntil(i.date) >= 0).slice(0, 5);
+
+  const el = document.getElementById('deadlinesList');
+  if (!nearest.length) {
+    el.innerHTML = '<div class="dl-empty">Nothing tracked yet. Add deadlines in Academic → Scholarships or Courses.</div>';
+    return;
+  }
+  el.innerHTML = nearest.map(item => {
+    const days = daysUntil(item.date);
+    const cls  = days <= 2 ? 'urgent' : days <= 6 ? 'soon' : 'fine';
+    const label = days === 0 ? 'today' : days === 1 ? 'tomorrow' : days + 'd';
+    return `<div class="deadline-item">
+      <div class="dl-left">
+        <div class="dl-tag">${item.tag}</div>
+        <div class="dl-name">${item.label}</div>
+      </div>
+      <div class="dl-days ${cls}">${label}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── MODAL UTILS ──────────────────────────────────────────
+function openScoreInfo() {
+  document.getElementById('modal-scoreinfo').classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById('modal-' + id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => {
+    if (e.target === o) o.classList.remove('open');
+  });
+});
+
+// ─── TOAST ────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ─── STARS ────────────────────────────────────────────────
+const sky = document.getElementById('sky');
+for (let i = 0; i < 80; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 1.6 + 0.3;
+  s.style.cssText = `
+    width:${size}px;height:${size}px;
+    top:${Math.random()*100}%;left:${Math.random()*100}%;
+    --d:${(Math.random()*4+2).toFixed(1)}s;
+    --delay:-${(Math.random()*6).toFixed(1)}s;
+    --max-op:${(Math.random()*0.45+0.15).toFixed(2)};
+  `;
+  sky.appendChild(s);
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+initGreeting();
+renderNoiseFact();
+renderScore();
+initCheckin();
+renderGoals();
+renderDeadlines();
+</script>
+</body>
+</html>
