@@ -41,225 +41,135 @@
     padding: 2rem 1rem 4rem;
   }
 
-  .sky {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
+  .sky { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
   .star {
-    position: absolute;
-    border-radius: 50%;
-    background: white;
-    opacity: 0;
+    position: absolute; border-radius: 50%; background: white; opacity: 0;
     animation: twinkle var(--d, 3s) ease-in-out infinite var(--delay, 0s);
   }
-  @keyframes twinkle {
-    0%, 100% { opacity: 0; }
-    50% { opacity: var(--max-op, 0.6); }
-  }
+  @keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:var(--max-op,0.6)} }
 
   .header {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    margin-bottom: 2.5rem;
-    padding-top: 1rem;
+    position: relative; z-index: 2; text-align: center;
+    margin-bottom: 2.5rem; padding-top: 1rem;
+    animation: fadein 0.8s ease forwards;
   }
-
   .header .greeting {
     font-family: 'Fraunces', serif;
     font-size: clamp(1.8rem, 4vw, 2.6rem);
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: var(--text);
-    margin-bottom: 0.3rem;
+    font-weight: 600; letter-spacing: 0.02em;
+    color: var(--text); margin-bottom: 0.3rem;
   }
-
   .header .date {
-    font-size: 0.72rem;
-    color: var(--text-dim);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    margin-bottom: 0.6rem;
+    font-size: 0.72rem; color: var(--text-dim);
+    letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.6rem;
   }
-
   .header .quote {
-    font-size: 0.88rem;
-    color: var(--text-dim);
-    font-style: italic;
-    max-width: 420px;
-    margin: 0 auto;
-    line-height: 1.6;
-    opacity: 0.75;
+    font-size: 0.88rem; color: var(--text-dim); font-style: italic;
+    max-width: 420px; margin: 0 auto; line-height: 1.6; opacity: 0.75;
   }
 
   .building-wrap {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    max-width: 780px;
+    position: relative; z-index: 2; width: 100%; max-width: 780px;
     animation: fadein 1.2s ease forwards;
   }
 
   .building {
-    width: 100%;
-    background: var(--concrete);
-    border: 1px solid var(--concrete-edge);
-    border-radius: 2px;
-    padding: 2.5rem 2rem 0;
-    position: relative;
+    width: 100%; background: var(--concrete);
+    border: 1px solid var(--concrete-edge); border-radius: 2px;
+    padding: 2.5rem 2rem 0; position: relative;
   }
 
   .rooftop {
-    position: absolute;
-    top: -18px; left: 10%; right: 10%;
-    height: 18px;
-    background: var(--concrete);
-    border: 1px solid var(--concrete-edge);
-    border-bottom: none;
-    border-radius: 2px 2px 0 0;
+    position: absolute; top: -18px; left: 10%; right: 10%;
+    height: 18px; background: var(--concrete);
+    border: 1px solid var(--concrete-edge); border-bottom: none; border-radius: 2px 2px 0 0;
   }
   .rooftop::before {
-    content: '';
-    position: absolute;
-    top: -10px; left: 30%; right: 30%;
-    height: 10px;
-    background: var(--concrete);
-    border: 1px solid var(--concrete-edge);
-    border-bottom: none;
+    content: ''; position: absolute; top: -10px; left: 30%; right: 30%;
+    height: 10px; background: var(--concrete);
+    border: 1px solid var(--concrete-edge); border-bottom: none;
   }
   .antenna {
-    position: absolute;
-    top: -52px; right: 28%;
-    width: 2px; height: 34px;
-    background: var(--concrete-edge);
+    position: absolute; top: -52px; right: 28%;
+    width: 2px; height: 34px; background: var(--concrete-edge);
   }
   .antenna::after {
-    content: '';
-    position: absolute;
-    top: 0; left: -7px;
-    width: 16px; height: 1px;
-    background: var(--concrete-edge);
+    content: ''; position: absolute; top: 0; left: -7px;
+    width: 16px; height: 1px; background: var(--concrete-edge);
   }
 
+  /* FLOOR LAYOUTS */
   .floor {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.4rem;
     margin-bottom: 1.4rem;
   }
+  .floor.two-col {
+    /* 2 windows but centered — use auto to keep them same size as 3-col */
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 66.66%;
+    margin-left: auto;
+    margin-right: auto;
+  }
   .floor.four-col { grid-template-columns: repeat(4, 1fr); }
 
-  .floor-divider {
-    height: 1px;
-    background: var(--concrete-edge);
-    margin: 0 0 1.4rem;
-  }
+  .floor-divider { height: 1px; background: var(--concrete-edge); margin: 0 0 1.4rem; }
 
   /* WINDOW */
   .window {
-    position: relative;
-    aspect-ratio: 3/4;
-    background: #080a0e;
-    border: 1.5px solid #252830;
-    border-radius: 1px;
-    overflow: visible;
-    cursor: pointer;
-    text-decoration: none;
-    display: block;
+    position: relative; aspect-ratio: 3/4;
+    background: #080a0e; border: 1.5px solid #252830; border-radius: 1px;
+    overflow: visible; cursor: pointer; text-decoration: none; display: block;
     transition: border-color 0.4s ease;
   }
+  .window-clip { position: absolute; inset: 0; overflow: hidden; border-radius: 1px; }
 
-  .window-clip {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    border-radius: 1px;
-  }
-
-  /* aura glow — bleeds outside the window onto concrete */
   .window-aura {
-    position: absolute;
-    inset: -30px;
-    border-radius: 4px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-    z-index: -1;
+    position: absolute; inset: -30px; border-radius: 4px;
+    opacity: 0; transition: opacity 0.5s ease; pointer-events: none; z-index: -1;
     filter: blur(22px);
   }
-
   .window:hover .window-aura { opacity: 1; }
   .window:hover { border-color: rgba(255,255,255,0.12); }
 
-  /* frame cross divider */
-  .win-frame {
-    position: absolute;
-    inset: 0;
-    z-index: 10;
-    pointer-events: none;
-  }
+  .win-frame { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
   .win-frame::before {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background:
       linear-gradient(var(--fc) 0 0) center / 1.5px 100% no-repeat,
       linear-gradient(var(--fc) 0 0) center / 100% 1.5px no-repeat;
   }
 
   .win-label {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    padding: 0.5rem 0.4rem 0.4rem;
-    text-align: center;
-    z-index: 11;
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 0.5rem 0.4rem 0.4rem; text-align: center; z-index: 11;
     background: linear-gradient(transparent, rgba(0,0,0,0.75));
   }
   .win-label span {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.58rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    color: rgba(255,255,255,0.8);
+    font-family: 'DM Sans', sans-serif; font-size: 0.58rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    opacity: 0; transition: opacity 0.3s ease; color: rgba(255,255,255,0.8);
   }
   .window:hover .win-label span { opacity: 1; }
 
-  .win-svg {
-    position: absolute;
-    inset: 0;
-    width: 100%; height: 100%;
-    z-index: 2;
-  }
+  .win-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; }
 
-  /* color configs */
+  /* colour configs */
   .w-yellow { --wc: #d4b84a; --fc: #22200e; }
   .w-amber  { --wc: #e8943a; --fc: #2a1e08; }
   .w-teal   { --wc: #4ecdc4; --fc: #162221; }
   .w-red    { --wc: #c94040; --fc: #261414; }
   .w-green  { --wc: #6a9e5e; --fc: #181e16; }
   .w-blue   { --wc: #5b8fa8; --fc: #141c22; }
-  .w-purple { --wc: #8b6bb1; --fc: #1c1624; }
   .w-warm   { --wc: #c47e3a; --fc: #221a10; }
 
   .ground {
-    height: 14px;
-    background: #09090c;
-    border-top: 1px solid var(--concrete-edge);
-    margin: 0 -2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
+    height: 14px; background: #09090c; border-top: 1px solid var(--concrete-edge);
+    margin: 0 -2rem; display: flex; align-items: center; justify-content: center; gap: 2rem;
   }
   .ground-light {
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    opacity: 0.3;
+    width: 4px; height: 4px; border-radius: 50%; opacity: 0.3;
     animation: groundblink 4s ease-in-out infinite;
   }
   .ground-light:nth-child(1) { background: var(--amber); }
@@ -267,84 +177,33 @@
   .ground-light:nth-child(3) { background: var(--amber); animation-delay: 2.6s; }
   @keyframes groundblink { 0%,100%{opacity:0.2} 50%{opacity:0.6} }
 
-  @keyframes fadein {
-    from { opacity:0; transform: translateY(16px); }
-    to   { opacity:1; transform: none; }
-  }
-  .header { animation: fadein 0.8s ease forwards; }
+  @keyframes fadein { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
 
-  /* SVG HOVER ANIMATIONS */
-
-  /* budgeting bars */
-  @keyframes barBounce {
-    0%,100% { transform: scaleY(1); }
-    50%      { transform: scaleY(1.18); }
-  }
+  /* ── SVG HOVER ANIMATIONS ── */
+  @keyframes barBounce { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(1.18)} }
   .w-green:hover .bar1 { animation: barBounce 0.9s ease-in-out infinite; transform-origin: bottom; }
   .w-green:hover .bar2 { animation: barBounce 0.9s 0.15s ease-in-out infinite; transform-origin: bottom; }
   .w-green:hover .bar3 { animation: barBounce 0.9s 0.3s ease-in-out infinite; transform-origin: bottom; }
   .w-green:hover .bar4 { animation: barBounce 0.9s 0.45s ease-in-out infinite; transform-origin: bottom; }
   .w-green:hover .bar5 { animation: barBounce 0.9s 0.6s ease-in-out infinite; transform-origin: bottom; }
 
-  /* health wheel spin */
-  @keyframes wheelSpin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
+  @keyframes wheelSpin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
   .w-teal.health-win:hover .wheel-rear  { animation: wheelSpin 1s linear infinite; transform-origin: 30px 95px; }
   .w-teal.health-win:hover .wheel-front { animation: wheelSpin 1s linear infinite; transform-origin: 70px 95px; }
-
-  /* rider bob */
-  @keyframes riderBob {
-    0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-2px); }
-  }
+  @keyframes riderBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-2px)} }
   .w-teal.health-win:hover .rider { animation: riderBob 0.5s ease-in-out infinite; }
 
-  /* wardrobe sway */
-  @keyframes clothSway {
-    0%,100% { transform: rotate(0deg); }
-    33%      { transform: rotate(4deg); }
-    66%      { transform: rotate(-3deg); }
-  }
+  @keyframes clothSway { 0%,100%{transform:rotate(0deg)} 33%{transform:rotate(4deg)} 66%{transform:rotate(-3deg)} }
   .w-red:hover .cloth1 { animation: clothSway 1.2s ease-in-out infinite; transform-origin: 28px 42px; }
   .w-red:hover .cloth2 { animation: clothSway 1.2s 0.2s ease-in-out infinite; transform-origin: 45px 42px; }
   .w-red:hover .cloth3 { animation: clothSway 1.2s 0.4s ease-in-out infinite; transform-origin: 62px 42px; }
 
-  /* ideas pulse */
-  @keyframes bulbPulse {
-    0%,100% { opacity: 0.08; r: 14; }
-    50%      { opacity: 0.22; r: 18; }
-  }
-  @keyframes bulbInner {
-    0%,100% { opacity: 0.12; }
-    50%      { opacity: 0.3; }
-  }
-  .w-purple:hover .bulb-outer { animation: bulbPulse 1s ease-in-out infinite; }
-  .w-purple:hover .bulb-inner { animation: bulbInner 1s ease-in-out infinite; }
-
-  /* build log cursor blink */
-  @keyframes cursorBlink {
-    0%,100% { opacity: 0; }
-    50%      { opacity: 0.8; }
-  }
-  .w-amber.build-win:hover .cursor { animation: cursorBlink 0.8s step-end infinite; }
-
-  /* opportunities notes wiggle */
-  @keyframes noteWiggle {
-    0%,100% { transform: rotate(0deg); }
-    25%      { transform: rotate(3deg); }
-    75%      { transform: rotate(-2deg); }
-  }
+  @keyframes noteWiggle { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(3deg)} 75%{transform:rotate(-2deg)} }
   .w-teal.opp-win:hover .note1 { animation: noteWiggle 1s ease-in-out infinite; transform-origin: center; }
   .w-teal.opp-win:hover .note2 { animation: noteWiggle 1s 0.2s ease-in-out infinite; transform-origin: center; }
   .w-teal.opp-win:hover .note3 { animation: noteWiggle 1s 0.4s ease-in-out infinite; transform-origin: center; }
 
-  /* academic book flutter */
-  @keyframes bookFlutter {
-    0%,100% { transform: rotate(0deg); }
-    50%      { transform: rotate(-8deg); }
-  }
+  @keyframes bookFlutter { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-8deg)} }
   .w-amber.acad-win:hover .book-held { animation: bookFlutter 0.6s ease-in-out infinite; transform-origin: 50px 104px; }
 </style>
 </head>
@@ -363,7 +222,7 @@
     <div class="rooftop"></div>
     <div class="antenna"></div>
 
-    <!-- FLOOR 1 -->
+    <!-- FLOOR 1 — 3 col: Overview, Academic, Opportunities -->
     <div class="floor">
 
       <!-- OVERVIEW -->
@@ -373,22 +232,14 @@
           <svg class="win-svg" viewBox="0 0 100 133">
             <rect width="100" height="133" fill="#131000"/>
             <ellipse cx="50" cy="8" rx="32" ry="12" fill="#d4b84a" opacity="0.1"/>
-            <!-- desk surface -->
             <rect x="15" y="96" width="70" height="4" rx="1" fill="#1e1a04"/>
-            <!-- monitor -->
             <rect x="30" y="70" width="40" height="26" rx="2" fill="#d4b84a" opacity="0.18"/>
             <rect x="32" y="72" width="36" height="22" rx="1" fill="#0a0900" opacity="0.6"/>
-            <!-- monitor stand -->
             <rect x="48" y="94" width="4" height="4" fill="#1e1a04"/>
-            <!-- person — solid silhouette, no sticks -->
-            <!-- head -->
             <ellipse cx="50" cy="64" rx="8" ry="8" fill="#0a0800"/>
-            <!-- torso -->
             <path d="M42,72 Q42,92 44,96 L56,96 Q58,92 58,72 Q54,69 46,69 Z" fill="#0a0800"/>
-            <!-- arms on desk -->
-            <ellipse cx="36" cy="93" rx="8" ry="3" rx="8" ry="3" fill="#0a0800"/>
+            <ellipse cx="36" cy="93" rx="8" ry="3" fill="#0a0800"/>
             <ellipse cx="64" cy="93" rx="8" ry="3" fill="#0a0800"/>
-            <!-- small plant -->
             <rect x="67" y="88" width="3" height="8" fill="#1e1a04"/>
             <ellipse cx="68" cy="87" rx="5" ry="5" fill="#2a3018"/>
             <ellipse cx="64" cy="89" rx="3" ry="4" fill="#222a14"/>
@@ -405,10 +256,7 @@
           <svg class="win-svg" viewBox="0 0 100 133">
             <rect width="100" height="133" fill="#120b00"/>
             <ellipse cx="50" cy="8" rx="28" ry="10" fill="#e8943a" opacity="0.1"/>
-            <!-- bookshelf -->
             <rect x="10" y="56" width="80" height="3" fill="#2a1e08"/>
-            <rect x="10" y="56" width="80" height="3" fill="#2a1e08"/>
-            <!-- books -->
             <rect x="14" y="40" width="9" height="16" rx="1" fill="#7a3010" opacity="0.9"/>
             <rect x="25" y="43" width="7" height="13" rx="1" fill="#3d5c2a" opacity="0.9"/>
             <rect x="34" y="38" width="10" height="18" rx="1" fill="#8b6914" opacity="0.9"/>
@@ -416,15 +264,10 @@
             <rect x="56" y="44" width="7" height="12" rx="1" fill="#2a4a3a" opacity="0.9"/>
             <rect x="65" y="39" width="9" height="17" rx="1" fill="#6b3a0f" opacity="0.9"/>
             <rect x="76" y="42" width="7" height="14" rx="1" fill="#3a2810" opacity="0.9"/>
-            <!-- lamp -->
             <rect x="74" y="72" width="2" height="24" fill="#1e1408"/>
             <ellipse cx="75" cy="70" rx="10" ry="5" fill="#e8943a" opacity="0.18"/>
-            <!-- person reading — solid silhouette -->
-            <!-- head -->
             <ellipse cx="40" cy="80" rx="9" ry="9" fill="#0c0700"/>
-            <!-- torso leaning forward -->
             <path d="M32,89 Q30,112 33,118 L48,118 Q50,112 50,89 Q46,86 34,86 Z" fill="#0c0700"/>
-            <!-- book in lap — solid shape -->
             <rect class="book-held" x="30" y="104" width="26" height="16" rx="2" fill="#1a1000"/>
             <line x1="43" y1="104" x2="43" y2="120" stroke="#0c0700" stroke-width="1"/>
           </svg>
@@ -439,25 +282,18 @@
         <div class="window-clip">
           <svg class="win-svg" viewBox="0 0 100 133">
             <rect width="100" height="133" fill="#030e0d"/>
-            <!-- corkboard -->
             <rect x="12" y="25" width="76" height="62" rx="2" fill="#140f06" opacity="0.95"/>
-            <!-- notes on board -->
             <rect class="note1" x="17" y="30" width="24" height="16" rx="1" fill="#4ecdc4" opacity="0.28"/>
             <rect class="note2" x="47" y="30" width="18" height="16" rx="1" fill="#e8943a" opacity="0.25"/>
             <rect class="note3" x="17" y="51" width="20" height="14" rx="1" fill="#c8c2b4" opacity="0.12"/>
             <rect x="42" y="51" width="26" height="14" rx="1" fill="#4ecdc4" opacity="0.18"/>
             <rect x="17" y="70" width="32" height="12" rx="1" fill="#e8943a" opacity="0.2"/>
             <rect x="55" y="70" width="26" height="12" rx="1" fill="#4ecdc4" opacity="0.13"/>
-            <!-- string lines -->
             <line x1="29" y1="38" x2="47" y2="58" stroke="#4ecdc4" stroke-width="0.5" opacity="0.18"/>
             <line x1="56" y1="38" x2="30" y2="65" stroke="#e8943a" stroke-width="0.5" opacity="0.15"/>
-            <!-- person — solid silhouette, arm raised pinning -->
             <ellipse cx="72" cy="97" rx="7" ry="7" fill="#020a09"/>
-            <!-- torso -->
             <path d="M65,104 Q64,120 66,126 L78,126 Q80,120 79,104 Q76,101 67,101 Z" fill="#020a09"/>
-            <!-- arm raised -->
             <path d="M78,108 Q84,100 86,94" stroke="#020a09" stroke-width="6" stroke-linecap="round" fill="none"/>
-            <!-- other arm down -->
             <path d="M65,110 Q59,114 57,118" stroke="#020a09" stroke-width="5" stroke-linecap="round" fill="none"/>
           </svg>
         </div>
@@ -468,8 +304,8 @@
 
     <div class="floor-divider"></div>
 
-    <!-- FLOOR 2 -->
-    <div class="floor">
+    <!-- FLOOR 2 — 2 col (centered): Wardrobe, Tools -->
+    <div class="floor two-col">
 
       <!-- WARDROBE -->
       <a class="window w-red" href="wardrobe.html">
@@ -477,26 +313,20 @@
         <div class="window-clip">
           <svg class="win-svg" viewBox="0 0 100 133">
             <rect width="100" height="133" fill="#0e0303"/>
-            <!-- rail -->
             <rect x="10" y="42" width="80" height="2" rx="1" fill="#2a1010"/>
-            <!-- hanger hooks -->
             <line x1="28" y1="42" x2="28" y2="38" stroke="#1e0c0c" stroke-width="1.5"/>
             <path d="M22,38 Q28,33 34,38" stroke="#1e0c0c" stroke-width="1.5" fill="none"/>
             <line x1="45" y1="42" x2="45" y2="38" stroke="#1e0c0c" stroke-width="1.5"/>
             <path d="M39,38 Q45,33 51,38" stroke="#1e0c0c" stroke-width="1.5" fill="none"/>
             <line x1="62" y1="42" x2="62" y2="38" stroke="#1e0c0c" stroke-width="1.5"/>
             <path d="M56,38 Q62,33 68,38" stroke="#1e0c0c" stroke-width="1.5" fill="none"/>
-            <!-- clothes — solid filled shapes -->
             <path class="cloth1" d="M21,38 Q18,50 19,62 L37,62 Q38,50 35,38 Q31,36 25,36 Z" fill="#6b1a1a" opacity="0.85"/>
             <path class="cloth2" d="M38,38 Q35,52 36,68 L54,68 Q55,52 52,38 Q48,35 42,35 Z" fill="#9a3030" opacity="0.7"/>
             <path class="cloth3" d="M55,38 Q52,49 53,60 L71,60 Q72,49 69,38 Q65,35 59,35 Z" fill="#4a1414" opacity="0.9"/>
-            <!-- mirror -->
             <rect x="70" y="65" width="18" height="34" rx="2" fill="#1a0808"/>
             <rect x="71" y="66" width="16" height="32" rx="1" fill="#200e0e" opacity="0.5"/>
-            <!-- person looking in mirror — solid -->
             <ellipse cx="42" cy="86" rx="8" ry="8" fill="#080202"/>
             <path d="M34,94 Q33,116 35,122 L50,122 Q52,116 50,94 Q47,91 37,91 Z" fill="#080202"/>
-            <!-- arms at sides -->
             <path d="M34,100 Q27,106 25,112" stroke="#080202" stroke-width="6" stroke-linecap="round" fill="none"/>
             <path d="M50,100 Q56,104 57,110" stroke="#080202" stroke-width="5" stroke-linecap="round" fill="none"/>
           </svg>
@@ -511,26 +341,20 @@
         <div class="window-clip">
           <svg class="win-svg" viewBox="0 0 100 133">
             <rect width="100" height="133" fill="#030810"/>
-            <!-- main monitor glow -->
             <rect x="10" y="38" width="80" height="52" rx="2" fill="#5b8fa8" opacity="0.12"/>
             <rect x="12" y="40" width="76" height="48" rx="1" fill="#040c14" opacity="0.8"/>
-            <!-- screen content lines -->
             <rect x="18" y="48" width="32" height="2" rx="1" fill="#5b8fa8" opacity="0.5"/>
             <rect x="18" y="54" width="24" height="2" rx="1" fill="#5b8fa8" opacity="0.3"/>
             <rect x="18" y="60" width="40" height="2" rx="1" fill="#5b8fa8" opacity="0.4"/>
             <rect x="18" y="66" width="18" height="2" rx="1" fill="#4ecdc4" opacity="0.3"/>
             <rect x="18" y="72" width="30" height="2" rx="1" fill="#5b8fa8" opacity="0.25"/>
-            <!-- small icon squares -->
             <rect x="60" y="48" width="10" height="10" rx="2" fill="#5b8fa8" opacity="0.25"/>
             <rect x="74" y="48" width="10" height="10" rx="2" fill="#4ecdc4" opacity="0.18"/>
             <rect x="60" y="62" width="10" height="10" rx="2" fill="#e8943a" opacity="0.18"/>
             <rect x="74" y="62" width="10" height="10" rx="2" fill="#8b6bb1" opacity="0.2"/>
-            <!-- desk -->
             <rect x="8" y="92" width="84" height="3" rx="1" fill="#0c1820"/>
-            <!-- person at desk — solid -->
             <ellipse cx="38" cy="84" rx="8" ry="8" fill="#020508"/>
             <path d="M30,92 Q29,110 31,116 L46,116 Q48,110 47,92 Q44,89 33,89 Z" fill="#020508"/>
-            <!-- arm forward on desk -->
             <path d="M30,100 Q20,100 16,100" stroke="#020508" stroke-width="6" stroke-linecap="round" fill="none"/>
             <path d="M47,100 Q54,100 60,98" stroke="#020508" stroke-width="5" stroke-linecap="round" fill="none"/>
           </svg>
@@ -538,44 +362,12 @@
         <div class="win-frame" style="--fc:#141c22"></div>
         <div class="win-label"><span>tools</span></div>
       </a>
-
-      <!-- IDEAS -->
-      <a class="window w-purple" href="ideas.html">
-        <div class="window-aura" style="background:radial-gradient(ellipse,rgba(139,107,177,0.28),transparent 70%)"></div>
-        <div class="window-clip">
-          <svg class="win-svg" viewBox="0 0 100 133">
-            <rect width="100" height="133" fill="#090612"/>
-            <!-- lightbulb aura -->
-            <ellipse class="bulb-outer" cx="50" cy="24" rx="14" ry="14" fill="#8b6bb1" opacity="0.08"/>
-            <ellipse class="bulb-inner" cx="50" cy="24" rx="8" ry="8" fill="#8b6bb1" opacity="0.12"/>
-            <!-- wall scribbles -->
-            <line x1="18" y1="42" x2="48" y2="42" stroke="#8b6bb1" stroke-width="0.8" opacity="0.35"/>
-            <line x1="18" y1="49" x2="40" y2="49" stroke="#8b6bb1" stroke-width="0.8" opacity="0.25"/>
-            <circle cx="54" cy="45" r="3" fill="none" stroke="#8b6bb1" stroke-width="0.8" opacity="0.35"/>
-            <line x1="57" y1="45" x2="68" y2="45" stroke="#8b6bb1" stroke-width="0.8" opacity="0.25"/>
-            <line x1="18" y1="57" x2="34" y2="57" stroke="#8b6bb1" stroke-width="0.8" opacity="0.2"/>
-            <!-- papers on floor -->
-            <rect x="12" y="88" width="22" height="15" rx="1" fill="#12091e" opacity="0.95" transform="rotate(-8,23,95)"/>
-            <rect x="38" y="90" width="20" height="14" rx="1" fill="#12091e" opacity="0.95" transform="rotate(5,48,97)"/>
-            <rect x="62" y="86" width="24" height="16" rx="1" fill="#12091e" opacity="0.95" transform="rotate(-3,74,94)"/>
-            <!-- person lying, thinking — solid silhouette -->
-            <!-- head -->
-            <ellipse cx="28" cy="106" rx="8" ry="8" fill="#050310"/>
-            <!-- body horizontal -->
-            <path d="M36,102 Q56,100 72,102 Q72,110 56,112 Q40,112 36,110 Z" fill="#050310"/>
-            <!-- legs -->
-            <path d="M70,106 Q82,106 86,108" stroke="#050310" stroke-width="7" stroke-linecap="round" fill="none"/>
-          </svg>
-        </div>
-        <div class="win-frame" style="--fc:#1c1624"></div>
-        <div class="win-label"><span>ideas</span></div>
-      </a>
     </div>
 
     <div class="floor-divider"></div>
 
-    <!-- FLOOR 3 -->
-    <div class="floor four-col">
+    <!-- FLOOR 3 — 3 col: People, Budgeting, Health -->
+    <div class="floor">
 
       <!-- PEOPLE -->
       <a class="window w-warm" href="people.html">
@@ -583,16 +375,12 @@
         <div class="window-clip">
           <svg class="win-svg" viewBox="0 0 100 133">
             <rect width="100" height="133" fill="#0e0700"/>
-            <!-- pendant lamp -->
             <rect x="49" y="0" width="2" height="22" fill="#1e1008"/>
             <ellipse cx="50" cy="22" rx="14" ry="6" fill="#c47e3a" opacity="0.2"/>
-            <!-- two people talking — solid silhouettes -->
-            <!-- person 1 -->
             <ellipse cx="28" cy="72" rx="9" ry="9" fill="#080400"/>
             <path d="M19,81 Q18,104 20,112 L38,112 Q40,104 38,81 Q35,78 23,78 Z" fill="#080400"/>
             <path d="M19,90 Q12,96 10,102" stroke="#080400" stroke-width="6" stroke-linecap="round" fill="none"/>
             <path d="M38,90 Q44,93 46,96" stroke="#080400" stroke-width="5" stroke-linecap="round" fill="none"/>
-            <!-- person 2 -->
             <ellipse cx="72" cy="75" rx="8" ry="8" fill="#080400"/>
             <path d="M64,83 Q63,104 65,112 L80,112 Q82,104 80,83 Q78,80 67,80 Z" fill="#080400"/>
             <path d="M64,92 Q58,96 56,100" stroke="#080400" stroke-width="5" stroke-linecap="round" fill="none"/>
@@ -609,20 +397,15 @@
         <div class="window-clip">
           <svg class="win-svg" viewBox="0 0 100 133">
             <rect width="100" height="133" fill="#040a03"/>
-            <!-- bars -->
             <rect class="bar1" x="12" y="70" width="12" height="22" rx="1" fill="#6a9e5e" opacity="0.5"/>
             <rect class="bar2" x="28" y="58" width="12" height="34" rx="1" fill="#6a9e5e" opacity="0.6"/>
             <rect class="bar3" x="44" y="50" width="12" height="42" rx="1" fill="#6a9e5e" opacity="0.7"/>
             <rect class="bar4" x="60" y="62" width="12" height="30" rx="1" fill="#6a9e5e" opacity="0.55"/>
             <rect class="bar5" x="76" y="44" width="12" height="48" rx="1" fill="#6a9e5e" opacity="0.8"/>
-            <!-- baseline -->
             <rect x="8" y="92" width="84" height="1" rx="1" fill="#1a2e18"/>
-            <!-- person pointing — solid -->
             <ellipse cx="24" cy="42" rx="7" ry="7" fill="#020702"/>
             <path d="M17,49 Q16,66 18,72 L32,72 Q34,66 32,49 Q29,46 20,46 Z" fill="#020702"/>
-            <!-- pointing arm -->
             <path d="M32,56 Q44,62 50,66" stroke="#020702" stroke-width="5" stroke-linecap="round" fill="none"/>
-            <!-- other arm -->
             <path d="M17,58 Q11,62 9,66" stroke="#020702" stroke-width="5" stroke-linecap="round" fill="none"/>
           </svg>
         </div>
@@ -636,38 +419,29 @@
         <div class="window-clip">
           <svg class="win-svg" viewBox="0 0 100 133">
             <rect width="100" height="133" fill="#030e0c"/>
-            <!-- bicycle — proper shapes -->
             <circle class="wheel-rear" cx="28" cy="94" r="20" fill="none" stroke="#0e2e2a" stroke-width="4"/>
             <circle cx="28" cy="94" r="3" fill="#0e2e2a"/>
-            <!-- wheel spokes -->
             <line x1="28" y1="74" x2="28" y2="114" stroke="#0e2e2a" stroke-width="1" opacity="0.5"/>
             <line x1="8" y1="94" x2="48" y2="94" stroke="#0e2e2a" stroke-width="1" opacity="0.5"/>
             <circle class="wheel-front" cx="72" cy="94" r="20" fill="none" stroke="#0e2e2a" stroke-width="4"/>
             <circle cx="72" cy="94" r="3" fill="#0e2e2a"/>
             <line x1="72" y1="74" x2="72" y2="114" stroke="#0e2e2a" stroke-width="1" opacity="0.5"/>
             <line x1="52" y1="94" x2="92" y2="94" stroke="#0e2e2a" stroke-width="1" opacity="0.5"/>
-            <!-- frame -->
             <line x1="28" y1="94" x2="50" y2="66" stroke="#0e2e2a" stroke-width="4"/>
             <line x1="50" y1="66" x2="72" y2="94" stroke="#0e2e2a" stroke-width="4"/>
             <line x1="50" y1="66" x2="28" y2="94" stroke="#0e2e2a" stroke-width="3"/>
             <line x1="50" y1="66" x2="55" y2="78" stroke="#0e2e2a" stroke-width="3"/>
-            <!-- handlebar -->
             <line x1="70" y1="70" x2="80" y2="66" stroke="#0e2e2a" stroke-width="3"/>
             <line x1="80" y1="66" x2="78" y2="60" stroke="#0e2e2a" stroke-width="2.5"/>
-            <!-- seat -->
             <line x1="50" y1="66" x2="44" y2="63" stroke="#0e2e2a" stroke-width="2.5"/>
             <rect x="40" y="61" width="10" height="3" rx="1" fill="#0e2e2a"/>
-            <!-- rider — solid silhouette -->
             <g class="rider">
               <ellipse cx="56" cy="52" rx="7" ry="7" fill="#020a09"/>
               <path d="M49,59 Q47,68 50,66 L58,66 Q62,68 60,59 Q57,56 52,56 Z" fill="#020a09"/>
-              <!-- arms to handlebar -->
               <path d="M58,63 Q68,62 76,62" stroke="#020a09" stroke-width="4" stroke-linecap="round" fill="none"/>
-              <!-- legs to pedal -->
               <path d="M50,66 Q46,76 48,82" stroke="#020a09" stroke-width="5" stroke-linecap="round" fill="none"/>
               <path d="M58,66 Q62,74 60,80" stroke="#020a09" stroke-width="5" stroke-linecap="round" fill="none"/>
             </g>
-            <!-- motion lines -->
             <line x1="2" y1="86" x2="10" y2="86" stroke="#4ecdc4" stroke-width="1" opacity="0.3"/>
             <line x1="2" y1="94" x2="7" y2="94" stroke="#4ecdc4" stroke-width="1" opacity="0.2"/>
             <line x1="2" y1="102" x2="10" y2="102" stroke="#4ecdc4" stroke-width="1" opacity="0.3"/>
@@ -676,37 +450,6 @@
         <div class="win-frame" style="--fc:#162221"></div>
         <div class="win-label"><span>health</span></div>
       </a>
-
-      <!-- BUILD LOG -->
-      <a class="window w-amber build-win" href="buildlog.html">
-        <div class="window-aura" style="background:radial-gradient(ellipse,rgba(232,148,58,0.28),transparent 70%)"></div>
-        <div class="window-clip">
-          <svg class="win-svg" viewBox="0 0 100 133">
-            <rect width="100" height="133" fill="#100800"/>
-            <!-- laptop open -->
-            <rect x="15" y="72" width="70" height="6" rx="1" fill="#1e1200"/>
-            <rect x="18" y="45" width="64" height="44" rx="2" fill="#e8943a" opacity="0.14"/>
-            <rect x="20" y="47" width="60" height="40" rx="1" fill="#080500" opacity="0.8"/>
-            <!-- code lines -->
-            <rect x="26" y="54" width="30" height="2" rx="1" fill="#e8943a" opacity="0.45"/>
-            <rect x="26" y="60" width="22" height="2" rx="1" fill="#c8c2b4" opacity="0.2"/>
-            <rect x="26" y="66" width="36" height="2" rx="1" fill="#e8943a" opacity="0.35"/>
-            <rect x="26" y="72" width="18" height="2" rx="1" fill="#4ecdc4" opacity="0.3"/>
-            <rect x="26" y="78" width="28" height="2" rx="1" fill="#c8c2b4" opacity="0.15"/>
-            <!-- cursor -->
-            <rect class="cursor" x="56" y="78" width="2" height="8" rx="1" fill="#e8943a" opacity="0.8"/>
-            <!-- person at laptop — solid -->
-            <ellipse cx="50" cy="92" rx="8" ry="8" fill="#080400"/>
-            <path d="M42,100 Q41,118 43,124 L58,124 Q60,118 58,100 Q55,97 45,97 Z" fill="#080400"/>
-            <!-- arms to keyboard -->
-            <path d="M42,108 Q34,110 28,110" stroke="#080400" stroke-width="5" stroke-linecap="round" fill="none"/>
-            <path d="M58,108 Q66,110 72,110" stroke="#080400" stroke-width="5" stroke-linecap="round" fill="none"/>
-          </svg>
-        </div>
-        <div class="win-frame" style="--fc:#2a1e08"></div>
-        <div class="win-label"><span>build log</span></div>
-      </a>
-
     </div>
 
     <div class="ground">
@@ -734,41 +477,36 @@
     "Success is not for the lazy. Let's hustle.",
     "Let's build a life that feels good on the inside, not just one that looks good on the outside.",
     "The best way to predict the future is to create it. Let's start building.",
-    "Your potential is endless. Let's tap into it and build something incredible.",
+    "Your potential is endless. Let's tap into it.",
   ];
 
   const quotes = [
     "I lied. I like being the best in the room. I am not humble. I want it more than everyone.",
-  "No small goals. No small plans. Extremes are home. Speed is stasis. A normal life is not worth living. If greatness is in your DNA, don't ignore it. Become it.",
-  "Mastery starts with drowning. Total fucking immersion. No half measures. Let it take over. Let it become the only thing that matters.",
-  "Be consumed by your ambition. There is no deeper betrayal than abandoning your own becoming.",
-  "How do I stop being scared? You do it scared. The courage arrives with the action, not before it.",
-  "It takes a dangerous mind to want more in this world. Stress is fuel. Chaos is fuel.",
-  "You honestly gotta believe in yourself so much that it's borderline delusional.",
-  "You need goals that give you goosebumps. A mission that makes it impossible to sleep. Use excitement as a compass.",
-  "My life became 600% better when I started acting like a self-obsessed piece of shit. 10/10 would recommend.",
-  "Even if you don't actually love yourself, it's fuckin fun to act like you think you're the human embodiment of perfection.",
-  "\"That's not realistic.\" Yeah, to you. Chopped, broke, doubtful ass.",
-  "I was working weekends, missing parties, investing everything. Now I just show results. Explanation is exhaustion. Execution is evidence.",
-  "Be so disciplined it looks like madness.",
-  "I'd rather think I'm the shit and be humbled by God than humble myself and never try.",
-  "Because I'm crazy enough to think I can.",
-  "The entire point of life is to take chances on dreams that seem crazy to most, but feel like destiny to you.",
-  "Even at my worst, I'm fucking incredible.",
-  "You're not always going to be motivated, so you must be disciplined.",
-  "Become obsessed with your potential.",
-  "Don't call me lucky. I failed more times than you tried.",
-  "Behind my obsession to be better every day is a kid who realised no one was coming to save him.",
-  "I feel my sexiest when I do what I said I was gonna do. Discipline and intention is power, and power is sexy.",
-  "Being insecure is a waste of youth. Nobody is above you.",
-  "I'm convinced that the key to greatness is simply having a delusional level of belief in your incredible future.",
-  "She was born with something inside her that refuses to settle for average.",
-  "A mathematician is a machine for turning coffee into theorems.",
-  "Do shit that confuses the normies. Lift heavy in the morning. Work when people are in bed. You can't fit in. You must stick out.",
-  "You're not too much. You were never too much. You're a woman who knows she was made for more and that terrifies the world.",
-  "I wanna be as ambitious as Beth Harmon is.",
-  "Idk I just have this crazy faith that everything is going to work out insanely well for me.",
-];
+    "No small goals. No small plans. Extremes are home. Speed is stasis. A normal life is not worth living.",
+    "Mastery starts with drowning. Total fucking immersion. No half measures. Let it take over.",
+    "Be consumed by your ambition. There is no deeper betrayal than abandoning your own becoming.",
+    "How do I stop being scared? You do it scared. The courage arrives with the action, not before it.",
+    "It takes a dangerous mind to want more in this world. Stress is fuel. Chaos is fuel.",
+    "You honestly gotta believe in yourself so much that it's borderline delusional.",
+    "You need goals that give you goosebumps. A mission that makes it impossible to sleep.",
+    "My life became 600% better when I started acting like a self-obsessed piece of shit. 10/10 would recommend.",
+    "\"That's not realistic.\" Yeah, to you. Chopped, broke, doubtful ass.",
+    "I was working weekends, missing parties, investing everything. Execution is evidence.",
+    "Be so disciplined it looks like madness.",
+    "I'd rather think I'm the shit and be humbled by God than humble myself and never try.",
+    "Because I'm crazy enough to think I can.",
+    "The entire point of life is to take chances on dreams that seem crazy to most, but feel like destiny to you.",
+    "Even at my worst, I'm fucking incredible.",
+    "You're not always going to be motivated, so you must be disciplined.",
+    "Don't call me lucky. I failed more times than you tried.",
+    "Behind my obsession to be better every day is a kid who realised no one was coming to save him.",
+    "I feel my sexiest when I do what I said I was gonna do. Discipline and intention is power.",
+    "Being insecure is a waste of youth. Nobody is above you.",
+    "She was born with something inside her that refuses to settle for average.",
+    "Do shit that confuses the normies. Work when people are in bed. You can't fit in. You must stick out.",
+    "You're not too much. You were never too much. You're a woman who knows she was made for more.",
+    "Idk I just have this crazy faith that everything is going to work out insanely well for me.",
+  ];
 
   function dailyPick(arr) {
     const day = Math.floor(Date.now() / 86400000);
@@ -780,11 +518,8 @@
 
   const d = new Date();
   document.getElementById('datestr').textContent =
-    d.toLocaleDateString('en-IN', {
-      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-    });
+    d.toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
-  // stars
   const sky = document.getElementById('sky');
   for (let i = 0; i < 90; i++) {
     const s = document.createElement('div');
